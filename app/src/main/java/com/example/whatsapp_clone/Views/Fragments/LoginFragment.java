@@ -28,7 +28,6 @@ public class LoginFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
