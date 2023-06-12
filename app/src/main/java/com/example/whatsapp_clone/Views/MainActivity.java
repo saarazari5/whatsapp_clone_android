@@ -25,7 +25,7 @@ private ActivityMainBinding binding;
 //        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder().build();
 //        NavigationUI.setupWithNavController(binding.myToolbar, navController, appBarConfiguration);
 
-    }
+   }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
