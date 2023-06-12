@@ -13,20 +13,19 @@ import com.example.whatsapp_clone.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-
+private ActivityMainBinding binding;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+//
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder().build();
+//        NavigationUI.setupWithNavController(binding.myToolbar, navController, appBarConfiguration);
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder().build();
-        NavigationUI.setupWithNavController(binding.myToolbar, navController, appBarConfiguration);
-
-    }
+   }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
