@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">whatsapp_clone</string>
+    <string name="login">Login</string>
+    <string name="settings">Settings</string>
 </resources>
