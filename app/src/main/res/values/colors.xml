@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="background_color">#C7C6C6</color>
     <color name="loginBtn_color">#8BC34A</color>
+    <color name="dark_gray">#CCF3F3F3</color>
+    <color name="app_primary">#158551</color>
+    <color name="app_primary_light">#41CC8B</color>
 </resources>

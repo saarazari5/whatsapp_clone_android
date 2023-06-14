@@ -14,4 +14,11 @@
     <string name="register_link_text">Register Here</string>
     <string name="right_arrow_icon">right arrow</string>
     <string name="left_arrow_icon">left arrow</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="temp_date">12/06/2023</string>
+    <string name="search">Search</string>
+    <string name="add">add</string>
+    <string name="add_contact">add contact</string>
+    <string name="add_new_contact">Add new Contact</string>
+    <string name="write_contact_name">write Contact name...</string>
 </resources>

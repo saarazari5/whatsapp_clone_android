@@ -12,10 +12,11 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/app_primary"
         android:elevation="4dp"
-        app:menu="@menu/app_menu"
+        app:menu="@menu/default_menu"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:title=""
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
