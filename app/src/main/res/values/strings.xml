@@ -2,4 +2,16 @@
     <string name="app_name">whatsapp_clone</string>
     <string name="login">Login</string>
     <string name="settings">Settings</string>
+    <string name="icon_img">icon_img</string>
+    <string name="login_header">Member Login</string>
+    <string name="username_placeholder">Enter Username</string>
+    <string name="password_placeholder">Enter Password</string>
+    <string name="show_password">show password</string>
+    <string name="lock_icon">lock</string>
+    <string name="username_icon">username</string>
+    <string name="loginBtn">Log In</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="register_link_text">Register Here</string>
+    <string name="right_arrow_icon">right arrow</string>
+    <string name="left_arrow_icon">left arrow</string>
 </resources>
