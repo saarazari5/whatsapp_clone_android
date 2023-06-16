@@ -56,6 +56,7 @@ public class ChatsFragment extends Fragment {
         mViewModel.mockChats();
     }
 
+
     /**
      * handle Observers for mutable live data object
      */

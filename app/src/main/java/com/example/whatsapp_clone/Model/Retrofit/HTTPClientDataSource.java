@@ -9,7 +9,6 @@ import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,6 +86,7 @@ public class HTTPClientDataSource {
     public void createChat(String token, String username, CompletionBlock<Chat> response) {
         
     }
+
 
     private void initService() {
         Retrofit retrofit = new Retrofit
