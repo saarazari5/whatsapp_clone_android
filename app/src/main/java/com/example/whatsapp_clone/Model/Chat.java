@@ -1,10 +1,14 @@
 package com.example.whatsapp_clone.Model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Chat implements Serializable {
+
+    @SerializedName("id")
     public int chatId;
     public Message lastMessage;
     public ArrayList<User>users;
