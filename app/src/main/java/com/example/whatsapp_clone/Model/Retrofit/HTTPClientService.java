@@ -31,7 +31,7 @@ public interface HTTPClientService {
     Call<List<Chat>> getChats(@Header("Authorization") String token);
 
     @POST("Chats")
-    Call<Chat> addNewChat(@Header("Authorization") String token, @Body User contact);
+    Call<ChatMetadata> createChat(@Header("Authorization") String token, @Body String username);
 
     @POST("Chats/{id}/Messages")
     Call<Message> sendNewMessage(@Header("Authorization") String token,

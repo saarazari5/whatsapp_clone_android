@@ -52,7 +52,7 @@ public class ChatsFragment extends Fragment {
         handleChatRecyclerView();
         handleAddContactButton();
         setupObservers();
-        
+
         mViewModel.mockChats();
     }
 

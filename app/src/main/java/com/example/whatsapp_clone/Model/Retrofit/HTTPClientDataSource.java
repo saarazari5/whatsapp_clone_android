@@ -2,11 +2,13 @@ package com.example.whatsapp_clone.Model.Retrofit;
 
 import androidx.annotation.NonNull;
 
+import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +23,6 @@ public class HTTPClientDataSource {
     public HTTPClientDataSource() {
             initService();
     }
-
 
     public void createUser(User user , CompletionBlock<Void> completionBlock) {
         service.createUser(user)
@@ -61,6 +62,31 @@ public class HTTPClientDataSource {
                     }
                 });
     }
+
+    public void getChats(String token, CompletionBlock<List<Chat>> completionBlock) {
+        service.getChats(token)
+                .enqueue(new Callback<List<Chat>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<Chat>> call, @NonNull Response<List<Chat>> response) {
+                        if(response.isSuccessful()) {
+                            List<Chat> chats = response.body();
+                            completionBlock.onResult(new Result<>(true, chats,""));
+                        }else {
+                            completionBlock.onResult(new Result<>(false, null, ""));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<Chat>> call, @NonNull Throwable t) {
+                        completionBlock.onResult(new Result<>(false, null, ""));
+                    }
+                });
+    }
+
+    public void createChat(String token, String username, CompletionBlock<Chat> response) {
+        
+    }
+
 
     private void initService() {
         Retrofit retrofit = new Retrofit

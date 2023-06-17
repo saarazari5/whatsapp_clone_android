@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    public State state;
+    public State state = State.LOGIN;
 
     public enum State {
         CHATS,
