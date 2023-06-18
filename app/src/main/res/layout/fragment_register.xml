@@ -142,7 +142,6 @@
                 android:fadingEdge="horizontal"
                 android:scaleType="centerCrop"
                 android:src="@drawable/add_contact_background"
-                android:clickable="true"
                 android:focusable="true"
                 android:visibility="invisible"/>
 

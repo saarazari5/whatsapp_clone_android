@@ -49,7 +49,6 @@ public class RegisterFragment extends Fragment {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
 
-
     public static RegisterFragment newInstance() {
         return new RegisterFragment();
     }
@@ -57,19 +56,22 @@ public class RegisterFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
-        // Inflate the layout and bind it using data binding
         binding = FragmentRegisterBinding.inflate(inflater, container, false);
-
-        // Get the root view from the binding
         View rootView = binding.getRoot();
+        return rootView;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
         binding.registerBtn.setOnClickListener(v -> {
             handleRegistration();
-            // call the validtion tests
-
         });
+        setProfilePicUploadingLogic();
+        setErrMsgDisappearLogic();
+    }
 
-        // picture uploading logic:
-        profileImageView= binding.profileImageView;
+    private void setProfilePicUploadingLogic(){
+        profileImageView = binding.profileImageView;
         uploadPictureBtn = binding.uploadPictureBtn;
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
@@ -87,14 +89,16 @@ public class RegisterFragment extends Fragment {
             imagePickerLauncher.launch(intent);
         });
 
+    }
 
-        profileImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            imagePickerLauncher.launch(intent);
-        });
-
-
-        // making the error msgs disappear when clicking on the edit text:
+    /**
+     * Making the error messages disappear from the edit text components when the user tap on them.
+     */
+    private void setErrMsgDisappearLogic() {
+        /*
+             to do:
+             add error msg for profile pic
+        */
         binding.emailInput.setOnClickListener(v -> {
             binding.emailInputLayout.setError(null);
         });
@@ -123,10 +127,7 @@ public class RegisterFragment extends Fragment {
             binding.passwordConfirmationInputLayout.setError(null);
         });
 
-        // Return the root view
-        return rootView;
     }
-
 
     private void handleImageSelection(Uri imageUri) {
         try {
@@ -138,6 +139,7 @@ public class RegisterFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
     private String convertBitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
@@ -146,6 +148,10 @@ public class RegisterFragment extends Fragment {
     }
 
 
+    /**
+     * add validation logic to profile picture
+     * limit the size of the email, username, password and stuff
+     */
     public void handleRegistration() {
 
         String userEmail = binding.emailInput.getText().toString();
@@ -173,12 +179,6 @@ public class RegisterFragment extends Fragment {
         if (!ValidationTester.arePasswordsEqual(userPassword, userPasswordConfirmation))
             binding.passwordConfirmationInputLayout.setError("The passwords do not match.");
 
-
-        // To do:
-        /**
-         * add validation logic to profile picture
-         * limit the size of the email, username, password and stuff
-         */
     }
 
 
@@ -188,7 +188,6 @@ public class RegisterFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         // TODO: Use the ViewModel
     }
-
 
 
     @Override
