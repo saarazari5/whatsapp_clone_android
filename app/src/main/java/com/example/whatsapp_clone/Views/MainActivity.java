@@ -1,5 +1,6 @@
 package com.example.whatsapp_clone.Views;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,10 +11,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import com.example.whatsapp_clone.Model.Delegates.SearchQueryObserver;
+import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.Token;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.R;
+import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,8 +46,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+        testRequests();
     }
 
+
+    public void testRequests() {
+        Repository
+                .getInstance()
+                .httpClientDataSource
+                .loginUser("saarazari5@Gmail.com", "12345678", result -> {
+                    if(result.isSuccess()) {
+                        Repository.getInstance()
+                                .httpClientDataSource
+                                .getMessages(new String(result.getData().token), 1, res -> {
+                                    if(res.isSuccess()) {
+                                        Log.i("messages", res.getData().toString());
+                                    }
+                                });
+                    }
+                });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
