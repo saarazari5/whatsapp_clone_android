@@ -15,7 +15,7 @@ import com.example.whatsapp_clone.Model.Retrofit.HTTPClientDataSource;
 public class Repository {
     private static Repository instance;
 
-    private HTTPClientDataSource httpClientDataSource;
+    public HTTPClientDataSource httpClientDataSource;
     // Private constructor to prevent instantiation from other classes
     private Repository() {
         httpClientDataSource = new HTTPClientDataSource();

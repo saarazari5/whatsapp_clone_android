@@ -14,12 +14,25 @@ public class User {
         this.profilePic = profilePic;
     }
 
+    public static class UserRegistration extends User {
+
+        String password;
+        public UserRegistration(String username,
+                                String password ,
+                                String displayName,
+                                String profilePic) {
+            super(username, displayName, profilePic);
+            this.password = password;
+        }
+    }
+
     public static class Mock extends User {
         public Mock() {
-            super("saarazari5@gmail.com",
+            super("ssaar@gmail.com",
                     "Saar Azari",
                     Utils.mockImage);
         }
     }
-
 }
+
+
