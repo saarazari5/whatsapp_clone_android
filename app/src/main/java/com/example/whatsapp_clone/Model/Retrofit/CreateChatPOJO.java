@@ -4,7 +4,7 @@ import com.example.whatsapp_clone.Model.User;
 import com.google.gson.annotations.SerializedName;
 
 public class CreateChatPOJO {
-    int id;
+    public int id;
     @SerializedName("user")
-    User addedUser;
+    public User addedUser;
 }

@@ -1,7 +1,15 @@
 package com.example.whatsapp_clone.Model;
 
+
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "message")
 public class Message {
-    int messageId;
+    @PrimaryKey
+    public int messageId;
+    @Embedded
     public User sender;
     public String content;
     public String created;

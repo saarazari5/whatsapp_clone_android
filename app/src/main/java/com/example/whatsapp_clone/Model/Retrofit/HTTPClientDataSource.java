@@ -26,7 +26,7 @@ public class HTTPClientDataSource {
             initService();
     }
 
-    public void   createUser(User.UserRegistration user , CompletionBlock<Void> completionBlock) {
+    public void  createUser(User.UserRegistration user , CompletionBlock<Void> completionBlock) {
         service.createUser(user)
                 .enqueue(new Callback<Void>() {
                     @Override
@@ -53,7 +53,7 @@ public class HTTPClientDataSource {
                         if(response.isSuccessful()) {
                             Token token = response.body();
                             assert token != null;
-                            token.token = "Bearer "+ token.token;
+                            token.token = "Bearer " + token.token;
                             completionBlock.onResult(new Result<>(true, token, ""));
                         } else {
                             completionBlock.onResult(new Result<>(false, null, ""));
@@ -129,7 +129,8 @@ public class HTTPClientDataSource {
 
     public void postMessage( String token,
                              String  msg,
-                             int chatId, CompletionBlock<Message> completionBlock) {
+                             int chatId,
+                             CompletionBlock<Message> completionBlock) {
 
         service.postMessage(token,msg,chatId)
                 .enqueue(new Callback<Message>() {

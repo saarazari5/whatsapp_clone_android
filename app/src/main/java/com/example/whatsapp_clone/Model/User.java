@@ -14,6 +14,12 @@ public class User {
         this.profilePic = profilePic;
     }
 
+
+    /**
+     * use instance of this subclass of User when creating a new user with password,
+     * the separation is needed since only in register case this class need a password,
+     * other responses that return a user from server does not need a password
+     */
     public static class UserRegistration extends User {
 
         String password;

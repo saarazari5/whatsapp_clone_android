@@ -9,7 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.Observer;
 
+import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Delegates.SearchQueryObserver;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.Token;
@@ -48,21 +50,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
+        Repository.init(getApplicationContext(), this);
+
         testRequests();
     }
 
 
     public void testRequests() {
-        Repository
-                .getInstance()
-                .httpClientDataSource
-                .createUser(new User.UserRegistration("saara@gmail.com",
-                        "12345678",
-                        "saar",
-                        "string"), result -> {
-                    if (result.isSuccess()) {
-                        Log.i("data", "succeesss");
-                    }
+        Repository.getInstance()
+                .createUser(new User.UserRegistration("", "", "", ""), result -> {
+                    // do some shit
                 });
     }
 
