@@ -3,7 +3,6 @@ package com.example.whatsapp_clone.Model;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 
 public class User {
-
     public String username;
     public String displayName;
     public String profilePic;

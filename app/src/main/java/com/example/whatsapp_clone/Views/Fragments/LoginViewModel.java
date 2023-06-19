@@ -1,16 +1,20 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
+import android.preference.Preference;
+import android.provider.SyncStateContract;
+import android.widget.Toast;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.data.LoginRepository;
 import com.example.whatsapp_clone.data.Result;
 import com.example.whatsapp_clone.data.model.LoggedInUser;
 import com.example.whatsapp_clone.data.model.UserProfile;
-import com.example.whatsapp_clone.network.ApiClient;
-import com.example.whatsapp_clone.network.ApiService;
+import com.google.firebase.auth.FirebaseAuth;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,17 +25,16 @@ import retrofit2.Response;
  */
 public class LoginViewModel extends ViewModel {
     private LoginRepository loginRepository;
-    private ApiService apiService;
+    private UserPreference preferences;
     private MutableLiveData<User> loggedInUser = new MutableLiveData<>();
+    private MutableLiveData<String> loggedInUserDetails = new MutableLiveData<>();
     public MutableLiveData<String> token = new MutableLiveData<>();
-    private MutableLiveData<Result.Error> loginError = new MutableLiveData<>();
+//    private MutableLiveData<Result.Error> loginError = new MutableLiveData<>();
+//    private FirebaseAuth auth;
 
     public LoginViewModel() {
         loginRepository = new LoginRepository();
         apiService = ApiClient.createService(ApiService.class);
-        Observer<String> tokenObserver = s -> {
-            this.loginUser();
-        };
     }
 
     /**
@@ -40,6 +43,10 @@ public class LoginViewModel extends ViewModel {
      */
     public LiveData<User> getLoggedInUser() {
         return loggedInUser;
+    }
+
+    public LiveData<String> getLoggedInUserDetails() {
+        return loggedInUserDetails;
     }
 
     /**
@@ -52,24 +59,26 @@ public class LoginViewModel extends ViewModel {
 
     /**
      * Perform login with username and password.
-     * @param username    The user's username.
-     * @param password    The user's password.
+     * @param username The user's username.
+     * @param password The user's password.
      */
     public void loginUser(String username, String password) {
-        // Check if user already logged in
-        loginRepository.login(username, password, new LoginRepository.LoginCallback() {
-            @Override
+        // Connect to Firebase
+//        auth = FirebaseAuth.getInstance();
+//        auth.signInWithEmailAndPassword(username, password);
+//        User user = new User(username, password, "picture");
+
+        // Login request with username and password
+        loginRepository.handleLogin(username, password, new LoginRepository.LoginCallback() {
             public void onSuccess(String token) {
                 // Get the user
-
                 loggedInUser.postValue(user);
-                saveAuthToken(user.getToken());
-                getUserProfile(user.getUserId());
-                // Navigate to chat screen or perform other actions
+                saveUserPreferences(loggedInUser.username, loggedInUser.displayName, loggedInUser.profilePic, token);
             }
 
-            @Override
             public void onError(Result.Error error) {
+                // Fail login message
+//                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
                 // Handle login error
                 loginError.setValue(error);
             }
@@ -105,9 +114,14 @@ public class LoginViewModel extends ViewModel {
      * Save the authentication token to local storage or preferences.
      * @param token The authentication token.
      */
-    private void saveAuthToken(String token) {
-        // Save the authentication token to local storage or preferences
-        // You can use SharedPreferences or other storage mechanisms
+    private void saveUserPreferences(String username, String displayName, String profilePic, String token) {
+        // Save the user preferences
+        preferences.putBoolean("isLoggedIn", true);
+        preferences.putString("username", username);
+        preferences.putString("displayName", displayName);
+        preferences.putString("profilePic", profilePic);
+        preferences.putString("token", token);
+        preferences.apply();
     }
 
     /**
@@ -122,16 +136,22 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
                 if (response.isSuccessful()) {
-                    LoggedInUser user = response.body();
-                    // Handle successful login response
+                    User user = response.body();
+                    // Successfull login message
+                    Toast.makeText(getContext(), "You are Logged in!", Toast.LENGTH_LONG).show();
+                    // Get the user
+                    loggedInUser.postValue(user);
+                    // Navigate to chat screen or perform other actions
                 } else {
                     // Handle API error
+                    loginError.setValue(new Result.Error("Login failed"));
                 }
             }
 
             @Override
             public void onFailure(Call<LoggedInUser> call, Throwable t) {
                 // Handle network failure
+                loginError.setValue(new Result.Error("Network error"));
             }
         });
     }
