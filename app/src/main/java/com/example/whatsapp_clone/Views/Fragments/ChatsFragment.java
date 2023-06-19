@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -23,9 +22,7 @@ import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Views.Adapters.ChatsAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentChatsBinding;
-
 import java.util.List;
-import java.util.Objects;
 
 public class ChatsFragment extends Fragment {
 
@@ -52,15 +49,17 @@ public class ChatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         chatsRv = binding.chats;
-        handleRv();
-        handleFab();
+        handleChatRecyclerView();
+        handleAddContactButton();
         setupObservers();
-
-
 
         mViewModel.mockChats();
     }
 
+
+    /**
+     * handle Observers for mutable live data object
+     */
     private void setupObservers() {
         final Observer<List<Chat>> chatsObserver = chats -> {
             chatsRv.setAdapter(new ChatsAdapter(chats,
@@ -74,9 +73,10 @@ public class ChatsFragment extends Fragment {
         mViewModel.getSelectedChatMutableData().observe(this.getViewLifecycleOwner(), selectedChatObserver);
     }
 
-    private void handleFab() {
+    private void handleAddContactButton() {
 
         binding.fab.setOnClickListener(view1 -> {
+            //create Alert for Add Contact
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             final View customLayout = getLayoutInflater().inflate(R.layout.add_contact_dialog, null);
             builder.setView(customLayout);
@@ -84,6 +84,8 @@ public class ChatsFragment extends Fragment {
             ImageView cancelBtn = customLayout.findViewById(R.id.cancel_btn);
             cancelBtn.setOnClickListener(view22 -> dialog.dismiss());
             Button addBtn = customLayout.findViewById(R.id.add_contact_btn);
+
+            //handle Add ContactButton
             addBtn.setOnClickListener(view2 -> {
                 EditText addContactEt = customLayout.findViewById(R.id.add_contact_et);
                 if (mViewModel.addContact(addContactEt.getText().toString())) {
@@ -96,10 +98,9 @@ public class ChatsFragment extends Fragment {
             });
             dialog.show();
         });
-
     }
 
-    private void handleRv() {
+    private void handleChatRecyclerView() {
         chatsRv.addOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy){
