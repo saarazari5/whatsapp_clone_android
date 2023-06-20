@@ -26,7 +26,7 @@ public class Utils {
             if(i%2 == 0) {
                 ArrayList<User>users = new ArrayList<>();
                 for (int j = 0; j <= 1 ; j ++) {
-                    users.add(new User("Ariel", "Ariel",Utils.mockImage));
+                    users.add(new User("Ariel", "Ariel", "123123123",Utils.mockImage));
                 }
                 mock.add(new Chat(i, new Message.Mock(), users));
             }
