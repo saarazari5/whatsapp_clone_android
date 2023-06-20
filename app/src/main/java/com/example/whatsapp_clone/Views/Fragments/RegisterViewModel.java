@@ -15,6 +15,7 @@ import com.example.whatsapp_clone.Model.Retrofit.HTTPClientDataSource;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
+import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.ValidationTester;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 
 public class RegisterViewModel extends ViewModel {
-    private HTTPClientDataSource source;
+    private Repository repo;
     private String base64ProfilePic;
     private MutableLiveData<Bitmap> profilePictureLiveData;
     private MutableLiveData<Set<InputError>> errorSetLiveData;
@@ -51,7 +52,7 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public RegisterViewModel() {
-        source = new HTTPClientDataSource();
+        repo = Repository.getInstance();
         profilePictureLiveData = new MutableLiveData<>();
         errorSetLiveData = new MutableLiveData<>();
         errorSetLiveData.setValue(new HashSet<>());
@@ -145,10 +146,10 @@ public class RegisterViewModel extends ViewModel {
 
 
         // Create a User object
-        User user = new User(userEmail, userDisplayName, userPassword, base64ProfilePic);
+        User.UserRegistration newUser = new User.UserRegistration(userEmail,userPassword,userDisplayName,base64ProfilePic);
 
         // Call the HTTPClientDataSource method to create the user
-        source.createUser(user, new CompletionBlock<Void>() {
+        repo.createUser(newUser, new CompletionBlock<Void>() {
             @Override
             public void onResult(Result<Void> result) {
                 // Handle the result, update the UI accordingly

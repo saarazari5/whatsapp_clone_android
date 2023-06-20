@@ -8,12 +8,10 @@ public class User {
     public String displayName;
     public String profilePic;
 
-    public String password;
 
-    public User(String username, String displayName, String password,String profilePic) {
+    public User(String username, String displayName,String profilePic) {
         this.username = username;
         this.displayName = displayName;
-        this.password = password;
         this.profilePic = profilePic;
     }
 
@@ -39,7 +37,6 @@ public class User {
         public Mock() {
             super("ssaar@gmail.com",
                     "Saar Azari",
-                    "123123123",
                     Utils.mockImage);
         }
     }
