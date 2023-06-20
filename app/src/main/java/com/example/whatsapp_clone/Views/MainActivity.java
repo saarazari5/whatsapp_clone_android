@@ -1,5 +1,6 @@
 package com.example.whatsapp_clone.Views;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -8,12 +9,22 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.Observer;
 
+import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Delegates.SearchQueryObserver;
+import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.Token;
+import com.example.whatsapp_clone.Model.User;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.R;
+import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,9 +49,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-        state = State.REGISTER; // test
+        Repository.init(getApplicationContext(), this);
+        testRequests();
     }
 
+
+    public void testRequests() {
+        Repository.getInstance()
+                .createUser(new User.UserRegistration("", "", "", ""), result -> {
+                    // do some shit
+                });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
