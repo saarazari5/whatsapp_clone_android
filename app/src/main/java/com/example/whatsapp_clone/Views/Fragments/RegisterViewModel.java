@@ -4,21 +4,19 @@ import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.whatsapp_clone.Model.Retrofit.HTTPClientDataSource;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
+import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.ValidationTester;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +26,7 @@ public class RegisterViewModel extends ViewModel {
     private Repository repo;
     private String base64ProfilePic;
     private MutableLiveData<Bitmap> profilePictureLiveData;
+    private MutableLiveData<Boolean> isRegistrationSucceed;
     private MutableLiveData<Set<InputError>> errorSetLiveData;
 
     enum InputError {
@@ -83,54 +82,55 @@ public class RegisterViewModel extends ViewModel {
         return profilePictureLiveData;
     }
 
+    public LiveData<Boolean> getIsRegistrationSucceed(){
+        return isRegistrationSucceed;
+    }
 
     public void handleImageSelection(ContentResolver contentResolver, Uri imageUri) {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri);
             profilePictureLiveData.setValue(bitmap);
-            this.base64ProfilePic = convertBitmapToBase64(bitmap);
+            this.base64ProfilePic = Utils.convertBitmapToBase64(bitmap);
         } catch (IOException e) {
             e.printStackTrace();
             //Todo: handle error
         }
     }
 
-    public String convertBitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
 
+    /**
+     * add validation logic to profile picture
+     * limit the size of the email, username, password and stuff
+     */
     public void registerUser(String userEmail, String userDisplayName, String userPassword, String userPasswordConfirmation) {
 
-        boolean inputErrorFlage = false;
+        boolean inputErrorFlag = false;
 
         if (!ValidationTester.isValidEmail(userEmail)) {
             addError(InputError.INVALID_EMAIL);
-            inputErrorFlage = true;
+            inputErrorFlag = true;
         }
 
         int displayNameValidationResult = ValidationTester.isValidStrInput(userDisplayName);
         if (displayNameValidationResult == 1) {
             addError(InputError.INVALID_DISPLAYNAME_LENGTH);
-            inputErrorFlage = true;
+            inputErrorFlag = true;
         } else if (displayNameValidationResult == 2) {
             addError(InputError.INVALID_DISPLAYNAME_CHAR);
-            inputErrorFlage = true;
+            inputErrorFlag = true;
         }
 
         int passwordValidationResult = ValidationTester.isValidStrInput(userPassword);
         if (passwordValidationResult == 1) {
             addError(InputError.INVALID_PASSWORD_LENGTH);
-            inputErrorFlage = true;
+            inputErrorFlag = true;
         } else if (passwordValidationResult == 2) {
             addError(InputError.INVALID_PASSWORD_CHAR);
-            inputErrorFlage = true;
+            inputErrorFlag = true;
         }
         if (!ValidationTester.arePasswordsEqual(userPassword, userPasswordConfirmation)) {
             addError(InputError.PASSWORDS_DONT_MATCH);
-            inputErrorFlage = true;
+            inputErrorFlag = true;
         }
 
         // to do:
@@ -138,7 +138,7 @@ public class RegisterViewModel extends ViewModel {
          * add validations tests for profile pic
          */
 
-        if (inputErrorFlage)
+        if (inputErrorFlag)
             return;
 
         // Convert profile picture to base64
@@ -154,15 +154,14 @@ public class RegisterViewModel extends ViewModel {
             public void onResult(Result<Void> result) {
                 // Handle the result, update the UI accordingly
                 if (result.isSuccess()) {
-                    String str = userEmail + ", " + userDisplayName + ", " + userPassword;
-                    Log.d("test", "fuck yeah!");
-                    Log.d("test", str);
-                    // User registration success, perform necessary actions
+                    Log.d("test", "User registration success!");
+                    //To do:
+                    // go to login fragment
+                    isRegistrationSucceed.setValue(true);
                 } else {
-                    Log.d("test", "fail!");
-                    String str = userEmail + ", " + userDisplayName + ", " + userPassword;
-                    Log.d("test", str);
-                    // User registration failed, show an error message or take appropriate action
+                    Log.d("test", " User registration failed!");
+                    isRegistrationSucceed.setValue(false);
+
                 }
             }
         });

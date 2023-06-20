@@ -14,6 +14,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.ValidationTester;
@@ -36,13 +38,7 @@ public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     private Button registerBtn;
     private RegisterViewModel mViewModel;
-    private EditText userEmailInput;
-    private EditText userDisplayNameInput;
-    private EditText userPasswordInput;
-    private EditText userPasswordConfInput;
-
-    private static final int REQUEST_IMAGE_PICK = 1;
-    private ImageView profileImageView;
+    private Boolean isRegistrationSucceed;
     private Button uploadPictureBtn;
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -59,8 +55,9 @@ public class RegisterFragment extends Fragment {
         View rootView = this.binding.getRoot();
         return rootView;
     }
+
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
@@ -69,7 +66,16 @@ public class RegisterFragment extends Fragment {
             String userDisplayName = binding.displayNameInput.getText().toString();
             String userPassword = binding.passwordInput.getText().toString();
             String userPasswordConfirmation = binding.passwordConfirmationInput.getText().toString();
-            this.mViewModel.registerUser(userEmail,userDisplayName,userPassword,userPasswordConfirmation);
+            this.mViewModel.registerUser(userEmail, userDisplayName, userPassword, userPasswordConfirmation);
+            if (this.isRegistrationSucceed) {
+                Navigation.findNavController(binding
+                                .getRoot())
+                        .navigate(R.id.action_registerFragment_to_loginFragment);
+            } else {
+                Toast.makeText(requireContext(),
+                        "This email is already taken.", Toast.LENGTH_SHORT).show();
+
+            }
         });
         setProfilePicUploadingLogic();
         setErrMsgDisappearLogic();
@@ -78,9 +84,9 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mViewModel.getErrorSetLiveData().observe(getViewLifecycleOwner(),inputErrors -> {
-            for(RegisterViewModel.InputError inputError: inputErrors){
-                switch (inputError){
+        mViewModel.getErrorSetLiveData().observe(getViewLifecycleOwner(), inputErrors -> {
+            for (RegisterViewModel.InputError inputError : inputErrors) {
+                switch (inputError) {
                     case INVALID_EMAIL:
                         binding.emailInputLayout.setError(inputError.getErr());
                         break;
@@ -98,17 +104,21 @@ public class RegisterFragment extends Fragment {
                 }
                 mViewModel.removeError(inputError);
             }
-        } );
+        });
         mViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), bitmap -> {
             ImageView profileImageView = binding.profileImageView;
             profileImageView.setImageBitmap(bitmap);
             profileImageView.setVisibility(View.VISIBLE);
 
         });
+
+        mViewModel.getIsRegistrationSucceed().observe(getViewLifecycleOwner(), isSucceed -> {
+            this.isRegistrationSucceed = mViewModel.getIsRegistrationSucceed().getValue();
+        });
+
     }
 
-    private void setProfilePicUploadingLogic(){
-        this.profileImageView = binding.profileImageView;
+    private void setProfilePicUploadingLogic() {
         this.uploadPictureBtn = binding.uploadPictureBtn;
 
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -116,7 +126,7 @@ public class RegisterFragment extends Fragment {
                 Intent data = result.getData();
                 if (data != null) {
                     Uri imageUri = data.getData();
-                    mViewModel.handleImageSelection(requireContext().getContentResolver(),imageUri); // Call the handleImageSelection method
+                    mViewModel.handleImageSelection(requireContext().getContentResolver(), imageUri); // Call the handleImageSelection method
                 }
             }
         });
@@ -164,58 +174,6 @@ public class RegisterFragment extends Fragment {
         });
 
     }
-
-//    private void handleImageSelection(Uri imageUri) {
-//        try {
-//            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-//            profileImageView.setImageBitmap(bitmap);
-//            base64ProfilePic = convertBitmapToBase64(bitmap);
-//            profileImageView.setVisibility(View.VISIBLE);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private String convertBitmapToBase64(Bitmap bitmap) {
-//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-//        byte[] byteArray = byteArrayOutputStream.toByteArray();
-//        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-//    }
-
-
-    /**
-     * add validation logic to profile picture
-     * limit the size of the email, username, password and stuff
-     */
-//    public void handleRegistration() {
-//
-//        String userEmail = binding.emailInput.getText().toString();
-//        String userDisplayName = binding.displayNameInput.getText().toString();
-//        String userPassword = binding.passwordInput.getText().toString();
-//        String userPasswordConfirmation = binding.passwordConfirmationInput.getText().toString();
-//
-//
-//        if (!ValidationTester.isValidEmail(userEmail)) {
-//            binding.emailInputLayout.setError("The email address you entered is not valid.");
-//        }
-//
-//        int displayNameValidationResult = ValidationTester.isValidStrInput(userDisplayName);
-//        if (displayNameValidationResult == 1)
-//            binding.displayNameInputLayout.setError("The username has to have between 8 to 20 characters");
-//        else if (displayNameValidationResult == 2)
-//            binding.displayNameInputLayout.setError("The username can not have whitespace characters in it.");
-//
-//        int passwordValidationResult = ValidationTester.isValidStrInput(userPassword);
-//        if (passwordValidationResult == 1)
-//            binding.passwordInputLayout.setError("The password has to have between 8 to 20 characters");
-//        else if (passwordValidationResult == 2)
-//            binding.passwordInputLayout.setError("The password can not have whitespace characters in it.");
-//
-//        if (!ValidationTester.arePasswordsEqual(userPassword, userPasswordConfirmation))
-//            binding.passwordConfirmationInputLayout.setError("The passwords do not match.");
-//
-//    }
 
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
