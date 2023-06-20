@@ -18,7 +18,7 @@ import retrofit2.http.Path;
 
 public interface HTTPClientService {
     @POST("Users")
-    Call<Void> createUser(@Body User user);
+    Call<Void> createUser(@Body User.UserRegistration user);
 
     @FormUrlEncoded
     @POST("Token")
@@ -31,14 +31,16 @@ public interface HTTPClientService {
     Call<List<Chat>> getChats(@Header("Authorization") String token);
 
     @POST("Chats")
-    Call<ChatMetadata> createChat(@Header("Authorization") String token, @Body String username);
+    Call<CreateChatPOJO> createChat(@Header("Authorization") String token, @Body String username);
 
     @POST("Chats/{id}/Messages")
-    Call<Message> sendNewMessage(@Header("Authorization") String token,
-                                 @Body Message newMessage,
+    Call<Message> postMessage(@Header("Authorization") String token,
+                                 @Body String msg,
                                  @Path("id") int chatId);
 
     @GET("Chats/{id}/Messages")
-    Call<List<Message>> getAllMessages(@Header("Authorization") String token,
+    Call<List<Message>> getMessages(@Header("Authorization") String token,
                                        @Path("id") int id);
+
+
 }

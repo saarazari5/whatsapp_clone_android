@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName;
 
 public class Token {
     @SerializedName("authorization")
-    String token;
+    public String token;
 }

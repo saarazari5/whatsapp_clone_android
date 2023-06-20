@@ -51,8 +51,7 @@ public class ChatsAdapter extends
         holder.chatNameTxt.setText(chat.users.get(0).displayName);
         holder.lastMsgTxt.setText(chat.lastMessage.content);
         holder.chatProfile.setImageBitmap(Utils.getDecodedPic(chat.users.get(0).profilePic));
-        holder.dataTxt.setText(chat.lastMessage.date);
-
+        holder.dataTxt.setText(chat.lastMessage.created);
     }
 
     @Override
