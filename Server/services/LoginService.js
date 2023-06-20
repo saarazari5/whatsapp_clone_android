@@ -30,7 +30,8 @@ const handleLogin = async (req, res) => {
         // create a jwt for the login user
         const token = await user.generateAuthToken();
         // send Ok status meaning successfull connect
-        res.status(200).json({ authorization: token, message: 'Login successful' });
+        // res.status(200).json({ authorization: token, message: 'Login successful' });
+        res.status(200).send(token);
         console.log(`${user.username} has connected`);
     } catch (e) {
         console.log(`An Error has occurred: ${e.message}`);

@@ -50,16 +50,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         Repository.init(getApplicationContext(), this);
-        testRequests();
+//        testRequests();
     }
 
 
-    public void testRequests() {
-        Repository.getInstance()
-                .createUser(new User.UserRegistration("", "", "", ""), result -> {
-                    // do some shit
-                });
-    }
+//    public void testRequests() {
+//        Repository.getInstance()
+//                .createUser(new User.UserRegistration("", "", "", ""), result -> {
+//                    // do some shit
+//                });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

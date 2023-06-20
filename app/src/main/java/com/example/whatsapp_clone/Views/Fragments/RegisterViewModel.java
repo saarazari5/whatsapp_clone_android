@@ -154,14 +154,12 @@ public class RegisterViewModel extends ViewModel {
             public void onResult(Result<Void> result) {
                 // Handle the result, update the UI accordingly
                 if (result.isSuccess()) {
-                    String str = userEmail + ", " + userDisplayName + ", " + userPassword;
-                    Log.d("test", "fuck yeah!");
-                    Log.d("test", str);
-                    // User registration success, perform necessary actions
+                    Log.d("test", "User registration success!");
+                    // move to login fragment
                 } else {
-                    Log.d("test", "fail!");
-                    String str = userEmail + ", " + userDisplayName + ", " + userPassword;
-                    Log.d("test", str);
+                    Log.d("test", "User registration failed!");
+
+
                     // User registration failed, show an error message or take appropriate action
                 }
             }
