@@ -55,6 +55,8 @@ public class RegisterViewModel extends ViewModel {
         profilePictureLiveData = new MutableLiveData<>();
         errorSetLiveData = new MutableLiveData<>();
         errorSetLiveData.setValue(new HashSet<>());
+        isRegistrationSucceed = new MutableLiveData<>();
+        isRegistrationSucceed.setValue(false);
     }
 
 
