@@ -9,4 +9,11 @@
     <string name="add_contact">add contact</string>
     <string name="add_new_contact">Add new Contact</string>
     <string name="write_contact_name">write Contact name...</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register">Register</string>
+    <string name="user_profile_picture">user\'s profile picture</string>
+    <string name="change_profile_picture">Change profile picture</string>
 </resources>

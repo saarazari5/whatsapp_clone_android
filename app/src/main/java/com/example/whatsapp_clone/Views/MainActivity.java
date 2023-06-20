@@ -49,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
-
         Repository.init(getApplicationContext(), this);
-
         testRequests();
     }
 
