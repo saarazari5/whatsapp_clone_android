@@ -5,12 +5,16 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.whatsapp_clone.Model.Retrofit.HTTPClientDataSource;
+import com.example.whatsapp_clone.Model.User;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.ValidationTester;
 
 import java.io.ByteArrayOutputStream;
@@ -73,6 +77,7 @@ public class RegisterViewModel extends ViewModel {
             errorSetLiveData.setValue(errorSet);
         }
     }
+
     public LiveData<Bitmap> getProfilePictureLiveData() {
         return profilePictureLiveData;
     }
@@ -97,56 +102,69 @@ public class RegisterViewModel extends ViewModel {
     }
 
     public void registerUser(String userEmail, String userDisplayName, String userPassword, String userPasswordConfirmation) {
-        // Perform necessary validations on user inputs
-//        String userEmail = binding.emailInput.getText().toString();
-//        String userDisplayName = binding.displayNameInput.getText().toString();
-//        String userPassword = binding.passwordInput.getText().toString();
-//        String userPasswordConfirmation = binding.passwordConfirmationInput.getText().toString();
 
+        boolean inputErrorFlage = false;
 
         if (!ValidationTester.isValidEmail(userEmail)) {
             addError(InputError.INVALID_EMAIL);
+            inputErrorFlage = true;
         }
 
         int displayNameValidationResult = ValidationTester.isValidStrInput(userDisplayName);
-        if (displayNameValidationResult == 1)
+        if (displayNameValidationResult == 1) {
             addError(InputError.INVALID_DISPLAYNAME_LENGTH);
-        else if (displayNameValidationResult == 2)
+            inputErrorFlage = true;
+        } else if (displayNameValidationResult == 2) {
             addError(InputError.INVALID_DISPLAYNAME_CHAR);
+            inputErrorFlage = true;
+        }
 
         int passwordValidationResult = ValidationTester.isValidStrInput(userPassword);
-        if (passwordValidationResult == 1)
+        if (passwordValidationResult == 1) {
             addError(InputError.INVALID_PASSWORD_LENGTH);
-        else if (passwordValidationResult == 2)
+            inputErrorFlage = true;
+        } else if (passwordValidationResult == 2) {
             addError(InputError.INVALID_PASSWORD_CHAR);
-        if (!ValidationTester.arePasswordsEqual(userPassword, userPasswordConfirmation))
+            inputErrorFlage = true;
+        }
+        if (!ValidationTester.arePasswordsEqual(userPassword, userPasswordConfirmation)) {
             addError(InputError.PASSWORDS_DONT_MATCH);
+            inputErrorFlage = true;
+        }
 
         // to do:
         /**
          * add validations tests for profile pic
          */
 
+        if (inputErrorFlage)
+            return;
 
         // Convert profile picture to base64
 //        String base64ProfilePic = convertBitmapToBase64(profilePicture);
 
 
         // Create a User object
-//        User user = new User(userEmail, userDisplayName, userPassword, base64ProfilePic);
+        User user = new User(userEmail, userDisplayName, userPassword, base64ProfilePic);
 
         // Call the HTTPClientDataSource method to create the user
-//        source.createUser(user, new CompletionBlock<Void>() {
-//            @Override
-//            public void onResult(Result<Void> result) {
-//                // Handle the result, update the UI accordingly
-//                if (result.isSuccess()) {
-//                    // User registration success, perform necessary actions
-//                } else {
-//                    // User registration failed, show an error message or take appropriate action
-//                }
-//            }
-//        });
+        source.createUser(user, new CompletionBlock<Void>() {
+            @Override
+            public void onResult(Result<Void> result) {
+                // Handle the result, update the UI accordingly
+                if (result.isSuccess()) {
+                    String str = userEmail + ", " + userDisplayName + ", " + userPassword;
+                    Log.d("test", "fuck yeah!");
+                    Log.d("test", str);
+                    // User registration success, perform necessary actions
+                } else {
+                    Log.d("test", "fail!");
+                    String str = userEmail + ", " + userDisplayName + ", " + userPassword;
+                    Log.d("test", str);
+                    // User registration failed, show an error message or take appropriate action
+                }
+            }
+        });
     }
 
 
