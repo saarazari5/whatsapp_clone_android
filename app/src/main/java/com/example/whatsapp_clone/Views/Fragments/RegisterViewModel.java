@@ -143,27 +143,20 @@ public class RegisterViewModel extends ViewModel {
         if (inputErrorFlag)
             return;
 
-        // Convert profile picture to base64
-//        String base64ProfilePic = convertBitmapToBase64(profilePicture);
-
 
         // Create a User object
         User.UserRegistration newUser = new User.UserRegistration(userEmail,userPassword,userDisplayName,base64ProfilePic);
 
-        // Call the HTTPClientDataSource method to create the user
         repo.createUser(newUser, new CompletionBlock<Void>() {
             @Override
             public void onResult(Result<Void> result) {
                 // Handle the result, update the UI accordingly
                 if (result.isSuccess()) {
                     Log.d("test", "User registration success!");
-                    //To do:
-                    // go to login fragment
                     isRegistrationSucceed.setValue(true);
                 } else {
                     Log.d("test", " User registration failed!");
                     isRegistrationSucceed.setValue(false);
-
                 }
             }
         });
