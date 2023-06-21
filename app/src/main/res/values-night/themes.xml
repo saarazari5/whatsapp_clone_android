@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Whatsapp_clone" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/app_primary</item>
-        <item name="android:statusBarColor">@color/app_primary</item>
+        <item name="colorPrimary">@color/app_primary_dark</item>
+        <item name="android:statusBarColor">@color/app_primary_dark</item>
     </style>
 
     <style name="AppTitleFont">
@@ -10,6 +10,36 @@
         <item name="android:elevation">4dp</item>
         <item name="fontStyle">italic</item>
     </style>
+
+    <style name="TOOLBARBackground">
+        <item name="android:background">@color/app_primary_dark</item>
+    </style>
+
+    <style name="SETTING_TEXTS">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="SCREEN">
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <!-- Texts background if light mode is on  -->
+    <style name="TEXT">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Button background if light mode is on  -->
+    <style name="BUTTON">
+        <item name="android:backgroundTint">@color/app_primary_dark</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:radius"> 30dp </item>
+    </style>
+
+    <!-- Button background if light mode is on  -->
+    <style name="ICONS">
+        <item name="android:tint">@color/white</item>
+    </style>
+
 
     <style name="ChatBackground">
         <item name="android:background">@drawable/whatsapp_background_dark</item>

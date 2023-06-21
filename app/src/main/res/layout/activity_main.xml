@@ -1,4 +1,5 @@
 <LinearLayout
+    android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,7 +21,7 @@
             android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/app_primary"
+            style="@style/TOOLBARBackground"
             android:elevation="4dp"
             app:menu="@menu/default_menu"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"

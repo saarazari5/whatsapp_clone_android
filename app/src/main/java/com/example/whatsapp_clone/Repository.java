@@ -109,9 +109,18 @@ public class Repository {
 
     }
 
+    public void logOut() {
+        //todo: delete all room schemes and delete all cache related to current user
+    }
+
 
     public void createUser(User.UserRegistration user, CompletionBlock<Void> completionBlock) {
         httpClientDataSource.createUser(user, completionBlock);
+    }
+
+    public void setBaseURL(String baseURL) {
+        if ((baseURL.isEmpty())) {return;}
+        httpClientDataSource.setBaseUrl(baseURL);
     }
 
     // Static method to get the instance
