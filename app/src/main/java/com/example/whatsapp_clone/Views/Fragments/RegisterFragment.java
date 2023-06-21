@@ -67,10 +67,12 @@ public class RegisterFragment extends Fragment {
             String userPassword = binding.passwordInput.getText().toString();
             String userPasswordConfirmation = binding.passwordConfirmationInput.getText().toString();
             this.mViewModel.registerUser(userEmail, userDisplayName, userPassword, userPasswordConfirmation);
-            if (this.isRegistrationSucceed) {
-                Navigation.findNavController(binding
-                                .getRoot())
-                        .navigate(R.id.action_registerFragment_to_loginFragment);
+            if (Boolean.TRUE.equals(this.mViewModel.getIsRegistrationSucceed().getValue())) {
+//                Navigation.findNavController(binding
+//                                .getRoot())
+//                        .navigate(R.id.action_registerFragment_to_loginFragment);
+                Toast.makeText(requireContext(),
+                        "fuck yeah", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(requireContext(),
                         "This email is already taken.", Toast.LENGTH_SHORT).show();
