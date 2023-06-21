@@ -26,7 +26,6 @@ public class RegisterViewModel extends ViewModel {
     private Repository repo;
     private String base64ProfilePic;
     private MutableLiveData<Bitmap> profilePictureLiveData;
-    private MutableLiveData<Boolean> isRegistrationSucceed;
     private MutableLiveData<Set<InputError>> errorSetLiveData;
 
     enum InputError {
@@ -55,8 +54,6 @@ public class RegisterViewModel extends ViewModel {
         profilePictureLiveData = new MutableLiveData<>();
         errorSetLiveData = new MutableLiveData<>();
         errorSetLiveData.setValue(new HashSet<>());
-        isRegistrationSucceed = new MutableLiveData<>();
-        isRegistrationSucceed.setValue(false);
     }
 
 
@@ -84,9 +81,7 @@ public class RegisterViewModel extends ViewModel {
         return profilePictureLiveData;
     }
 
-    public LiveData<Boolean> getIsRegistrationSucceed(){
-        return isRegistrationSucceed;
-    }
+
 
     public void handleImageSelection(ContentResolver contentResolver, Uri imageUri) {
         try {
@@ -104,7 +99,8 @@ public class RegisterViewModel extends ViewModel {
      * add validation logic to profile picture
      * limit the size of the email, username, password and stuff
      */
-    public void registerUser(String userEmail, String userDisplayName, String userPassword, String userPasswordConfirmation) {
+//    public void registerUser(String userEmail, String userDisplayName, String userPassword, String userPasswordConfirmation) {
+    public void registerUser(String userEmail, String userDisplayName, String userPassword, String userPasswordConfirmation, RegisterFragment.RegistrationCallback registerFragmentViewCallBack) {
 
         boolean inputErrorFlag = false;
 
@@ -151,12 +147,15 @@ public class RegisterViewModel extends ViewModel {
             @Override
             public void onResult(Result<Void> result) {
                 // Handle the result, update the UI accordingly
+
                 if (result.isSuccess()) {
                     Log.d("test", "User registration success!");
-                    isRegistrationSucceed.setValue(true);
-                } else {
-                    Log.d("test", " User registration failed!");
-                    isRegistrationSucceed.setValue(false);
+                    registerFragmentViewCallBack.onRegistrationSuccess();
+                } else if (result.getErrorMessage().contains("Failed to connect"))
+                    registerFragmentViewCallBack.onServerConnectionFailure();
+                else {
+                    Log.d("test", "User registration failed!");
+                    registerFragmentViewCallBack.onRegistrationFailure();
                 }
             }
         });
