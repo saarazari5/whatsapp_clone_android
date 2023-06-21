@@ -35,4 +35,22 @@ public class Utils {
 
         return mock;
     }
+
+    public static String formatDateTime(String created) {
+        return "";
+    }
+
+    public static List<Message> mockMessages() {
+        ArrayList<Message> mock = new ArrayList<>();
+
+        for(int i =0 ; i<10 ; i++) {
+            if (i % 2 == 0) {
+                mock.add(new Message.Mock());
+            } else {
+                mock.add(new Message.Mock2());
+            }
+        }
+
+        return mock;
+    }
 }
