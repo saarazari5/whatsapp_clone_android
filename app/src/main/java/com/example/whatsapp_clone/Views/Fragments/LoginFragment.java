@@ -21,9 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.whatsapp_clone.R;
+import com.example.whatsapp_clone.UserPreferences;
 import com.example.whatsapp_clone.databinding.FragmentLoginBinding;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +37,6 @@ public class LoginFragment extends Fragment {
     private EditText etUsername, etPassword;
     private final List<String> errors = new ArrayList<>();
     private ProgressBar progressBar;
-    private FirebaseAuth authProfile;
-
-    /**
-     * Creates a new instance of LoginFragment.
-     *
-     * @return A LoginFragment instance.
-     */
-    public static LoginFragment newInstance() {
-        return new LoginFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,6 +45,7 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         // Create new view model for the login
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel.initializePreferences(this);
         return binding.getRoot();
     }
 
@@ -72,14 +62,10 @@ public class LoginFragment extends Fragment {
         }
 
         // Get the username and password inputs
-        etUsername = binding.usernameInput;
+        etUsername = binding.usernameInput.getEditText();
         etPassword = binding.passwordInput;
         // Initialize the progress bar
         progressBar = binding.progressBar;
-
-        // Get instance of the current user
-        authProfile = FirebaseAuth.getInstance();
-        FirebaseUser user = authProfile.getCurrentUser();
 
         // Observer
 //        Observer<User> userObserver = user -> {
@@ -151,11 +137,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (authProfile.getCurrentUser() != null) {
+        UserPreferences preferences = new UserPreferences(requireContext());
+        // Check if the user is already logged in
+        if (preferences.getBoolean("isLoggedIn")) {
             // Already logged in message
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
-            // Start user activity
-//            startActivity(new Intent(getContext(), UserActivity.class));
+            // Finish the current activity
             requireActivity().finish();
         } else {
             Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();
@@ -175,6 +162,7 @@ public class LoginFragment extends Fragment {
         // Validate username
         if (username.isEmpty()) {
             errors.add("Username is required");
+//            passwordLayout.error = getString(R.string.error);
             etUsername.setError("Username is required");
             etUsername.requestFocus();
             isValid = false;

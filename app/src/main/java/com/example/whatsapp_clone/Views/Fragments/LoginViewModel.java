@@ -1,59 +1,37 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
-import android.preference.Preference;
-import android.provider.SyncStateContract;
-import android.widget.Toast;
-
-import androidx.lifecycle.LiveData;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
-import com.example.whatsapp_clone.data.LoginRepository;
-import com.example.whatsapp_clone.data.Result;
-import com.example.whatsapp_clone.data.model.LoggedInUser;
-import com.example.whatsapp_clone.data.model.UserProfile;
-import com.google.firebase.auth.FirebaseAuth;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Utils.Result;
+import com.example.whatsapp_clone.Repository;
+import com.example.whatsapp_clone.UserPreferences;
 
 /**
  * ViewModel class for the login screen.
  */
 public class LoginViewModel extends ViewModel {
-    private LoginRepository loginRepository;
-    private UserPreference preferences;
-    private MutableLiveData<User> loggedInUser = new MutableLiveData<>();
-    private MutableLiveData<String> loggedInUserDetails = new MutableLiveData<>();
-    public MutableLiveData<String> token = new MutableLiveData<>();
-//    private MutableLiveData<Result.Error> loginError = new MutableLiveData<>();
-//    private FirebaseAuth auth;
+    private final Repository repository;
+    private UserPreferences preferences;
+    private final MutableLiveData<Result<String>> loginError = new MutableLiveData<>();
 
     public LoginViewModel() {
-        loginRepository = new LoginRepository();
-        apiService = ApiClient.createService(ApiService.class);
+        repository = Repository.getInstance();
     }
 
-    /**
-     * Get the logged-in user LiveData.
-     * @return LiveData representing the logged-in user.
-     */
-    public LiveData<User> getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    public LiveData<String> getLoggedInUserDetails() {
-        return loggedInUserDetails;
+    public void initializePreferences(Fragment loginFragment) {
+        this.preferences = new UserPreferences(loginFragment.requireContext());
     }
 
     /**
      * Get the login error LiveData.
      * @return LiveData representing the login error.
      */
-    public LiveData<Result.Error> getLoginError() {
+    public MutableLiveData<Result<String>> getLoginError() {
         return loginError;
     }
 
@@ -63,49 +41,52 @@ public class LoginViewModel extends ViewModel {
      * @param password The user's password.
      */
     public void loginUser(String username, String password) {
-        // Connect to Firebase
-//        auth = FirebaseAuth.getInstance();
-//        auth.signInWithEmailAndPassword(username, password);
-//        User user = new User(username, password, "picture");
-
         // Login request with username and password
-        loginRepository.handleLogin(username, password, new LoginRepository.LoginCallback() {
-            public void onSuccess(String token) {
-                // Get the user
-                loggedInUser.postValue(user);
-                saveUserPreferences(loggedInUser.username, loggedInUser.displayName, loggedInUser.profilePic, token);
-            }
-
-            public void onError(Result.Error error) {
-                // Fail login message
-//                Toast.makeText(getContext(), "Something went wrong!", Toast.LENGTH_LONG).show();
-                // Handle login error
-                loginError.setValue(error);
+        repository.handleLogin(username, password, new CompletionBlock<Token>() {
+            @Override
+            public void onResult(Result<Token> result) {
+                // Check if result is an error
+                if (result.isSuccess()) {
+                    // Get the user and send it to the chat screen
+                    handleUser(username, result.getData());
+                } else {
+                    // Handle the error message
+                    String errorMsg = result.getErrorMessage();
+                    loginError.setValue(new Result<String>(false, "ERROR", errorMsg));
+                }
             }
         });
+//        repository.handleLogin(username, password, new Callback<Token>() {
+//            public void onSuccess(String token) {
+//                // Get the user and send it to the chat screen
+//                handleUser(username, token);
+//            }
+//
+//            public void onError(Result error) {
+//                // Handle login error
+//                loginError.setValue(error);
+//            }
+//        });
     }
 
     /**
      * Get the user profile for the specified user ID.
-     * @param userId The user ID.
+     * @param username The user ID.
      */
-    private void getUserProfile(String userId) {
-        // Make an API call to get the user profile
-        Call<UserProfile> call = apiService.getUserProfile(userId);
-        call.enqueue(new Callback<UserProfile>() {
+    private void handleUser(String username, Object token) {
+        // Request user profile from the repository
+        repository.getUser(username, (String) token, new CompletionBlock<User>() {
             @Override
-            public void onResponse(Call<UserProfile> call, Response<UserProfile> response) {
-                if (response.isSuccessful()) {
-                    UserProfile userProfile = response.body();
-                    // Handle user profile response
+            public void onResult(Result<User> result) {
+                // Get the user and send it to the chat screen
+                if (result.isSuccess()) {
+                    User user = result.getData();
+                    saveUserPreferences(user.username, user.displayName, user.profilePic, (String) token);
                 } else {
-                    // Handle API error
+                    // Handle the error message
+                    String errorMsg = result.getErrorMessage();
+                    loginError.setValue(new Result<String>(false, "ERROR", errorMsg));
                 }
-            }
-
-            @Override
-            public void onFailure(Call<UserProfile> call, Throwable t) {
-                // Handle network failure
             }
         });
     }
@@ -121,38 +102,5 @@ public class LoginViewModel extends ViewModel {
         preferences.putString("displayName", displayName);
         preferences.putString("profilePic", profilePic);
         preferences.putString("token", token);
-        preferences.apply();
-    }
-
-    /**
-     * Send a login request to the server with the provided username and password.
-     * @param username    The user's username.
-     * @param password    The user's password.
-     */
-    private void sendLoginRequest(String username, String password) {
-        // Make an API call for login
-        Call<LoggedInUser> call = apiService.login(username, password);
-        call.enqueue(new Callback<LoggedInUser>() {
-            @Override
-            public void onResponse(Call<LoggedInUser> call, Response<LoggedInUser> response) {
-                if (response.isSuccessful()) {
-                    User user = response.body();
-                    // Successfull login message
-                    Toast.makeText(getContext(), "You are Logged in!", Toast.LENGTH_LONG).show();
-                    // Get the user
-                    loggedInUser.postValue(user);
-                    // Navigate to chat screen or perform other actions
-                } else {
-                    // Handle API error
-                    loginError.setValue(new Result.Error("Login failed"));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LoggedInUser> call, Throwable t) {
-                // Handle network failure
-                loginError.setValue(new Result.Error("Network error"));
-            }
-        });
     }
 }

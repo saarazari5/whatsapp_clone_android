@@ -46,135 +46,179 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/username_input"
+<!--            <EditText-->
+<!--                android:id="@+id/username_input"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_below="@id/login_form_title"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:autofillHints="Use email format: example@example.com"-->
+<!--                android:background="@drawable/input_bg"-->
+<!--                android:hint="@string/username_placeholder"-->
+<!--                android:inputType="textEmailAddress"-->
+<!--                android:paddingLeft="50dp"-->
+<!--                android:textSize="15sp" />-->
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/username_input"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/login_form_title"
+            android:layout_marginTop="10dp"
+            android:autofillHints="Use email format: example@example.com"
+            android:background="@drawable/input_bg"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/login_form_title"
-                android:layout_marginTop="10dp"
-                android:autofillHints="Use email format: example@example.com"
+                android:layout_height="wrap_content"
                 android:background="@drawable/input_bg"
-                android:hint="@string/username_placeholder"
                 android:inputType="textEmailAddress"
+                android:textSize="15sp"
                 android:paddingLeft="50dp"
-                android:textSize="15sp" />
-
-            <ImageView
-                android:id="@+id/email_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/username_input"
-                android:layout_alignTop="@id/username_input"
-                android:layout_alignBottom="@id/username_input"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:contentDescription="@string/username_icon"
-                android:padding="5dp"
-                android:src="@drawable/ic_username_icon"
-                app:tint="#666666" />
-
-            <EditText
-                android:id="@+id/password_input"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/username_input"
-                android:layout_marginTop="13dp"
-                android:autofillHints="Password has at least 8 characters"
-                android:background="@drawable/input_bg"
-                android:hint="@string/password_placeholder"
-                android:inputType="textPassword"
-                android:paddingLeft="50dp"
-                android:textSize="15sp" />
-
-            <ImageView
-                android:id="@+id/password_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/password_input"
-                android:layout_alignBottom="@id/password_input"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
-                android:contentDescription="@string/lock_icon"
-                android:padding="5dp"
-                android:src="@drawable/ic_password_icon"
-                app:tint="#666666" />
-
-            <ImageView
-                android:id="@+id/show_password_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/password_input"
-                android:layout_alignBottom="@id/password_input"
-                android:layout_alignParentRight="true"
-                android:contentDescription="@string/show_password"
-                android:padding="10dp"
-                android:src="@drawable/ic_show_password_icon"
-                app:tint="#666666" />
-
-            <Button
-                android:id="@+id/login_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/password_input"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="@color/loginBtn_color"
-                android:padding="12dp"
-                android:text="@string/loginBtn"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/register_link"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/login_button"
-                android:layout_marginTop="10dp"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="@string/register_link_text"
-                android:textColor="#666666"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/right_arrow_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/register_link"
-                android:layout_alignBottom="@id/register_link"
-                android:layout_alignParentRight="true"
-                android:contentDescription="@string/right_arrow_icon"
-                android:paddingStart="5dp"
-                android:paddingEnd="100dp"
-                android:src="@drawable/ic_right_arrow_icon"
-                android:textSize="24sp"
-                app:tint="#666666" />
-
-            <ImageView
-                android:id="@+id/left_arrow_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/register_link"
-                android:layout_alignBottom="@id/register_link"
-                android:contentDescription="@string/left_arrow_icon"
-                android:paddingStart="100dp"
-                android:paddingEnd="5dp"
-                android:src="@drawable/ic_left_arrow_icon"
-                android:textSize="24sp"
-                app:tint="#666666" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:elevation="10dp"
-                android:visibility="gone"
+                android:hint="@string/username_placeholder"
+                app:errorEnabled="true"
+                app:endIconMode="clear_text"
             />
 
-        </RelativeLayout>
-    </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/email_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/username_input"
+            android:layout_alignTop="@id/username_input"
+            android:layout_alignBottom="@id/username_input"
+            android:layout_marginStart="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:contentDescription="@string/username_icon"
+            android:padding="5dp"
+            android:src="@drawable/ic_username_icon"
+            app:tint="#666666" />
+
+        <EditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/username_input"
+            android:layout_marginTop="13dp"
+            android:autofillHints="Password has at least 8 characters"
+            android:background="@drawable/input_bg"
+            android:hint="@string/password_placeholder"
+            android:inputType="textPassword"
+            android:paddingLeft="50dp"
+            android:textSize="15sp" />
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/textField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="@string/password_placeholder"-->
+<!--            app:helperTextEnabled="true"-->
+<!--            app:errorEnabled="true"-->
+<!--            >-->
+<!--            -->
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="textPassword"-->
+<!--                app:startIconDrawable="@drawable/ic_password_icon"-->
+<!--                app:endIconMode="password_toggle"-->
+
+<!--            />-->
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <ImageView
+            android:id="@+id/password_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/password_input"
+            android:layout_alignBottom="@id/password_input"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:contentDescription="@string/lock_icon"
+            android:padding="5dp"
+            android:src="@drawable/ic_password_icon"
+            app:tint="#666666" />
+
+        <ImageView
+            android:id="@+id/show_password_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/password_input"
+            android:layout_alignBottom="@id/password_input"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/show_password"
+            android:padding="10dp"
+            android:src="@drawable/ic_show_password_icon"
+            app:tint="#666666" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password_input"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/loginBtn_color"
+            android:padding="12dp"
+            android:text="@string/loginBtn"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/register_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_button"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:padding="10dp"
+            android:text="@string/register_link_text"
+            android:textColor="#666666"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/right_arrow_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/register_link"
+            android:layout_alignBottom="@id/register_link"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/right_arrow_icon"
+            android:paddingStart="5dp"
+            android:paddingEnd="80dp"
+            android:src="@drawable/ic_right_arrow_icon"
+            android:textSize="24sp"
+            app:tint="#666666" />
+
+        <ImageView
+            android:id="@+id/left_arrow_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/register_link"
+            android:layout_alignBottom="@id/register_link"
+            android:contentDescription="@string/left_arrow_icon"
+            android:paddingStart="80dp"
+            android:paddingEnd="5dp"
+            android:src="@drawable/ic_left_arrow_icon"
+            android:textSize="24sp"
+            app:tint="#666666" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:elevation="10dp"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

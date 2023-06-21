@@ -8,7 +8,10 @@ import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,57 +24,95 @@ public class HTTPClientDataSource {
 
 
     public HTTPClientDataSource() {
-            initService();
+        initService();
     }
 
-    public void createUser(User user , CompletionBlock<Void> completionBlock) {
-        service.createUser(user)
-                .enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                        if(response.isSuccessful()) {
-                            completionBlock.onResult(new Result<>(true, null,""));
-                        } else {
-                            completionBlock.onResult(new Result<>(false, null, String.valueOf(response.code())));
-                        }
-                    }
+    public void createUser(User user, CompletionBlock<Void> completionBlock) {
+        service.createUser(user).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    completionBlock.onResult(new Result<>(true, null, ""));
+                } else {
+                    completionBlock.onResult(new Result<>(false, null, String.valueOf(response.code())));
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                        completionBlock.onResult(new Result<>(false, null, t.getMessage()));
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                completionBlock.onResult(new Result<>(false, null, t.getMessage()));
+            }
+        });
     }
 
     public void loginUser(String username, String password, CompletionBlock<Token> completionBlock) {
-        service.loginUser(username,password)
-                .enqueue(new Callback<Token>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
-                        if(response.isSuccessful()) {
-                            Token token = response.body();
-                            completionBlock.onResult(new Result<>(true, token, ""));
+        service.loginUser(username, password).enqueue(new Callback<Token>() {
+            @Override
+            public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
+                if (response.isSuccessful()) {
+                    Token token = response.body();
+                    completionBlock.onResult(new Result<>(true, token, ""));
+                } else {
+                    String errorMessage;
+                    try (ResponseBody errorBody = response.errorBody()) {
+                        if (errorBody != null) {
+                            errorMessage = errorBody.string();
                         } else {
-                            completionBlock.onResult(new Result<>(false, null, ""));
+                            errorMessage = "Unknown error occurred";
                         }
+                    } catch (IOException e) {
+                        errorMessage = "Error reading response body";
                     }
+                    completionBlock.onResult(new Result<>(false, null, errorMessage));
+                }
+            }
 
-                    @Override
-                    public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
-                        completionBlock.onResult(new Result<>(false, null, t.getMessage()));
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
+                completionBlock.onResult(new Result<>(false, null, t.getMessage()));
+            }
+        });
     }
+
+    public void getUserDetails(String token, String username, CompletionBlock<User> completionBlock) {
+        service.getUserDetails(token, username).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    completionBlock.onResult(new Result<>(true, user, ""));
+                } else {
+                    String errorMessage;
+                    try (ResponseBody errorBody = response.errorBody()) {
+                        if (errorBody != null) {
+                            errorMessage = errorBody.string();
+                        } else {
+                            errorMessage = "Unknown error occurred";
+                        }
+                    } catch (IOException e) {
+                        errorMessage = "Error reading response body";
+                    }
+                    completionBlock.onResult(new Result<>(false, null, errorMessage));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                completionBlock.onResult(new Result<>(false, null, t.getMessage()));
+            }
+        });
+    }
+
 
     public void getChats(String token, CompletionBlock<List<Chat>> completionBlock) {
         service.getChats(token)
                 .enqueue(new Callback<List<Chat>>() {
                     @Override
                     public void onResponse(@NonNull Call<List<Chat>> call, @NonNull Response<List<Chat>> response) {
-                        if(response.isSuccessful()) {
+                        if (response.isSuccessful()) {
                             List<Chat> chats = response.body();
-                            completionBlock.onResult(new Result<>(true, chats,""));
-                        }else {
+                            completionBlock.onResult(new Result<>(true, chats, ""));
+                        } else {
                             completionBlock.onResult(new Result<>(false, null, ""));
                         }
                     }
@@ -84,7 +125,7 @@ public class HTTPClientDataSource {
     }
 
     public void createChat(String token, String username, CompletionBlock<Chat> response) {
-        
+
     }
 
 
