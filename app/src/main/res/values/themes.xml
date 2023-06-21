@@ -5,5 +5,16 @@
         <item name="android:statusBarColor">@color/app_primary</item>
     </style>
 
+    <style name="AppTitleFont">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:elevation">4dp</item>
+        <item name="fontStyle">italic</item>
+    </style>
+
+
+    <style name="ChatBackground">
+        <item name="android:background">@drawable/whats_app_clone_background</item>
+    </style>
+
     <style name="Theme.Whatsapp_clone" parent="Base.Theme.Whatsapp_clone" />
 </resources>

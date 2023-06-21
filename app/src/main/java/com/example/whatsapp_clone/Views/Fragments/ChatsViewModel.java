@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Delegates.SearchQueryObserver;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Model.Utils.Utils;
+import com.example.whatsapp_clone.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,29 @@ public class ChatsViewModel extends ViewModel implements SearchQueryObserver {
         chats = Utils.mockChats();
         filteredChats = chats;
         chatsMutableData.postValue(chats);
+    }
+
+    public void fetchChats() {
+        Repository.getInstance()
+                .getChats("", result -> {
+                    if(result.isSuccess()) {
+                        chats = result.getData();
+                        filteredChats = result.getData();
+                        chatsMutableData.postValue(chats);
+                    }
+                });
+    }
+
+    public void createChat(String contact) {
+        Repository
+                .getInstance()
+                .createChat("", contact, result -> {
+                    if (result.isSuccess()) {
+                        chats.add(result.getData());
+                        filteredChats.add(result.getData());
+                        chatsMutableData.postValue(filteredChats);
+                    }
+                });
     }
 
     @Override
@@ -54,9 +80,5 @@ public class ChatsViewModel extends ViewModel implements SearchQueryObserver {
             filteredChats = newFilteredChats;
             chatsMutableData.postValue(newFilteredChats);
         }
-    }
-
-    public boolean addContact(String query) {
-        return true;
     }
 }
