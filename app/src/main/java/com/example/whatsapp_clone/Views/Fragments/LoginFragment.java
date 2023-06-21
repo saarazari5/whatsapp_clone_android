@@ -43,15 +43,15 @@ public class LoginFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false);
-        // Create new view model for the login
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        loginViewModel.initializePreferences(this);
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Create new view model for the login
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel.initializePreferences(this);
 
         // Set the login title in the activity's action bar
         if (getActivity() != null) {
@@ -66,26 +66,6 @@ public class LoginFragment extends Fragment {
         etPassword = binding.passwordInput;
         // Initialize the progress bar
         progressBar = binding.progressBar;
-
-        // Observer
-//        Observer<User> userObserver = user -> {
-//            Bundle args = new Bundle();
-//            args.putString("current_chat_name", chat.users.get(0).username);
-//            args.putString("current_chat_image", chat.users.get(0).displayName);
-//            args.putInt("current_chat_id", chat.chatId);
-//
-//            Navigation.findNavController(binding.getRoot())
-//                    .navigate(R.id.action_loginFragment_to_chatsFragment,args);
-//        };
-
-//        loginViewModel.getLoggedInUser().observe(this.getViewLifecycleOwner(), userObserver);
-
-
-//        Observer<String> tokenObserver = s -> {
-//            String username = binding.usernameInput.getText().toString();
-//            loginViewModel.getUserFromDB();
-//        };
-
 
         // Toggle password visibility
         binding.showPasswordIcon.setOnClickListener(v -> {

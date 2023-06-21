@@ -154,7 +154,6 @@ public class RegisterViewModel extends ViewModel {
                 if (result.isSuccess()) {
                     Log.d("test", "User registration success!");
                     isRegistrationSucceed.setValue(true);
-                } 
                 } else {
                     Log.d("test", " User registration failed!");
                     isRegistrationSucceed.setValue(false);
