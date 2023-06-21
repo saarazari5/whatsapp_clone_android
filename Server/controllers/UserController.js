@@ -18,17 +18,25 @@ const deleteUser = async (req, res) => {
 }
 
 const createUser = async (req, res) => {
-    console.log("heeeeeeeeyyyyyy");// test
 
-    res.json(await UserService.createUser(
+    
+    // res.json(await UserService.createUser(
+    //     req.body.username,
+    //     req.body.password,
+    //     req.body.displayName,
+    //     req.body.profilePic));
+    const toSend = await UserService.createUser(
         req.body.username,
         req.body.password,
         req.body.displayName,
-        req.body.profilePic));
+        req.body.profilePic);
 
-    console.log(res.status);
+    res.status(toSend.status).send(toSend.body);
+    console.log(res.statusCode);
 
 };
+
+
 
 
 module.exports = { getAllUsers, createUser, getUserById, updateUser, deleteUser };

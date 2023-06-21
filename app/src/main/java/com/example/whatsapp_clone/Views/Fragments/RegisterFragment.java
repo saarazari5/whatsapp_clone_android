@@ -66,16 +66,24 @@ public class RegisterFragment extends Fragment {
             String userDisplayName = binding.displayNameInput.getText().toString();
             String userPassword = binding.passwordInput.getText().toString();
             String userPasswordConfirmation = binding.passwordConfirmationInput.getText().toString();
-            this.mViewModel.registerUser(userEmail, userDisplayName, userPassword, userPasswordConfirmation);
-            if (this.isRegistrationSucceed) {
-                Navigation.findNavController(binding
-                                .getRoot())
-                        .navigate(R.id.action_registerFragment_to_loginFragment);
-            } else {
-                Toast.makeText(requireContext(),
-                        "This email is already taken.", Toast.LENGTH_SHORT).show();
 
-            }
+            this.mViewModel.registerUser(userEmail, userDisplayName, userPassword, userPasswordConfirmation, new RegistrationCallback() {
+                @Override
+                public void onRegistrationSuccess() {
+                    Navigation.findNavController(binding.getRoot())
+                            .navigate(R.id.action_registerFragment_to_loginFragment);
+                }
+                @Override
+                public void onRegistrationFailure() {
+                    Toast.makeText(requireContext(),
+                            "This email is already taken.", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onServerConnectionFailure(){
+                    Toast.makeText(requireContext(),
+                            "Failed to connect to the server.", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
         setProfilePicUploadingLogic();
         setErrMsgDisappearLogic();
@@ -109,13 +117,7 @@ public class RegisterFragment extends Fragment {
             ImageView profileImageView = binding.profileImageView;
             profileImageView.setImageBitmap(bitmap);
             profileImageView.setVisibility(View.VISIBLE);
-
         });
-
-        mViewModel.getIsRegistrationSucceed().observe(getViewLifecycleOwner(), isSucceed -> {
-            this.isRegistrationSucceed = mViewModel.getIsRegistrationSucceed().getValue();
-        });
-
     }
 
     private void setProfilePicUploadingLogic() {
@@ -190,5 +192,12 @@ public class RegisterFragment extends Fragment {
         binding = null;
     }
 
+    public interface RegistrationCallback {
+        void onRegistrationSuccess();
+
+        void onRegistrationFailure();
+
+        void onServerConnectionFailure();
+    }
 
 }

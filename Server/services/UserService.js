@@ -11,30 +11,37 @@ const getAllUsers = async (req, res) => {
 }
 
 const createUser = async (username, password, displayName, profilePic) => {
-    const newUser = new User({ 
+    const newUser = new User({
         username: username,
         displayName: displayName,
         password: password,
-        profilePic: profilePic});
+        profilePic: profilePic
+    });
     try {
 
         await newUser.save();
-        console.log("ok!");
+        console.log('User saved successfully:', newUser);
         return {
-            status: 200
-        }
+            status: 200,
+            body: {
+                username: username,
+                displayName: displayName,
+                profilePic: profilePic
+            }
+        };
     }
-    catch (e) {
-        console.log("error!");
-        console.log(e);
+    catch (error) {
+        // console.log(error);
+        console.log("error");
         return {
-            status:409
+            title: "conflict",
+            status: 409
         }
     }
 };
 
 const getUser = async (username) => {
-    const dbResult = await User.findOne({username});
+    const dbResult = await User.findOne({ username });
     return dbResult;
 
 }
@@ -90,4 +97,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { getAllUsers, createUser, getUser ,getUserById, updateUser, deleteUser };
+module.exports = { getAllUsers, createUser, getUser, getUserById, updateUser, deleteUser };
