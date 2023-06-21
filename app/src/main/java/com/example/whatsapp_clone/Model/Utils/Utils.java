@@ -8,6 +8,7 @@ import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.User;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,12 @@ public class Utils {
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
+    public static String convertBitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
     public static List<Chat> mockChats() {
         ArrayList<Chat> mock = new ArrayList<>();
         for(int i =0 ; i<10 ; i++) {
