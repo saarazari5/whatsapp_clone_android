@@ -18,7 +18,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Repository singleton , all Communication with ROOM and RETROFIT should be from this class
  * everything else will not be allowed!!!!
@@ -65,15 +64,15 @@ public class Repository {
         });
     }
 
-    public void getMessages(String token, Chat chat, CompletionBlock<List<Message>> completionBlock) {
-            roomClientDataSource.findMessages(chat.users.get(0).username)
+    public void getMessages(String token, int chatId, User user, CompletionBlock<List<Message>> completionBlock) {
+            roomClientDataSource.findMessages(user.username)
                     .observe(LOWeakReference.get(), messages -> {
                         if (!messages.isEmpty()) {
                             completionBlock
                                 .onResult(new Result<>(true, messages, ""));
                             return;
                         }
-                        httpClientDataSource.getMessages(token, chat.chatId, result -> {
+                        httpClientDataSource.getMessages(token, chatId, result -> {
                             if(result.isSuccess()) {
                                 roomClientDataSource.insert(result.getData().toArray(new Message[0]));
                             }

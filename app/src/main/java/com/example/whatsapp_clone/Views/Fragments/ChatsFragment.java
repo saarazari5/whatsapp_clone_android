@@ -41,6 +41,7 @@ public class ChatsFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(ChatsViewModel.class);
         MainActivity activity = ((MainActivity) requireActivity());
         activity.state = MainActivity.State.CHATS;
+        activity.invalidateOptionsMenu();
         activity.observers.add(mViewModel);
         return binding.getRoot();
     }
@@ -54,6 +55,7 @@ public class ChatsFragment extends Fragment {
         setupObservers();
 
         mViewModel.mockChats();
+        //mViewModel.fetchChats();
     }
 
 
@@ -88,13 +90,9 @@ public class ChatsFragment extends Fragment {
             //handle Add ContactButton
             addBtn.setOnClickListener(view2 -> {
                 EditText addContactEt = customLayout.findViewById(R.id.add_contact_et);
-                if (mViewModel.addContact(addContactEt.getText().toString())) {
-                    dialog.dismiss();
-                } else {
-                    Toast.makeText(requireContext(),
-                            "Contact not found...",
-                            Toast.LENGTH_SHORT).show();
-                }
+                //todo: consider add error handling
+                mViewModel.createChat(addContactEt.getText().toString());
+                dialog.dismiss();
             });
             dialog.show();
         });
@@ -128,7 +126,8 @@ public class ChatsFragment extends Fragment {
     private void navigateToMessages(Chat chat) {
         Bundle args = new Bundle();
         args.putString("current_chat_name", chat.users.get(0).username);
-        args.putString("current_chat_image", chat.users.get(0).displayName);
+        args.putString("current_chat_displayName", chat.users.get(0).displayName);
+        args.putString("current_chat_profilePic", chat.users.get(0).profilePic);
         args.putInt("current_chat_id", chat.chatId);
 
         Navigation.findNavController(binding

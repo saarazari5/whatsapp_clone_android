@@ -16,4 +16,11 @@
     <string name="register">Register</string>
     <string name="user_profile_picture">user\'s profile picture</string>
     <string name="change_profile_picture">Change profile picture</string>
+    <string name="back_button">back button</string>
+    <string name="register_title">Register</string>
+    <string name="chat_title">Chats</string>
+    <string name="login_title">Login</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="send">Send</string>
+
 </resources>

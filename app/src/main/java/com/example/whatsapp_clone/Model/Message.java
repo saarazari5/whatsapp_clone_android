@@ -29,4 +29,13 @@ public class Message {
                     "12/06/2023" );
         }
     }
+
+    public static class Mock2 extends  Message {
+        public Mock2() {
+            super(2,
+                    new User.Mock2(),
+                    "Lorem Ipsum, Ipsum Lorem !!! ",
+                    "12/06/2023" );
+        }
+    }
 }
