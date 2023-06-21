@@ -1,5 +1,7 @@
 package com.example.whatsapp_clone.Model.Retrofit;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.example.whatsapp_clone.Model.Chat;
@@ -8,6 +10,8 @@ import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 import retrofit2.Call;
@@ -23,7 +27,7 @@ public class HTTPClientDataSource {
 
 
     public HTTPClientDataSource() {
-            initService();
+        initService();
     }
 
     public void  createUser(User.UserRegistration user , CompletionBlock<Void> completionBlock) {
@@ -40,6 +44,7 @@ public class HTTPClientDataSource {
 
                     @Override
                     public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        Log.d("test", "the registration failed!");
                         completionBlock.onResult(new Result<>(false, null, t.getMessage()));
                     }
                 });
@@ -155,12 +160,25 @@ public class HTTPClientDataSource {
 
 
 
+//    private void initService() {
+//        Retrofit retrofit = new Retrofit
+//                .Builder()
+//                .baseUrl(baseUrl)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        this.service = retrofit.create(HTTPClientService.class);
+//    }
 
     private void initService() {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         Retrofit retrofit = new Retrofit
                 .Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         this.service = retrofit.create(HTTPClientService.class);

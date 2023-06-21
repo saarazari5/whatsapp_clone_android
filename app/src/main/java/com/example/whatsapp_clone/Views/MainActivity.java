@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarTitle = binding.myToolbar.findViewById(R.id.toolbar_title);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
