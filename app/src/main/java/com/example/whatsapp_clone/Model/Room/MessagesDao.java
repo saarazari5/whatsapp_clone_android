@@ -7,15 +7,16 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.MessageEntity;
 
 import java.util.List;
 
 @Dao
 public interface MessagesDao {
 
-    @Query("SELECT * FROM message WHERE username = :sender")
-    public LiveData<List<Message>> findMessages(String sender);
+    @Query("SELECT * FROM message WHERE chatId = :chatId")
+    public LiveData<List<MessageEntity>> findMessages(int chatId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insert(Message ... message);
+    public void insert(MessageEntity ... message);
 }

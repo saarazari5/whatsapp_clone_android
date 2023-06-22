@@ -54,8 +54,8 @@ public class ChatsFragment extends Fragment {
         handleAddContactButton();
         setupObservers();
 
-        mViewModel.mockChats();
-        //mViewModel.fetchChats();
+        //mViewModel.mockChats();
+        mViewModel.fetchChats();
     }
 
 
