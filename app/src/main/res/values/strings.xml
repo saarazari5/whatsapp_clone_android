@@ -22,5 +22,8 @@
     <string name="login_title">Login</string>
     <string name="enter_message">Enter Message</string>
     <string name="send">Send</string>
+    <string name="set_url">set URL</string>
+    <string name="night_mode">night mode</string>
+    <string name="logout">Logout</string>
 
 </resources>
