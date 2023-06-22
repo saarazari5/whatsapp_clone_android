@@ -39,6 +39,14 @@ public class User {
                     Utils.mockImage);
         }
     }
+
+    public static class Mock2 extends User {
+        public Mock2() {
+            super("oriKatzir@gmail.com",
+                    "ori katzir",
+                    Utils.mockImage);
+        }
+    }
 }
 
 
