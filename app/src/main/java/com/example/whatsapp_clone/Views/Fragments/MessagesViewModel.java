@@ -3,21 +3,19 @@ package com.example.whatsapp_clone.Views.Fragments;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.whatsapp_clone.Model.Chat;
-import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.Adapters.MessageToMessageEntityAdapter;
+import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
-import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
-import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.Repository;
 
 import java.util.List;
 
 public class MessagesViewModel extends ViewModel {
-    private final MutableLiveData<List<Message>> messagesMutableData = new MutableLiveData<>();
-    private List<Message> messages;
+    private final MutableLiveData<List<MessageEntity>> messagesMutableData = new MutableLiveData<>();
+    private List<MessageEntity> messages;
 
-    public MutableLiveData<List<Message>> getMessagesMutableData() {
+    public MutableLiveData<List<MessageEntity>> getMessagesMutableData() {
         return messagesMutableData;
     }
 
@@ -49,7 +47,7 @@ public class MessagesViewModel extends ViewModel {
     }
 
     public void mockMessages() {
-        messages = Utils.mockMessages();
+        messages = new MessageToMessageEntityAdapter().adapt(Utils.mockMessages(),1);
         messagesMutableData.postValue(messages);
 
     }

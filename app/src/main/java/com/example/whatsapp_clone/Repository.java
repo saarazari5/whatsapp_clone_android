@@ -5,11 +5,15 @@ import android.content.Context;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+
+import com.example.whatsapp_clone.Model.Adapters.MessageToMessageEntityAdapter;
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.Retrofit.CreateChatPOJO;
 import com.example.whatsapp_clone.Model.Retrofit.HTTPClientDataSource;
 import com.example.whatsapp_clone.Model.Room.RoomClientDataSource;
+import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
@@ -64,8 +68,8 @@ public class Repository {
         });
     }
 
-    public void getMessages(String token, int chatId, User user, CompletionBlock<List<Message>> completionBlock) {
-            roomClientDataSource.findMessages(user.username)
+    public void getMessages(String token, int chatId, User user, CompletionBlock<List<MessageEntity>> completionBlock) {
+            roomClientDataSource.findMessages(chatId)
                     .observe(LOWeakReference.get(), messages -> {
                         if (!messages.isEmpty()) {
                             completionBlock
@@ -73,10 +77,16 @@ public class Repository {
                             return;
                         }
                         httpClientDataSource.getMessages(token, chatId, result -> {
+                            Result<List<MessageEntity>> res;
                             if(result.isSuccess()) {
-                                roomClientDataSource.insert(result.getData().toArray(new Message[0]));
+                                List<MessageEntity> messageEntities = new MessageToMessageEntityAdapter()
+                                                                     .adapt(result.getData(), chatId);
+                                roomClientDataSource.insert(messageEntities.toArray(new MessageEntity[0]));
+                                res = new Result<>(true, messageEntities, "");
+                            } else {
+                                res = new Result<>(result.isSuccess(), null, result.getErrorMessage());
                             }
-                            completionBlock.onResult(result);
+                            completionBlock.onResult(res);
                         });
                     });
     }
@@ -101,12 +111,26 @@ public class Repository {
     public void addMessage(String token,
                            String msg,
                            int chatId,
-                           CompletionBlock<Message> completionBlock){
+                           CompletionBlock<MessageEntity> completionBlock){
         httpClientDataSource.postMessage(token, msg, chatId, result -> {
-            if (result.isSuccess()) { roomClientDataSource.insert(result.getData()); }
-            completionBlock.onResult(result);
+            Result<MessageEntity> res;
+            if (result.isSuccess()) {
+                MessageEntity messageEntity = new MessageToMessageEntityAdapter().adapt(result.getData(), chatId);
+                roomClientDataSource.insert(messageEntity);
+                res = new Result<>(true, messageEntity,"");
+            } else {
+                res = new Result<>(false, null, result.getErrorMessage());
+            }
+            completionBlock.onResult(res);
         });
+    }
 
+    public void loginUser(String username, String password, CompletionBlock<Token> completionBlock) {
+        httpClientDataSource.loginUser(username, password, completionBlock);
+    }
+
+    public void getUserDetails(String username, String token, CompletionBlock<User> completionBlock) {
+        httpClientDataSource.getUserDetails(username, token, completionBlock);
     }
 
     public void logOut() {

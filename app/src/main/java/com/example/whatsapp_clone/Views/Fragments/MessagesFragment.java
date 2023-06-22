@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Views.Adapters.MessagesAdapter;
@@ -76,7 +77,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private void setupObservers() {
-        final Observer<List<Message>> messagesObserver = messages -> {
+        final Observer<List<MessageEntity>> messagesObserver = messages -> {
             messagesRv.setAdapter(new MessagesAdapter(messages));
             messagesRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         };
@@ -94,6 +95,7 @@ public class MessagesFragment extends Fragment {
         binding.buttonGchatSend
                 .setOnClickListener(view -> {
                     String msg = binding.editGchatMessage.getText().toString();
+                    binding.editGchatMessage.setText("");
                     mViewModel.addMessages(msg,chatId);
                 });
     }

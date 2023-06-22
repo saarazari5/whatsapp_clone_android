@@ -71,6 +71,27 @@ public class HTTPClientDataSource {
                 });
     }
 
+    public void getUserDetails(String username, String token, CompletionBlock<User> completionBlock) {
+        service.getUserDetails(token, username)
+                .enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
+                        if(response.isSuccessful()) {
+                            User currentUser = response.body();
+                            assert currentUser != null;
+                            completionBlock.onResult(new Result<>(true, currentUser, ""));
+                        } else {
+                            completionBlock.onResult(new Result<>(false, null, ""));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
+                        completionBlock.onResult(new Result<>(false, null, t.getMessage()));
+                    }
+                });
+    }
+
     public void getChats(String token, CompletionBlock<List<Chat>> completionBlock) {
         service.getChats(token)
                 .enqueue(new Callback<List<Chat>>() {
@@ -154,20 +175,6 @@ public class HTTPClientDataSource {
                     }
                 });
     }
-
-
-
-
-
-//    private void initService() {
-//        Retrofit retrofit = new Retrofit
-//                .Builder()
-//                .baseUrl(baseUrl)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//
-//        this.service = retrofit.create(HTTPClientService.class);
-//    }
 
     private void initService() {
         Gson gson = new GsonBuilder()

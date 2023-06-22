@@ -8,6 +8,7 @@ import androidx.room.Room;
 
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.MessageEntity;
 
 import java.util.List;
 
@@ -27,13 +28,13 @@ public class RoomClientDataSource {
                 .execute(chats);
     }
 
-    public void insert(Message ... messages) {
+    public void insert(MessageEntity ... messages) {
         new insertMessageAsyncTask(roomClientDataSource.messagesDao())
                 .execute(messages);
     }
 
-    public LiveData<List<Message>>findMessages(String sender) {
-        return roomClientDataSource.messagesDao().findMessages(sender);
+    public LiveData<List<MessageEntity>>findMessages(int chatId) {
+        return roomClientDataSource.messagesDao().findMessages(chatId);
     }
 
     public LiveData<List<Chat>>findChats() {
@@ -55,7 +56,7 @@ public class RoomClientDataSource {
         }
     }
 
-    private static class insertMessageAsyncTask extends AsyncTask<Message, Void , Void> {
+    private static class insertMessageAsyncTask extends AsyncTask<MessageEntity, Void , Void> {
 
         private MessagesDao mMessageAsyncTaskDao;
 
@@ -66,7 +67,7 @@ public class RoomClientDataSource {
         }
 
         @Override
-        protected Void doInBackground(Message... messages) {
+        protected Void doInBackground(MessageEntity... messages) {
              mMessageAsyncTaskDao.insert(messages);
             return null;
         }
