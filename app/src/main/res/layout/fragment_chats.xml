@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/app_primary_light"
+        app:backgroundTint="@color/app_primary"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:contentDescription="@string/add_contact"
         android:src="@drawable/baseline_person_add_24"

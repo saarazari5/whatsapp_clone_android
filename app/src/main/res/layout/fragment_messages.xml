@@ -65,7 +65,7 @@
             android:elevation="4dp"
             android:background="?attr/selectableItemBackground"
             android:text="@string/send"
-            android:textColor="@color/app_primary_dark" />
+            android:textColor="@color/app_primary" />
 
     </RelativeLayout>
 

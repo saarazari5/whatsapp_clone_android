@@ -16,7 +16,7 @@ import com.example.whatsapp_clone.Model.Room.RoomClientDataSource;
 import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
-]import com.example.whatsapp_clone.Model.Utils.Result;
+import com.example.whatsapp_clone.Model.Utils.Result;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
