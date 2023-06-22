@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray"
+    android:background="@color/backgrounRegister"
     tools:context=".Views.Fragments.RegisterFragment">
 
     <ScrollView
@@ -25,17 +25,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/InputLayoutStyle"
                 android:hint="@string/email"
-                app:boxStrokeColor="@color/app_primary_light"
                 app:boxStrokeWidth="2dp"
-                app:endIconMode="clear_text"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/app_primary_light">
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailInput"
@@ -47,14 +42,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/displayNameInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/InputLayoutStyle"
                 android:hint="@string/username"
-                app:boxStrokeColor="@color/app_primary_light"
                 app:boxStrokeWidth="2dp"
-                app:endIconMode="clear_text"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/app_primary_light">
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/displayNameInput"
@@ -66,14 +57,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/PasswordLayoutStyle"
                 android:hint="@string/password"
-                app:boxStrokeColor="@color/app_primary_light"
                 app:boxStrokeWidth="2dp"
-                app:endIconMode="password_toggle"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/app_primary_light">
+                app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordInput"
@@ -85,22 +72,18 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordConfirmationInputLayout"
+                style="@style/PasswordLayoutStyle"
+                app:boxStrokeWidth="2dp"
+                android:hint="@string/confirm_password"
+                app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordConfirmationInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/confirm_password"
-                app:boxStrokeColor="@color/app_primary_light"
-                app:boxStrokeWidth="2dp"
-                app:endIconMode="password_toggle"
-                app:errorEnabled="true"
-                app:hintTextColor="@color/app_primary_light">
+                android:inputType="textPassword" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/passwordConfirmationInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 style="Widget.Material3.Button.OutlinedButton"
