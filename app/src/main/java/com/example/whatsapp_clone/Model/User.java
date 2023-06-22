@@ -1,13 +1,12 @@
 package com.example.whatsapp_clone.Model;
 
 import com.example.whatsapp_clone.Model.Utils.Utils;
+import com.google.gson.annotations.SerializedName;
 
 public class User {
-
     public String username;
     public String displayName;
     public String profilePic;
-
 
     public User(String username, String displayName,String profilePic) {
         this.username = username;
@@ -25,7 +24,7 @@ public class User {
 
         String password;
         public UserRegistration(String username,
-                                String password ,
+                                String password,
                                 String displayName,
                                 String profilePic) {
             super(username, displayName, profilePic);
