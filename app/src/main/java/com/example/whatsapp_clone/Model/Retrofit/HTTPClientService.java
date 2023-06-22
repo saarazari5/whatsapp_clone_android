@@ -24,8 +24,8 @@ public interface HTTPClientService {
     @POST("Token")
     Call<Token> loginUser(@Field("username") String username, @Field("password") String password);
 
-    @GET("Users/{username}")
-    Call<User> getUserDetails(@Header("Authorization") String token, @Path("username") String username);
+    @GET("Users/{id}")
+    Call<User> getUserDetails(@Header("Authorization") String token, @Path("id") String username);
 
     @GET("Chats")
     Call<List<Chat>> getChats(@Header("Authorization") String token);

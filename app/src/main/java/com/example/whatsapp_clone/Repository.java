@@ -1,22 +1,27 @@
 package com.example.whatsapp_clone;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.Retrofit.CreateChatPOJO;
 import com.example.whatsapp_clone.Model.Retrofit.HTTPClientDataSource;
-import com.example.whatsapp_clone.Model.Room.RoomClientDataSource;
+import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Room.RoomClientDataSource;
 import com.example.whatsapp_clone.Model.Utils.Result;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.http.HEAD;
 
 /**
  * Repository singleton , all Communication with ROOM and RETROFIT should be from this class
@@ -28,12 +33,12 @@ import java.util.List;
  */
 public class Repository {
     private static Repository instance;
-
     // boiler plate , ignore it
     private WeakReference<LifecycleOwner> LOWeakReference;
 
     private final HTTPClientDataSource httpClientDataSource;
-    private  RoomClientDataSource roomClientDataSource;
+    private RoomClientDataSource roomClientDataSource;
+
     // Private constructor to prevent instantiation from other classes
     private Repository() {
         httpClientDataSource = new HTTPClientDataSource();
@@ -42,13 +47,14 @@ public class Repository {
     /**
      * use shared preferences to get the current logged in user
      * todo: replace the code with Ido sharedPF class
+     *
      * @return current logged in user
      */
     public User getCurrentUser() {
         return new User.Mock();
     }
 
-    public void createChat (String token, String userName, CompletionBlock<Chat> completionBlock) {
+    public void createChat(String token, String userName, CompletionBlock<Chat> completionBlock) {
         httpClientDataSource.createChat(token, userName, result -> {
             if (result.isSuccess()) {
                 CreateChatPOJO pojo = result.getData();
@@ -64,14 +70,15 @@ public class Repository {
         });
     }
 
+
     public void getMessages(String token, int chatId, User user, CompletionBlock<List<Message>> completionBlock) {
             roomClientDataSource.findMessages(user.username)
                     .observe(LOWeakReference.get(), messages -> {
                         if (!messages.isEmpty()) {
                             completionBlock
                                 .onResult(new Result<>(true, messages, ""));
-                            return;
-                        }
+                        return;
+                    }
                         httpClientDataSource.getMessages(token, chatId, result -> {
                             if(result.isSuccess()) {
                                 roomClientDataSource.insert(result.getData().toArray(new Message[0]));
@@ -90,20 +97,23 @@ public class Repository {
                                 .onResult(new Result<>(true, chats, ""));
                         return;
                     }
-                    httpClientDataSource.getChats(token,  result -> {
-                        if(result.isSuccess()) {
+                    httpClientDataSource.getChats(token, result -> {
+                        if (result.isSuccess()) {
                             roomClientDataSource.insert(result.getData().toArray(new Chat[0]));
                         }
                         completionBlock.onResult(result);
                     });
                 });
     }
+
     public void addMessage(String token,
                            String msg,
                            int chatId,
-                           CompletionBlock<Message> completionBlock){
+                           CompletionBlock<Message> completionBlock) {
         httpClientDataSource.postMessage(token, msg, chatId, result -> {
-            if (result.isSuccess()) { roomClientDataSource.insert(result.getData()); }
+            if (result.isSuccess()) {
+                roomClientDataSource.insert(result.getData());
+            }
             completionBlock.onResult(result);
         });
 
@@ -135,6 +145,13 @@ public class Repository {
         return instance;
     }
 
+    public void handleLogin(String username, String password, CompletionBlock<Token> completionBlock) {
+        httpClientDataSource.loginUser(username, password, completionBlock);
+    }
+
+    public void getUser(String username, String token, CompletionBlock<User> completionBlock) {
+        httpClientDataSource.getUserDetails(token, username, completionBlock);
+    }
 
     public static void init(Context context, LifecycleOwner lifecycleOwner) {
         Repository
