@@ -45,6 +45,7 @@
         <item name="android:background">@drawable/whatsapp_background_dark</item>
     </style>
 
+    // register:
     <style name="PasswordLayoutStyle" parent="Widget.Material3.TextInputLayout.FilledBox">
         <item name="boxStrokeColor">@color/app_primary</item>
         <item name="boxBackgroundColor">#666766</item>
