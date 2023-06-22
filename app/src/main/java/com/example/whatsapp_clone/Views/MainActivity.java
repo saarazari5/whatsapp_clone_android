@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-               observers.forEach(searchQueryObserver -> searchQueryObserver.onQueryTextSubmit(query));
+                observers.forEach(searchQueryObserver -> searchQueryObserver.onQueryTextSubmit(query));
                 return false;
             }
 
