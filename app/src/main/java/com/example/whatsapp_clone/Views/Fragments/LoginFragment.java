@@ -153,7 +153,7 @@ public class LoginFragment extends Fragment {
             // Already logged in message
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
             // Finish the current activity
-//            requireActivity().finish();
+            requireActivity().finish();
         } else {
             Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();
         }
