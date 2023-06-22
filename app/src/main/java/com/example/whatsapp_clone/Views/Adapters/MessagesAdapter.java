@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.whatsapp_clone.Model.Message;
+import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Repository;
@@ -23,9 +24,9 @@ public class MessagesAdapter extends
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
-    private final List<Message> messages;
+    private final List<MessageEntity> messages;
 
-    public MessagesAdapter(List<Message> messages) {
+    public MessagesAdapter(List<MessageEntity> messages) {
         this.messages = messages;
     }
 
@@ -50,7 +51,7 @@ public class MessagesAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-        Message message =  messages.get(position);
+        MessageEntity message =  messages.get(position);
 
         if (message.sender.username
                 .equals(Repository.getInstance().getCurrentUser().username)) {
@@ -64,7 +65,7 @@ public class MessagesAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull ChatsAdapter.ViewHolder holder, int position) {
-        Message message = messages.get(position);
+        MessageEntity message = messages.get(position);
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).bind(message);
@@ -91,7 +92,7 @@ public class MessagesAdapter extends
             profileImage = (CircleImageView) itemView.findViewById(R.id.image_gchat_profile_other);
         }
 
-        void bind(Message message) {
+        void bind(MessageEntity message) {
             messageText.setText(message.content);
 
             // Format the stored timestamp into a readable String using method.
@@ -113,7 +114,7 @@ public class MessagesAdapter extends
             timeText = (TextView) itemView.findViewById(R.id.text_gchat_timestamp_me);
         }
 
-        void bind(Message message) {
+        void bind(MessageEntity message) {
             messageText.setText(message.content);
 
             // Format the stored timestamp into a readable String using method.
