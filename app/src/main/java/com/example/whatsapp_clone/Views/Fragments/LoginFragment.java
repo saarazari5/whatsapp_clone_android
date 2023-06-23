@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -67,7 +69,6 @@ public class LoginFragment extends Fragment {
         }
 
         // Get the username and password inputs
-//        etUsername = binding.usernameInput.getEditText();
         etUsername = binding.usernameInput;
         etPassword = binding.passwordInput;
         // Initialize the progress bar
@@ -76,12 +77,12 @@ public class LoginFragment extends Fragment {
         // Toggle password visibility
         binding.showPasswordIcon.setOnClickListener(v -> {
             if (etPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
-                // If password is visible - hide it
+                // Password is invisible - show it
                 etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 // Change the icon
-                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password_icon);
+                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password);
             } else {
-                // Password is invisible - show it
+                // Password is visible - hide it
                 etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 // Change the icon
                 binding.showPasswordIcon.setImageResource(R.drawable.ic_show_password_icon);
@@ -153,7 +154,7 @@ public class LoginFragment extends Fragment {
             // Already logged in message
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
             // Finish the current activity
-            requireActivity().finish();
+//            requireActivity().finish();
         } else {
             Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();
         }
