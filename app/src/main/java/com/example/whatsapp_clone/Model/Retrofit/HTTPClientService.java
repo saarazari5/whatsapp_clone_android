@@ -22,7 +22,7 @@ public interface HTTPClientService {
 
     @FormUrlEncoded
     @POST("Token")
-    Call<Token> loginUser(@Field("username") String username, @Field("password") String password);
+    Call<String> loginUser(@Field("username") String username, @Field("password") String password);
 
     @GET("Users/{id}")
     Call<User> getUserDetails(@Header("Authorization") String token, @Path("id") String username);

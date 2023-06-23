@@ -26,8 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HTTPClientDataSource {
     private HTTPClientService service;
-   private String baseUrl = "http://10.0.2.2:5000/api/";
-   // private String baseUrl = "http://172.18.70.214:5000/api/";
+    private String baseUrl = "http://10.0.0.34:5000/api/";
 
     public HTTPClientDataSource() {
         initService();
@@ -52,14 +51,14 @@ public class HTTPClientDataSource {
                     }
                 });
     }
-    public void loginUser(String username, String password, CompletionBlock<Token> completionBlock) {
-        service.loginUser(username,password).enqueue(new Callback<Token>() {
+    public void loginUser(String username, String password, CompletionBlock<String> completionBlock) {
+        service.loginUser(username,password).enqueue(new Callback<String>() {
             @Override
-            public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if(response.isSuccessful()) {
-                    Token token = response.body();
+                    String token = response.body();
                     assert token != null;
-                    token.token = "Bearer " + token.token;
+                    token = "Bearer " + token;
                     completionBlock.onResult(new Result<>(true, token, ""));
                 } else {
                     String errorMessage;
@@ -77,7 +76,7 @@ public class HTTPClientDataSource {
             }
 
             @Override
-            public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
                 completionBlock.onResult(new Result<>(false, null, t.getMessage()));
             }
         });

@@ -47,9 +47,9 @@ public class LoginViewModel extends ViewModel {
      */
     public void loginUser(String username, String password) {
         // Login request with username and password
-        repository.handleLogin(username, password, new CompletionBlock<Token>() {
+        repository.handleLogin(username, password, new CompletionBlock<String>() {
             @Override
-            public void onResult(Result<Token> result) {
+            public void onResult(Result<String> result) {
                 // Check if result is an error
                 if (result.isSuccess()) {
                     // Get the user and send it to the chat screen
@@ -67,15 +67,15 @@ public class LoginViewModel extends ViewModel {
      * Get the user profile for the specified user ID.
      * @param username The user ID.
      */
-    private void handleUser(String username, Token token) {
+    private void handleUser(String username, String token) {
         // Request user profile from the repository
-        repository.getUser(username, token.token, new CompletionBlock<User>() {
+        repository.getUser(username, token, new CompletionBlock<User>() {
             @Override
             public void onResult(Result<User> result) {
                 // Get the user and send it to the chat screen
                 if (result.isSuccess()) {
                     User user = result.getData();
-                    saveUserPreferences(user.username, user.displayName, user.profilePic, token.token);
+                    saveUserPreferences(user.username, user.displayName, user.profilePic, token);
                     loggedInUserLivedata.postValue(user);
                 } else {
                     // Handle the error message

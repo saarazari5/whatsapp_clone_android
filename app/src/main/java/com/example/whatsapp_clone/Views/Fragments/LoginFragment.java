@@ -1,10 +1,8 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,17 +19,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.UserPreferences;
 import com.example.whatsapp_clone.databinding.FragmentLoginBinding;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * A fragment that displays the login screen.
@@ -40,7 +33,6 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
     private EditText etUsername, etPassword;
-    private final List<String> errors = new ArrayList<>();
     private ProgressBar progressBar;
 
     @Override
@@ -67,7 +59,6 @@ public class LoginFragment extends Fragment {
         }
 
         // Get the username and password inputs
-//        etUsername = binding.usernameInput.getEditText();
         etUsername = binding.usernameInput;
         etPassword = binding.passwordInput;
         // Initialize the progress bar
@@ -111,16 +102,13 @@ public class LoginFragment extends Fragment {
         });
 
         // Set click listener for the register link
-        binding.registerLink.setOnClickListener(v -> {
-            Navigation.findNavController(binding.getRoot())
-                    .navigate(R.id.action_loginFragment_to_registerFragment);
-        });
+        binding.registerLink.setOnClickListener(v -> Navigation.findNavController(binding.getRoot())
+                .navigate(R.id.action_loginFragment_to_registerFragment));
 
         // Set listener for the logged user to navigate the chat page
-        loginViewModel.getLoggedInUserLivedata().observe(this.getViewLifecycleOwner(), user -> {
-            Navigation.findNavController(binding.getRoot())
-                    .navigate(R.id.action_loginFragment_to_chatsFragment);
-        });
+        loginViewModel.getLoggedInUserLivedata().observe(this.getViewLifecycleOwner(), user ->
+                Navigation.findNavController(binding.getRoot())
+                .navigate(R.id.action_loginFragment_to_chatsFragment));
 
         // Set listener for the error from the server if exists
         loginViewModel.getLoginError().observe(this.getViewLifecycleOwner(), result -> {
@@ -141,7 +129,7 @@ public class LoginFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "Error: Unable to extract error message";
+        return "Unexpected server error";
     }
 
     @Override
@@ -154,8 +142,6 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
             // Finish the current activity
             requireActivity().finish();
-        } else {
-            Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -171,12 +157,10 @@ public class LoginFragment extends Fragment {
 
         // Validate username
         if (username.isEmpty()) {
-//            errors.add("Username is required");
             etUsername.setError("Username is required");
             etUsername.requestFocus();
             isValid = false;
         } else if (!isValidUsername(username)) {
-//            errors.add("Invalid username format");
             etUsername.setError("Invalid username format");
             etUsername.requestFocus();
             isValid = false;
@@ -184,12 +168,10 @@ public class LoginFragment extends Fragment {
 
         // Validate password
         if (password.isEmpty()) {
-            errors.add("Password is required");
             etPassword.setError("Password is required");
             etPassword.requestFocus();
             isValid = false;
         } else if (password.length() < 8) {
-            errors.add("Password is less than 8 characters");
             etPassword.setError("Password is less than 8 characters");
             etPassword.requestFocus();
             isValid = false;
