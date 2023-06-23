@@ -1,11 +1,7 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,7 +21,8 @@ import android.widget.Toast;
 
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.R;
-import com.example.whatsapp_clone.UserPreferences;
+import com.example.whatsapp_clone.SPManager;
+import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentLoginBinding;
 
 import org.json.JSONException;
@@ -33,7 +30,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A fragment that displays the login screen.
@@ -50,13 +46,15 @@ public class LoginFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false);
+        MainActivity activity = ((MainActivity) requireActivity());
+        activity.state = MainActivity.State.LOGIN;
+        activity.invalidateOptionsMenu();
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Create new view model for the login
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         loginViewModel.initializePreferences(this);
 
@@ -69,9 +67,9 @@ public class LoginFragment extends Fragment {
         }
 
         // Get the username and password inputs
+
         etUsername = binding.usernameInput;
         etPassword = binding.passwordInput;
-        // Initialize the progress bar
         progressBar = binding.progressBar;
 
         // Toggle password visibility
@@ -148,13 +146,15 @@ public class LoginFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        UserPreferences preferences = new UserPreferences(requireContext());
+        SPManager preferences = new SPManager(requireContext());
         // Check if the user is already logged in
-        if (preferences.getBoolean("isLoggedIn")) {
-            // Already logged in message
+        boolean isLoggedIn = preferences.getBoolean("isLoggedIn");
+
+        if(!isLoggedIn) {return;}
+        User.UserRegistration currentUser = preferences.getUser("current_user");
+        if (currentUser != null) {
+            loginViewModel.loginUser(currentUser.username, currentUser.password);
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
-            // Finish the current activity
-//            requireActivity().finish();
         } else {
             Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();
         }
@@ -182,7 +182,6 @@ public class LoginFragment extends Fragment {
             etUsername.requestFocus();
             isValid = false;
         }
-
         // Validate password
         if (password.isEmpty()) {
             errors.add("Password is required");

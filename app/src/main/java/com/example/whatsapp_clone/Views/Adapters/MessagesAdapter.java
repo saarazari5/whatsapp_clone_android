@@ -96,7 +96,7 @@ public class MessagesAdapter extends
             messageText.setText(message.content);
 
             // Format the stored timestamp into a readable String using method.
-            timeText.setText(Utils.formatDateTime(message.created));
+            timeText.setText(Utils.formatDateTime(message.created, true));
             nameText.setText(message.sender.displayName);
 
             // Insert the profile image from the URL into the ImageView.
@@ -118,7 +118,7 @@ public class MessagesAdapter extends
             messageText.setText(message.content);
 
             // Format the stored timestamp into a readable String using method.
-            timeText.setText(Utils.formatDateTime(message.created));
+            timeText.setText(Utils.formatDateTime(message.created, true));
         }
     }
 }

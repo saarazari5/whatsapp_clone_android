@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -52,14 +53,14 @@ public class HTTPClientDataSource {
                     }
                 });
     }
-    public void loginUser(String username, String password, CompletionBlock<Token> completionBlock) {
-        service.loginUser(username,password).enqueue(new Callback<Token>() {
+    public void loginUser(String username, String password, CompletionBlock<String> completionBlock) {
+        service.loginUser(username,password).enqueue(new Callback<String>() {
             @Override
-            public void onResponse(@NonNull Call<Token> call, @NonNull Response<Token> response) {
+            public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if(response.isSuccessful()) {
-                    Token token = response.body();
+                    String token = response.body();
                     assert token != null;
-                    token.token = "Bearer " + token.token;
+                    token = "Bearer " + token;
                     completionBlock.onResult(new Result<>(true, token, ""));
                 } else {
                     String errorMessage;
@@ -77,7 +78,7 @@ public class HTTPClientDataSource {
             }
 
             @Override
-            public void onFailure(@NonNull Call<Token> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<String> call, @NonNull Throwable t) {
                 completionBlock.onResult(new Result<>(false, null, t.getMessage()));
             }
         });
@@ -134,7 +135,7 @@ public class HTTPClientDataSource {
                 });
     }
 
-    public void createChat(String token, String username, CompletionBlock<CreateChatPOJO> completionBlock) {
+    public void createChat(String token, HashMap<String, String> username, CompletionBlock<CreateChatPOJO> completionBlock) {
         service.createChat(token, username)
                 .enqueue(new Callback<CreateChatPOJO>() {
                     @Override
@@ -175,7 +176,7 @@ public class HTTPClientDataSource {
     }
 
     public void postMessage(String token,
-                            String msg,
+                            HashMap<String, String> msg,
                             int chatId,
                             CompletionBlock<Message> completionBlock) {
 
@@ -199,6 +200,7 @@ public class HTTPClientDataSource {
     }
 
     private void initService() {
+
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();

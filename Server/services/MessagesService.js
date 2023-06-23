@@ -18,7 +18,7 @@ const postMessage = async (sender, chatId, content) => {
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
-        return newMessage;
+        return {messageId: messageId, id: messageId, sender: newMessage.sender, content: newMessage.content};
 
     } catch (error) {
         return null;

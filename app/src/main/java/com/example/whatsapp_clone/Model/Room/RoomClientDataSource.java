@@ -9,6 +9,7 @@ import androidx.room.Room;
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.MessageEntity;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class RoomClientDataSource {
                 .execute(messages);
     }
 
+    public void deleteAll() {
+        new deleteAllAsyncTask(roomClientDataSource).execute();
+    }
+
     public LiveData<List<MessageEntity>>findMessages(int chatId) {
         return roomClientDataSource.messagesDao().findMessages(chatId);
     }
@@ -52,6 +57,22 @@ public class RoomClientDataSource {
         @Override
         protected Void doInBackground(final Chat... chats) {
             mChatAsyncTaskDao.insert(chats);
+            return null;
+        }
+    }
+
+    private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+        private RoomClientDatabase roomClientDataSource;
+
+
+        deleteAllAsyncTask(RoomClientDatabase roomClientDataSource) {
+           this.roomClientDataSource = roomClientDataSource;
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            roomClientDataSource.clearAllTables();
             return null;
         }
     }

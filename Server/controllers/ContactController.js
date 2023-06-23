@@ -31,6 +31,7 @@ const createChat = async (req, res) => {
     } else {
         const id = result;
         const user = newContact;
+        console.log("new user is: ", user)
         res.status(200).json({ id, user });
     }
 };
