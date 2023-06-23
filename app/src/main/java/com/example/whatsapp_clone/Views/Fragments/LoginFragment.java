@@ -1,7 +1,7 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -56,6 +57,17 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         loginViewModel.initializePreferences(this);
+
+        // Set the login title in the activity's action bar
+        if (getActivity() != null) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setTitle("Login");
+            }
+        }
+
+        // Get the username and password inputs
+
         etUsername = binding.usernameInput;
         etPassword = binding.passwordInput;
         progressBar = binding.progressBar;
@@ -63,12 +75,12 @@ public class LoginFragment extends Fragment {
         // Toggle password visibility
         binding.showPasswordIcon.setOnClickListener(v -> {
             if (etPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
-                // If password is visible - hide it
+                // Password is invisible - show it
                 etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 // Change the icon
-                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password_icon);
+                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password);
             } else {
-                // Password is invisible - show it
+                // Password is visible - hide it
                 etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 // Change the icon
                 binding.showPasswordIcon.setImageResource(R.drawable.ic_show_password_icon);
@@ -143,6 +155,8 @@ public class LoginFragment extends Fragment {
         if (currentUser != null) {
             loginViewModel.loginUser(currentUser.username, currentUser.password);
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();
         }
     }
 

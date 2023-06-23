@@ -6,6 +6,12 @@
     <color name="background_color">#CC474545</color>
     <color name="app_primary">#CC158551</color>
     <color name="primary_text">#F3EFEF</color>
-    <color name="backgrounRegister">#CC474545</color>
+    <color name="backgroundRegister">#CC4E5C4B</color>
+    <color name="loginBtn">#4CAF50</color>
+    <color name="loginLogo">#4CAF50</color>
+    <color name="loginTitle">#CCCFCC</color>
+    <color name="registerBtn">#888888</color>
+    <color name="loginContainer">#646464</color>
+    <color name="arrow">#CCCCCCCC</color>
 
 </resources>
