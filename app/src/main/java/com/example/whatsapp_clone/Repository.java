@@ -148,6 +148,7 @@ public class Repository {
 
     public void setBaseURL(String baseURL) {
         if ((baseURL.isEmpty())) {return;}
+        new SPManager(contextWeakReference.get()).putString("base_url", baseURL);
         httpClientDataSource.setBaseUrl(baseURL);
     }
 
@@ -181,5 +182,13 @@ public class Repository {
 
         Repository.getInstance()
                 .contextWeakReference = new WeakReference<>(context);
+
+       SPManager manager = new SPManager(context);
+       String baseURL = manager.getString("base_url");
+        if(baseURL == null) {
+           Repository.getInstance().setBaseURL("http://10.0.2.2:5000/api/");
+       }else {
+            Repository.getInstance().setBaseURL(baseURL);
+        }
     }
 }
