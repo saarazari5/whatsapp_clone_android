@@ -1,15 +1,10 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
-import android.util.Log;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.navigation.Navigation;
 
-import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
-import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.UserPreferences;
@@ -47,18 +42,15 @@ public class LoginViewModel extends ViewModel {
      */
     public void loginUser(String username, String password) {
         // Login request with username and password
-        repository.handleLogin(username, password, new CompletionBlock<String>() {
-            @Override
-            public void onResult(Result<String> result) {
-                // Check if result is an error
-                if (result.isSuccess()) {
-                    // Get the user and send it to the chat screen
-                    handleUser(username, result.getData());
-                } else {
-                    // Handle the error message
-                    String errorMsg = result.getErrorMessage();
-                    loginError.postValue(new Result<String>(false, "ERROR", errorMsg));
-                }
+        repository.handleLogin(username, password, result -> {
+            // Check if result is an error
+            if (result.isSuccess()) {
+                // Get the user and send it to the chat screen
+                handleUser(username, result.getData());
+            } else {
+                // Handle the error message
+                String errorMsg = result.getErrorMessage();
+                loginError.postValue(new Result<>(false, "ERROR", errorMsg));
             }
         });
     }
@@ -69,19 +61,16 @@ public class LoginViewModel extends ViewModel {
      */
     private void handleUser(String username, String token) {
         // Request user profile from the repository
-        repository.getUser(username, token, new CompletionBlock<User>() {
-            @Override
-            public void onResult(Result<User> result) {
-                // Get the user and send it to the chat screen
-                if (result.isSuccess()) {
-                    User user = result.getData();
-                    saveUserPreferences(user.username, user.displayName, user.profilePic, token);
-                    loggedInUserLivedata.postValue(user);
-                } else {
-                    // Handle the error message
-                    String errorMsg = result.getErrorMessage();
-                    loginError.postValue(new Result<String>(false, "ERROR", errorMsg));
-                }
+        repository.getUser(username, token, result -> {
+            // Get the user and send it to the chat screen
+            if (result.isSuccess()) {
+                User user = result.getData();
+                saveUserPreferences(user.username, user.displayName, user.profilePic, token);
+                loggedInUserLivedata.postValue(user);
+            } else {
+                // Handle the error message
+                String errorMsg = result.getErrorMessage();
+                loginError.postValue(new Result<>(false, "ERROR", errorMsg));
             }
         });
     }
