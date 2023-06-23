@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
-import android.text.Layout;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,6 @@ import android.widget.Toast;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.ValidationTester;
 import com.example.whatsapp_clone.databinding.FragmentRegisterBinding;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,15 +39,6 @@ public class RegisterFragment extends Fragment {
     private Button registerBtn;
     private RegisterViewModel mViewModel;
     private Boolean isRegistrationSucceed;
-    private EditText emailInputET;
-    private EditText displayNameInputInputET;
-    private EditText passwordInputET;
-    private EditText passwordConfirmationInputET;
-
-    private TextInputLayout emailInputLayout;
-    private TextInputLayout displayNameInputLayout;
-    private TextInputLayout passwordInputLayout;
-    private TextInputLayout passwordConfirmationInputLayout;
     private Button uploadPictureBtn;
 
     private ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -63,14 +52,6 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
         this.binding = FragmentRegisterBinding.inflate(inflater, container, false);
-        this.emailInputET = binding.emailInput;
-        this.emailInputLayout = binding.emailInputLayout;
-        this.displayNameInputInputET = binding.displayNameInput;
-        this.displayNameInputLayout = binding.displayNameInputLayout;
-        this.passwordInputET = binding.passwordInput;
-        this.passwordInputLayout = binding.passwordInputLayout;
-        this.passwordConfirmationInputET = binding.passwordConfirmationInput;
-        this.passwordConfirmationInputLayout = binding.passwordConfirmationInputLayout;
         View rootView = this.binding.getRoot();
         return rootView;
     }
@@ -92,15 +73,13 @@ public class RegisterFragment extends Fragment {
                     Navigation.findNavController(binding.getRoot())
                             .navigate(R.id.action_registerFragment_to_loginFragment);
                 }
-
                 @Override
                 public void onRegistrationFailure() {
                     Toast.makeText(requireContext(),
                             "This email is already taken.", Toast.LENGTH_SHORT).show();
                 }
-
                 @Override
-                public void onServerConnectionFailure() {
+                public void onServerConnectionFailure(){
                     Toast.makeText(requireContext(),
                             "Failed to connect to the server.", Toast.LENGTH_SHORT).show();
                 }
@@ -168,33 +147,32 @@ public class RegisterFragment extends Fragment {
      */
     private void setErrMsgDisappearLogic() {
 
-        this.emailInputET.setOnClickListener(v -> {
-            this.emailInputLayout.setError(null);
+        binding.emailInput.setOnClickListener(v -> {
+            binding.emailInputLayout.setError(null);
         });
-        this.emailInputLayout.setOnClickListener(v -> {
-            this.emailInputLayout.setError(null);
-        });
-
-
-        this.displayNameInputInputET.setOnClickListener(v -> {
-            this.displayNameInputLayout.setError(null);
-        });
-        this.displayNameInputLayout.setOnClickListener(v -> {
-            this.displayNameInputLayout.setError(null);
+        binding.emailInputLayout.setOnClickListener(v -> {
+            binding.emailInputLayout.setError(null);
         });
 
-        this.passwordInputET.setOnClickListener(v -> {
-            this.passwordInputLayout.setError(null);
+        binding.displayNameInput.setOnClickListener(v -> {
+            binding.displayNameInputLayout.setError(null);
         });
-        this.passwordInputLayout.setOnClickListener(v -> {
-            this.passwordInputLayout.setError(null);
+        binding.displayNameInputLayout.setOnClickListener(v -> {
+            binding.displayNameInputLayout.setError(null);
         });
 
-        this.passwordConfirmationInputET.setOnClickListener(v -> {
-            this.passwordConfirmationInputLayout.setError(null);
+        binding.passwordInput.setOnClickListener(v -> {
+            binding.passwordInputLayout.setError(null);
         });
-        this.passwordConfirmationInputLayout.setOnClickListener(v -> {
-            this.passwordConfirmationInputLayout.setError(null);
+        binding.passwordInputLayout.setOnClickListener(v -> {
+            binding.passwordInputLayout.setOnClickListener(null);
+        });
+
+        binding.passwordConfirmationInput.setOnClickListener(v -> {
+            binding.passwordConfirmationInputLayout.setError(null);
+        });
+        binding.passwordConfirmationInputLayout.setOnClickListener(v -> {
+            binding.passwordConfirmationInputLayout.setError(null);
         });
 
     }
