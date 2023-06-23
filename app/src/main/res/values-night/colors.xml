@@ -6,6 +6,6 @@
     <color name="background_color">#CC474545</color>
     <color name="app_primary">#CC158551</color>
     <color name="primary_text">#F3EFEF</color>
-    <color name="backgrounRegister">#CC474545</color>
+    <color name="backgroundRegister">#CC4E5C4B</color>
 
 </resources>
