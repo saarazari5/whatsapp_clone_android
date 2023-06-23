@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgrounRegister"
+    android:background="@color/backgroundRegister"
     tools:context=".Views.Fragments.RegisterFragment">
 
     <ScrollView
@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="13dp"
+            android:layout_marginTop="@dimen/cardview_default_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +30,6 @@
                 android:id="@+id/emailInputLayout"
                 style="@style/InputLayoutStyle"
                 android:hint="@string/email"
-                app:boxStrokeWidth="2dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -44,7 +44,6 @@
                 android:id="@+id/displayNameInputLayout"
                 style="@style/InputLayoutStyle"
                 android:hint="@string/username"
-                app:boxStrokeWidth="2dp"
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -55,12 +54,15 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordInputLayout"
                 style="@style/PasswordLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/password"
-                app:boxStrokeWidth="2dp"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:errorTextAppearance="@style/ErrorTextAppearance">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordInput"
@@ -70,54 +72,59 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordConfirmationInputLayout"
                 style="@style/PasswordLayoutStyle"
-                app:boxStrokeWidth="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/confirm_password"
                 app:errorEnabled="true">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/passwordConfirmationInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordConfirmationInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                style="Widget.Material3.Button.OutlinedButton"
                 android:id="@+id/uploadPictureBtn"
+                style="Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upload profile picture"
-                app:icon="@drawable/ic_picture_uploade"
                 android:layout_gravity="center"
-
-                />
+                android:layout_marginTop="@dimen/cardview_default_elevation"
+                android:text="Upload profile picture"
+                android:textColor="@color/white"
+                android:tint="@color/white"
+                app:icon="@drawable/ic_picture_uploade"
+                app:iconTint="@color/white" />
 
             <Button
                 android:id="@+id/registerBtn"
-                style="@style/Widget.AppCompat.Button.Small"
+                style="Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="@string/register" />
+                android:text="@string/register"
+                android:textColor="@color/white"/>
 
             <ImageView
                 android:id="@+id/profileImageView"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="32dp"
                 android:layout_marginTop="50dp"
+                android:layout_marginBottom="32dp"
                 android:contentDescription="@string/user_profile_picture"
                 android:fadingEdge="horizontal"
+                android:focusable="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/add_contact_background"
-                android:focusable="true"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
         </LinearLayout>
 

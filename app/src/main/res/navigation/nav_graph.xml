@@ -5,6 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
+
     <fragment
         android:id="@+id/chatsFragment"
         android:name="com.example.whatsapp_clone.Views.Fragments.ChatsFragment"
