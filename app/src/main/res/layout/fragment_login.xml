@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/login_container_background"
+        style="@style/CONTAINER_BACKGROUND"
         android:elevation="4dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -25,39 +25,15 @@
 
             <ImageView
                 android:id="@+id/login_pic"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="30dp"
-                android:contentDescription="@string/icon_img"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_logo" />
+                style="@style/loginPic" />
 
             <TextView
                 android:id="@+id/login_form_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/login_pic"
-                android:layout_marginBottom="18dp"
-                android:gravity="center_horizontal"
-                android:text="@string/login_header"
-                android:textColor="#333333"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                style="@style/loginTitle" />
 
             <EditText
                 android:id="@+id/username_input"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@id/login_form_title"
-                android:layout_marginTop="10dp"
-                android:autofillHints="Use email format: example@example.com"
-                android:background="@drawable/input_bg"
-                android:hint="@string/username_placeholder"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="50dp"
-                android:textSize="15sp" />
+                style="@style/usernameInput" />
 
 <!--        <com.google.android.material.textfield.TextInputLayout-->
 <!--            android:id="@+id/username_input"-->
@@ -101,16 +77,7 @@
 
         <EditText
             android:id="@+id/password_input"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@id/username_input"
-            android:layout_marginTop="13dp"
-            android:autofillHints="Password has at least 8 characters"
-            android:background="@drawable/input_bg"
-            android:hint="@string/password_placeholder"
-            android:inputType="textPassword"
-            android:paddingLeft="50dp"
-            android:textSize="15sp" />
+            style="@style/passwordInput"/>
 
 <!--        <com.google.android.material.textfield.TextInputLayout-->
 <!--            android:id="@+id/textField"-->
@@ -131,6 +98,17 @@
 <!--            />-->
 
 <!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/password_input"-->
+<!--                style="@style/passwordInput"-->
+<!--                app:errorEnabled="true"/>-->
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/passwordInput"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="textPassword" />-->
 
         <ImageView
             android:id="@+id/password_icon"
@@ -163,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/password_input"
             android:layout_marginTop="20dp"
-            android:backgroundTint="@color/app_primary"
+            android:backgroundTint="@color/loginBtn"
             android:padding="12dp"
             android:text="@string/loginBtn"
             android:textColor="#ffffff"
@@ -174,13 +152,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/login_button"
-            android:layout_marginTop="10dp"
             android:gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="@string/register_link_text"
-            android:textColor="#666666"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            style="@style/registerBtn"
+         />
 
         <ImageView
             android:id="@+id/right_arrow_icon"
@@ -189,12 +163,8 @@
             android:layout_alignTop="@id/register_link"
             android:layout_alignBottom="@id/register_link"
             android:layout_alignParentRight="true"
-            android:contentDescription="@string/right_arrow_icon"
-            android:paddingStart="5dp"
-            android:paddingEnd="50dp"
-            android:src="@drawable/ic_right_arrow_icon"
-            android:textSize="24sp"
-            app:tint="#666666" />
+            style="@style/rightArrow"
+         />
 
         <ImageView
             android:id="@+id/left_arrow_icon"
@@ -202,12 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/register_link"
             android:layout_alignBottom="@id/register_link"
-            android:contentDescription="@string/left_arrow_icon"
-            android:paddingStart="50dp"
-            android:paddingEnd="5dp"
-            android:src="@drawable/ic_left_arrow_icon"
-            android:textSize="24sp"
-            app:tint="#666666" />
+            style="@style/leftArrow" />
 
         <ProgressBar
             android:id="@+id/progressBar"

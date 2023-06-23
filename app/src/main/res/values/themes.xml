@@ -16,6 +16,94 @@
         <item name="android:background">@drawable/whats_app_clone_background</item>
     </style>
 
+<!--    login styles-->
+    <style name="CONTAINER_BACKGROUND">
+        <item name="android:background">@drawable/login_container_background</item>
+    </style>
+
+    <style name="loginPic">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:contentDescription">@string/icon_img</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/ic_logo</item>
+    </style>
+
+    <style name="loginTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@id/login_pic</item>
+        <item name="android:layout_marginBottom">18dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:text">@string/login_header</item>
+        <item name="android:textColor">@color/loginTitle</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="usernameInput">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_below">@id/login_form_title</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@drawable/input_bg</item>
+        <item name="android:inputType">textEmailAddress</item>
+        <item name="android:hint">@string/username_placeholder</item>
+        <item name="android:textColorHint">@color/inputLoginPlaceholder</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">50dp</item>
+    </style>
+
+    <style name="passwordInput">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_below">@id/username_input</item>
+        <item name="android:layout_marginTop">13dp</item>
+        <item name="android:background">@drawable/input_bg</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:hint">@string/password_placeholder</item>
+        <item name="android:textColorHint">@color/inputLoginPlaceholder</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">50dp</item>
+
+        android:layout_below="@id/username_input"
+        android:layout_marginTop="13dp"
+        android:autofillHints="Password has at least 8 characters"
+        android:background="@drawable/input_bg"
+        android:hint="@string/password_placeholder"
+        android:textColorHint="@color/black"
+        android:inputType="textPassword"
+        android:paddingLeft="50dp"
+        android:textSize="15sp"
+    </style>
+
+    <style name="registerBtn">
+        <item name="android:color">@color/registerBtn</item>
+        <item name="android:text">@string/register_link_text</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">10sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="rightArrow">
+        <item name="android:contentDescription">@string/right_arrow_icon</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">50dp</item>
+        <item name="android:src">@drawable/ic_right_arrow_icon</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="leftArrow">
+        <item name="android:contentDescription">@string/left_arrow_icon</item>
+        <item name="android:paddingStart">50dp</item>
+        <item name="android:paddingEnd">5dp</item>
+        <item name="android:src">@drawable/ic_left_arrow_icon</item>
+        <item name="android:textSize">24sp</item>
+    </style>
 
     <!-- Light mode -->
     <!-- Screen background if light mode is on  -->
