@@ -53,6 +53,7 @@
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:hint">@string/username_placeholder</item>
         <item name="android:textColorHint">@color/inputLoginPlaceholder</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">15sp</item>
         <item name="android:paddingLeft">50dp</item>
     </style>
@@ -66,18 +67,9 @@
         <item name="android:inputType">textPassword</item>
         <item name="android:hint">@string/password_placeholder</item>
         <item name="android:textColorHint">@color/inputLoginPlaceholder</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:textSize">15sp</item>
         <item name="android:paddingLeft">50dp</item>
-
-        android:layout_below="@id/username_input"
-        android:layout_marginTop="13dp"
-        android:autofillHints="Password has at least 8 characters"
-        android:background="@drawable/input_bg"
-        android:hint="@string/password_placeholder"
-        android:textColorHint="@color/black"
-        android:inputType="textPassword"
-        android:paddingLeft="50dp"
-        android:textSize="15sp"
     </style>
 
     <style name="registerBtn">

@@ -69,7 +69,6 @@ public class LoginFragment extends Fragment {
         }
 
         // Get the username and password inputs
-//        etUsername = binding.usernameInput.getEditText();
         etUsername = binding.usernameInput;
         etPassword = binding.passwordInput;
         // Initialize the progress bar
@@ -81,9 +80,9 @@ public class LoginFragment extends Fragment {
                 // Password is invisible - show it
                 etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 // Change the icon
-                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password_icon);
+                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password);
             } else {
-                // If password is visible - hide it
+                // Password is visible - hide it
                 etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 // Change the icon
                 binding.showPasswordIcon.setImageResource(R.drawable.ic_show_password_icon);
