@@ -9,6 +9,9 @@ import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.User;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +21,12 @@ public class Utils {
     public static boolean isSettingsOpen = false;
     public static Bitmap getDecodedPic(String pic){
         String base64Data = pic.substring(pic.indexOf(',') + 1);
-        byte[] decodedString = Base64.decode(base64Data, Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        try {
+            byte[] decodedString = Base64.decode(base64Data, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        }catch (RuntimeException ex) {
+            return null;
+        }
     }
 
     public static String convertBitmapToBase64(Bitmap bitmap) {
@@ -44,9 +51,22 @@ public class Utils {
         return mock;
     }
 
-    public static String formatDateTime(String created) {
-        return "";
+    public static String formatDateTime(String created, boolean isPrecise) {
+        OffsetDateTime dateTime = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            dateTime = OffsetDateTime.parse(created);
+            // Define the desired date format
+
+            DateTimeFormatter formatter =  isPrecise ? DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss") : DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            // Format the date and time using the formatter
+
+            return dateTime.format(formatter);
+        }
+
+        return  "";
     }
+
 
     public static List<Message> mockMessages() {
         ArrayList<Message> mock = new ArrayList<>();

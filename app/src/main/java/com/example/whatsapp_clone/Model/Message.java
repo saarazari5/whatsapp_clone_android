@@ -1,7 +1,11 @@
 package com.example.whatsapp_clone.Model;
 import androidx.room.Embedded;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Message {
+
+    @SerializedName("id")
     public int messageId;
 
     @Embedded

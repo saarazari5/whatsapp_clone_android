@@ -18,11 +18,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.whatsapp_clone.Model.Chat;
+import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.R;
+import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.Views.Adapters.ChatsAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentChatsBinding;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatsFragment extends Fragment {
 
@@ -125,9 +128,20 @@ public class ChatsFragment extends Fragment {
 
     private void navigateToMessages(Chat chat) {
         Bundle args = new Bundle();
-        args.putString("current_chat_name", chat.users.get(0).username);
-        args.putString("current_chat_displayName", chat.users.get(0).displayName);
-        args.putString("current_chat_profilePic", chat.users.get(0).profilePic);
+
+        User currentUser = Repository.getInstance().getCurrentUser();
+        User otherUser;
+
+        if(Objects.equals(currentUser.username, chat.users.get(0).username)) {
+            otherUser = chat.users.get(1);
+        }else {
+            otherUser = chat.users.get(0);
+        }
+
+
+        args.putString("current_chat_name", otherUser.username);
+        args.putString("current_chat_displayName", otherUser.displayName);
+        args.putString("current_chat_profilePic", otherUser.profilePic);
         args.putInt("current_chat_id", chat.chatId);
 
         Navigation.findNavController(binding

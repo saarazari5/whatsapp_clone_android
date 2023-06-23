@@ -6,13 +6,17 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Delegates.SearchQueryObserver;
+import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ChatsViewModel extends ViewModel implements SearchQueryObserver {
@@ -26,26 +30,43 @@ public class ChatsViewModel extends ViewModel implements SearchQueryObserver {
 
     public void mockChats() {
         chats = Utils.mockChats();
-        filteredChats = chats;
+        filteredChats = new ArrayList<>(chats);
         chatsMutableData.postValue(chats);
     }
 
     public void fetchChats() {
-        Repository.getInstance()
-                .getChats("", result -> {
+        Repository repository = Repository.getInstance();
+        String token = repository.getToken();
+
+        repository
+                .getChats(token, result -> {
                     if(result.isSuccess()) {
                         chats = result.getData();
-                        filteredChats = result.getData();
+                        filteredChats = new ArrayList<>(chats);
                         chatsMutableData.postValue(chats);
                     }
                 });
     }
 
     public void createChat(String contact) {
-        Repository
-                .getInstance()
-                .createChat("", contact, result -> {
+        HashMap<String, String> username = new HashMap<>();
+        username.put("username",contact);
+
+        Repository repository = Repository.getInstance();
+        String token = repository.getToken();
+        repository
+                .createChat(token, username, result -> {
                     if (result.isSuccess()) {
+                        boolean shouldAdd = true;
+                        for (Chat chat : chats) {
+                            if (chat.users.get(0).username.equals(contact) ||
+                                    chat.users.get(1).username.equals(contact)) {
+                                shouldAdd = false;
+                                break;
+                            }
+                        }
+
+                        if(!shouldAdd) {return;}
                         chats.add(result.getData());
                         filteredChats.add(result.getData());
                         chatsMutableData.postValue(filteredChats);
@@ -55,11 +76,23 @@ public class ChatsViewModel extends ViewModel implements SearchQueryObserver {
 
     @Override
     public void onQueryTextSubmit(String query) {
+
         if(query.isEmpty()) {
             chatsMutableData.postValue(chats);
         }else {
+
             filteredChats = filteredChats.stream()
-                    .filter(chat -> chat.users.get(0).displayName.contains(query))
+                    .filter(chat -> {
+                        User currentUser = Repository.getInstance().getCurrentUser();
+                        User otherUser;
+
+                        if(Objects.equals(currentUser.username, chat.users.get(0).username)) {
+                            otherUser = chat.users.get(1);
+                        }else {
+                            otherUser = chat.users.get(0);
+                        }
+                       return otherUser.displayName.contains(query);
+                    })
                     .collect(Collectors.toList());
             chatsMutableData.postValue(filteredChats);
         }
@@ -68,12 +101,21 @@ public class ChatsViewModel extends ViewModel implements SearchQueryObserver {
     @Override
     public void onQueryTextChange(String newText) {
         if(newText.isEmpty()) {
-            filteredChats = chats;
+            filteredChats = new ArrayList<>(chats);
             chatsMutableData.postValue(chats);
         }else {
             ArrayList<Chat> newFilteredChats = new ArrayList<>();
             for (Chat chat : filteredChats) {
-                if(chat.users.get(0).displayName.contains(newText)) {
+                User currentUser = Repository.getInstance().getCurrentUser();
+                User otherUser;
+
+                if(Objects.equals(currentUser.username, chat.users.get(0).username)) {
+                    otherUser = chat.users.get(1);
+                }else {
+                    otherUser = chat.users.get(0);
+                }
+
+                if(otherUser.displayName.contains(newText)) {
                    newFilteredChats.add(chat);
                 }
             }

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.ValidationTester;
+import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentRegisterBinding;
 
 import java.io.ByteArrayOutputStream;
@@ -53,6 +54,9 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
         this.binding = FragmentRegisterBinding.inflate(inflater, container, false);
         View rootView = this.binding.getRoot();
+        MainActivity activity = ((MainActivity) requireActivity());
+        activity.state = MainActivity.State.REGISTER;
+        activity.invalidateOptionsMenu();
         return rootView;
     }
 
