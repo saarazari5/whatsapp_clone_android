@@ -113,18 +113,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleToolbarForRegister() {
-        binding.userProfile.setVisibility(View.INVISIBLE);
-        binding.backBtn.setVisibility(View.INVISIBLE);
-        binding.deleteContactBtn.setVisibility(View.INVISIBLE);
+        binding.userProfile.setVisibility(View.GONE);
+        binding.backBtn.setVisibility(View.GONE);
+        binding.deleteContactBtn.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(R.string.register_title);
 
     }
 
     private void handleToolbarForLogin() {
-        binding.userProfile.setVisibility(View.INVISIBLE);
-        binding.backBtn.setVisibility(View.INVISIBLE);
-        binding.deleteContactBtn.setVisibility(View.INVISIBLE);
+        binding.userProfile.setVisibility(View.GONE);
+        binding.backBtn.setVisibility(View.GONE);
+        binding.deleteContactBtn.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(R.string.login_title);
     }
@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity {
     public void didEnterMessageScreen(User user, ImageView.OnClickListener onBackPressed) {
         binding.backBtn.setOnClickListener(onBackPressed);
         binding.userProfile.setImageBitmap(Utils.getDecodedPic(user.profilePic));
-//        binding.deleteContactBtn.setOnClickListener();
         toolbarTitle.setText(user.displayName);
     }
 

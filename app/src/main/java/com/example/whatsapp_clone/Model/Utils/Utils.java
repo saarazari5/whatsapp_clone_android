@@ -52,6 +52,7 @@ public class Utils {
     }
 
     public static String formatDateTime(String created, boolean isPrecise) {
+        if(created == null || created.isEmpty()) {return  "";}
         OffsetDateTime dateTime = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             dateTime = OffsetDateTime.parse(created);
