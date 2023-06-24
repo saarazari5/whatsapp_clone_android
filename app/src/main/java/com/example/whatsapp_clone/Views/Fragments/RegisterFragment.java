@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -64,6 +65,14 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.mViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+
+        // Set the login title in the activity's action bar
+        if (getActivity() != null) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            if (activity.getSupportActionBar() != null) {
+                activity.getSupportActionBar().setTitle("Register");
+            }
+        }
 
         binding.registerBtn.setOnClickListener(v -> {
             String userEmail = binding.emailInput.getText().toString();

@@ -28,9 +28,6 @@ import com.example.whatsapp_clone.databinding.FragmentLoginBinding;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * A fragment that displays the login screen.
  */
@@ -38,7 +35,6 @@ public class LoginFragment extends Fragment {
     private FragmentLoginBinding binding;
     private LoginViewModel loginViewModel;
     private EditText etUsername, etPassword;
-    private final List<String> errors = new ArrayList<>();
     private ProgressBar progressBar;
 
     @Override
@@ -110,16 +106,13 @@ public class LoginFragment extends Fragment {
         });
 
         // Set click listener for the register link
-        binding.registerLink.setOnClickListener(v -> {
-            Navigation.findNavController(binding.getRoot())
-                    .navigate(R.id.action_loginFragment_to_registerFragment);
-        });
+        binding.registerLink.setOnClickListener(v -> Navigation.findNavController(binding.getRoot())
+                .navigate(R.id.action_loginFragment_to_registerFragment));
 
         // Set listener for the logged user to navigate the chat page
-        loginViewModel.getLoggedInUserLivedata().observe(this.getViewLifecycleOwner(), user -> {
-            Navigation.findNavController(binding.getRoot())
-                    .navigate(R.id.action_loginFragment_to_chatsFragment);
-        });
+        loginViewModel.getLoggedInUserLivedata().observe(this.getViewLifecycleOwner(), user ->
+                Navigation.findNavController(binding.getRoot())
+                .navigate(R.id.action_loginFragment_to_chatsFragment));
 
         // Set listener for the error from the server if exists
         loginViewModel.getLoginError().observe(this.getViewLifecycleOwner(), result -> {
@@ -140,7 +133,7 @@ public class LoginFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "Error: Unable to extract error message";
+        return "Unexpected server error";
     }
 
     @Override
@@ -172,24 +165,20 @@ public class LoginFragment extends Fragment {
 
         // Validate username
         if (username.isEmpty()) {
-//            errors.add("Username is required");
             etUsername.setError("Username is required");
             etUsername.requestFocus();
             isValid = false;
         } else if (!isValidUsername(username)) {
-//            errors.add("Invalid username format");
             etUsername.setError("Invalid username format");
             etUsername.requestFocus();
             isValid = false;
         }
         // Validate password
         if (password.isEmpty()) {
-            errors.add("Password is required");
             etPassword.setError("Password is required");
             etPassword.requestFocus();
             isValid = false;
         } else if (password.length() < 8) {
-            errors.add("Password is less than 8 characters");
             etPassword.setError("Password is less than 8 characters");
             etPassword.requestFocus();
             isValid = false;

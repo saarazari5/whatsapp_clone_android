@@ -1,14 +1,10 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
-import android.util.Log;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
-import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.SPManager;
@@ -49,12 +45,11 @@ public class LoginViewModel extends ViewModel {
         repository.handleLogin(username, password, result -> {
             // Check if result is an error
             if (result.isSuccess()) {
-                // Get the user and send it to the chat screen
                 handleUser(username, password, result.getData());
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
-                loginError.postValue(new Result<String>(false, "ERROR", errorMsg));
+                loginError.postValue(new Result<>(false, "ERROR", errorMsg));
             }
         });
     }
@@ -63,18 +58,20 @@ public class LoginViewModel extends ViewModel {
      * Get the user profile for the specified user ID.
      * @param username The user ID.
      */
+=
     private void handleUser(String username,String password ,String token) {
+
         // Request user profile from the repository
         repository.getUser(username, token, result -> {
             // Get the user and send it to the chat screen
             if (result.isSuccess()) {
                 User user = result.getData();
-                saveUserPreferences(user.username, user.displayName, user.profilePic, password ,token);
-                loggedInUserLivedata.postValue(user);
+
+                saveUserPreferences(user.username, user.displayName, user.profilePic, password ,token);loggedInUserLivedata.postValue(user);
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
-                loginError.postValue(new Result<String>(false, "ERROR", errorMsg));
+                loginError.postValue(new Result<>(false, "ERROR", errorMsg));
             }
         });
     }
