@@ -23,6 +23,15 @@
             android:layout_height="match_parent"
             android:padding="30dp">
 
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:elevation="10dp"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/login_pic"
                 style="@style/loginPic" />
@@ -35,30 +44,6 @@
                 android:id="@+id/username_input"
                 style="@style/usernameInput" />
 
-<!--        <com.google.android.material.textfield.TextInputLayout-->
-<!--            android:id="@+id/username_input"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_below="@id/login_form_title"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:autofillHints="Use email format: example@example.com"-->
-<!--            android:background="@drawable/input_bg"-->
-<!--            app:endIconMode="clear_text"-->
-<!--            app:errorEnabled="true">-->
-
-<!--            <com.google.android.material.textfield.TextInputEditText-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/input_bg"-->
-<!--                android:inputType="textEmailAddress"-->
-<!--                android:textSize="15sp"-->
-<!--                android:paddingLeft="50dp"-->
-<!--                android:hint="@string/username_placeholder"-->
-<!--                app:errorEnabled="true"-->
-<!--                app:endIconMode="clear_text"-->
-<!--            />-->
-
-<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
         <ImageView
             android:id="@+id/email_icon"
@@ -79,25 +64,6 @@
             android:id="@+id/password_input"
             style="@style/passwordInput"/>
 
-<!--        <com.google.android.material.textfield.TextInputLayout-->
-<!--            android:id="@+id/textField"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="@string/password_placeholder"-->
-<!--            app:helperTextEnabled="true"-->
-<!--            app:errorEnabled="true"-->
-<!--            >-->
-<!--            -->
-<!--            <com.google.android.material.textfield.TextInputEditText-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:inputType="textPassword"-->
-<!--                app:startIconDrawable="@drawable/ic_password_icon"-->
-<!--                app:endIconMode="password_toggle"-->
-
-<!--            />-->
-
-<!--        </com.google.android.material.textfield.TextInputLayout>-->
 
 
 
@@ -164,15 +130,6 @@
             android:layout_alignTop="@id/register_link"
             android:layout_alignBottom="@id/register_link"
             style="@style/leftArrow" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:elevation="10dp"
-            android:visibility="gone" />
 
     </RelativeLayout>
 </LinearLayout>

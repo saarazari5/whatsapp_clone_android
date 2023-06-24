@@ -1,6 +1,7 @@
 package com.example.whatsapp_clone.Views;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,7 @@ import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Repository;
+import com.example.whatsapp_clone.SPManager;
 import com.example.whatsapp_clone.databinding.ActivityMainBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -52,10 +54,16 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView toolbarTitle;
     public ArrayList<SearchQueryObserver> observers = new ArrayList<>();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SPManager spManager = new SPManager(this);
+        boolean isNight = spManager.getBoolean("is_night_mode");
+        if(isNight) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE); //will hide the title
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -63,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         Repository.init(getApplicationContext(), this);
         toolbarTitle = binding.myToolbar.findViewById(R.id.toolbar_title);
+
         if(Utils.isSettingsOpen) {
             showSettingsBottomSheet();
         }
@@ -208,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
     private void handleBottomSheetElements(BottomSheetDialog dialog, View bottomSheetView) {
+        SPManager spManager = new SPManager(this);
         //USER SECTION
         View userDetails = bottomSheetView.findViewById(R.id.current_user_details);
         CircleImageView userImage = bottomSheetView.findViewById(R.id.currentUserImg);
@@ -221,14 +231,20 @@ public class MainActivity extends AppCompatActivity {
             userDetails.setVisibility(View.GONE);
         }
 
+
         //Dark mode section
         SwitchCompat darkModeSwitch = (SwitchCompat) bottomSheetView.findViewById(R.id.switchDarkMode);
+
+        boolean isNight = spManager.getBoolean("is_night_mode");
+        darkModeSwitch.setChecked(isNight);
 
         darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                spManager.putBoolean("is_night_mode", true);
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                spManager.putBoolean("is_night_mode", false);
             }
         });
 
@@ -267,8 +283,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-            int firstDestinationId = navController.getGraph().getStartDestination();
-            navController.popBackStack(firstDestinationId, false);
+            navController.navigate(R.id.loginFragment);
         });
 
 

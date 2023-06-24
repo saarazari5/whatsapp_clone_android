@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -133,7 +134,7 @@ public class HTTPClientDataSource {
                 });
     }
 
-    public void createChat(String token, String username, CompletionBlock<CreateChatPOJO> completionBlock) {
+    public void createChat(String token, HashMap<String, String> username, CompletionBlock<CreateChatPOJO> completionBlock) {
         service.createChat(token, username)
                 .enqueue(new Callback<CreateChatPOJO>() {
                     @Override
@@ -174,7 +175,7 @@ public class HTTPClientDataSource {
     }
 
     public void postMessage(String token,
-                            String msg,
+                            HashMap<String, String> msg,
                             int chatId,
                             CompletionBlock<Message> completionBlock) {
 
@@ -198,6 +199,7 @@ public class HTTPClientDataSource {
     }
 
     private void initService() {
+
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();

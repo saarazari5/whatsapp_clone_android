@@ -9,6 +9,7 @@ import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MessagesViewModel extends ViewModel {
@@ -25,9 +26,11 @@ public class MessagesViewModel extends ViewModel {
     }
 
     public void loadMessages(int chatId, User user) {
-        Repository
-                .getInstance()
-                .getMessages("", chatId, user, result -> {
+        Repository repository = Repository.getInstance();
+        String token = repository.getToken();
+
+       repository
+                .getMessages(token, chatId, result -> {
                         if(result.isSuccess()) {
                             messages = result.getData();
                             messagesMutableData.postValue(messages);
@@ -36,9 +39,13 @@ public class MessagesViewModel extends ViewModel {
     }
 
     public void addMessages(String msg, int chatId) {
-        Repository
-                .getInstance()
-                .addMessage("", msg, chatId, result -> {
+        HashMap<String, String> message = new HashMap<>();
+        message.put("msg", msg);
+        Repository repository = Repository.getInstance();
+        String token = repository.getToken();
+
+        repository
+                .addMessage(token, message, chatId, result -> {
                     if(result.isSuccess()) {
                         messages.add(result.getData());
                         messagesMutableData.postValue(messages);

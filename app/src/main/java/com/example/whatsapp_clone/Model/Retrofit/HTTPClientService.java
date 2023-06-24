@@ -5,6 +5,7 @@ import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,18 +25,18 @@ public interface HTTPClientService {
     @POST("Token")
     Call<String> loginUser(@Field("username") String username, @Field("password") String password);
 
-    @GET("Users/{id}")
-    Call<User> getUserDetails(@Header("Authorization") String token, @Path("id") String username);
+    @GET("Users/{username}")
+    Call<User> getUserDetails(@Header("Authorization") String token, @Path("username") String username);
 
     @GET("Chats")
     Call<List<Chat>> getChats(@Header("Authorization") String token);
 
     @POST("Chats")
-    Call<CreateChatPOJO> createChat(@Header("Authorization") String token, @Body String username);
+    Call<CreateChatPOJO> createChat(@Header("Authorization") String token, @Body HashMap<String, String> username);
 
     @POST("Chats/{id}/Messages")
     Call<Message> postMessage(@Header("Authorization") String token,
-                                 @Body String msg,
+                                 @Body HashMap<String, String> msg,
                                  @Path("id") int chatId);
 
     @GET("Chats/{id}/Messages")

@@ -7,14 +7,14 @@ import androidx.lifecycle.ViewModel;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Repository;
-import com.example.whatsapp_clone.UserPreferences;
+import com.example.whatsapp_clone.SPManager;
 
 /**
  * ViewModel class for the login screen.
  */
 public class LoginViewModel extends ViewModel {
     private final Repository repository;
-    private UserPreferences preferences;
+    private SPManager preferences;
     private final MutableLiveData<Result<String>> loginError = new MutableLiveData<>();
     private final MutableLiveData<User>loggedInUserLivedata = new MutableLiveData<>();
 
@@ -23,7 +23,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void initializePreferences(Fragment loginFragment) {
-        this.preferences = new UserPreferences(loginFragment.requireContext());
+        this.preferences = new SPManager(loginFragment.requireContext());
     }
 
     /**
@@ -45,8 +45,7 @@ public class LoginViewModel extends ViewModel {
         repository.handleLogin(username, password, result -> {
             // Check if result is an error
             if (result.isSuccess()) {
-                // Get the user and send it to the chat screen
-                handleUser(username, result.getData());
+                handleUser(username, password, result.getData());
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
@@ -59,14 +58,16 @@ public class LoginViewModel extends ViewModel {
      * Get the user profile for the specified user ID.
      * @param username The user ID.
      */
-    private void handleUser(String username, String token) {
+=
+    private void handleUser(String username,String password ,String token) {
+
         // Request user profile from the repository
         repository.getUser(username, token, result -> {
             // Get the user and send it to the chat screen
             if (result.isSuccess()) {
                 User user = result.getData();
-                saveUserPreferences(user.username, user.displayName, user.profilePic, token);
-                loggedInUserLivedata.postValue(user);
+
+                saveUserPreferences(user.username, user.displayName, user.profilePic, password ,token);loggedInUserLivedata.postValue(user);
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
@@ -79,12 +80,16 @@ public class LoginViewModel extends ViewModel {
      * Save the authentication token to local storage or preferences.
      * @param token The authentication token.
      */
-    private void saveUserPreferences(String username, String displayName, String profilePic, String token) {
+    private void saveUserPreferences(String username, String displayName, String profilePic, String password ,String token) {
+
+        User.UserRegistration userRegistration = new User.UserRegistration(username,password,displayName,profilePic);
+        preferences.putUser(userRegistration, "current_user");
         // Save the user preferences
         preferences.putBoolean("isLoggedIn", true);
         preferences.putString("username", username);
         preferences.putString("displayName", displayName);
         preferences.putString("profilePic", profilePic);
         preferences.putString("token", token);
+        Log.i("token", token);
     }
 }

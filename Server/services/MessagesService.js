@@ -4,10 +4,23 @@ const contactModel = require('../models/Contact');
 
 const messageModel = Message.messageModel;
 
+const getHighestMessageId = async () => {
+    try {
+        const messages = await Message.find({})
+            .sort({ messageId: -1 })
+            .limit(1);
+
+        if (messages.length === 0) { return 0; }
+        return messages[0].messageId;
+    } catch (err) {
+        throw err;
+    }
+}
+
 const postMessage = async (sender, chatId, content) => {
     try {
         const chat = await contactModel.findOne({"chatId": chatId});
-        const messageId = await messageModel.estimatedDocumentCount() + 1;
+        const messageId = await getHighestMessageId + 1;
         const newMessage = new messageModel({
             messageId: messageId,
             sender: sender,
@@ -18,7 +31,7 @@ const postMessage = async (sender, chatId, content) => {
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
-        return newMessage;
+        return {messageId: messageId, id: messageId, sender: newMessage.sender, content: newMessage.content};
 
     } catch (error) {
         return null;
