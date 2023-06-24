@@ -61,8 +61,14 @@ public class Repository {
     }
 
     // temporary implementation
-    public void deleteChat(String token, int chatId, CompletionBlock<Void> completionBlock) {
-        this.httpClientDataSource.deleteChat(token, chatId, completionBlock);
+    public void deleteChat(String token, Integer chatId, CompletionBlock<Void> completionBlock) {
+        this.httpClientDataSource.deleteChat(token, chatId, result -> {
+            if (result.isSuccess()){
+                roomClientDataSource.deleteChat(chatId);
+            }
+            completionBlock.onResult(result);
+        });
+
     }
 
     public void createChat(String token, HashMap<String, String> username, CompletionBlock<Chat> completionBlock) {

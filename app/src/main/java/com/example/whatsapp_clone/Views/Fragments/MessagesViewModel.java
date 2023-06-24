@@ -56,7 +56,7 @@ public class MessagesViewModel extends ViewModel {
                 });
     }
 
-    public void deleteChat(int chatId, CompletionBlock<Void> completionBlock) {
+    public void deleteChat(Integer chatId, CompletionBlock<Void> completionBlock) {
         Repository repository = Repository.getInstance();
         String token = repository.getToken();
 

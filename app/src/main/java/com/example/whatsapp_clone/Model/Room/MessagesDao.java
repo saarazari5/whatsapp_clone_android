@@ -11,6 +11,8 @@ import com.example.whatsapp_clone.Model.MessageEntity;
 
 import java.util.List;
 
+import retrofit2.http.DELETE;
+
 @Dao
 public interface MessagesDao {
 
@@ -19,4 +21,7 @@ public interface MessagesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insert(MessageEntity ... message);
+
+    @Query("DELETE FROM message WHERE chatId = :chatId")
+    public void delete(Integer chatId);
 }

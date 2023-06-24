@@ -29,24 +29,25 @@ public class RoomClientDataSource {
                 .execute(chats);
     }
 
-    public void insert(MessageEntity ... messages) {
+    public void insert(MessageEntity... messages) {
         new insertMessageAsyncTask(roomClientDataSource.messagesDao())
                 .execute(messages);
     }
 
-    public void deleteChat(Chat... chats){
-        new deleteChatAsyncTask(roomClientDataSource.chatsDao()).execute(chats);
+    public void deleteChat(Integer... chatIds) {
+        new deleteChatAsyncTask(roomClientDataSource.chatsDao(), roomClientDataSource.messagesDao())
+                .execute(chatIds);
     }
 
     public void deleteAll() {
         new deleteAllAsyncTask(roomClientDataSource).execute();
     }
 
-    public LiveData<List<MessageEntity>>findMessages(int chatId) {
+    public LiveData<List<MessageEntity>> findMessages(int chatId) {
         return roomClientDataSource.messagesDao().findMessages(chatId);
     }
 
-    public LiveData<List<Chat>>findChats() {
+    public LiveData<List<Chat>> findChats() {
         return roomClientDataSource.chatsDao().getAll();
     }
 
@@ -66,19 +67,21 @@ public class RoomClientDataSource {
     }
 
     // delete chat stuff:
-    private static class deleteChatAsyncTask extends AsyncTask<Chat, Void, Void> {
+    private static class deleteChatAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         private ChatsDao mChatAsyncTaskDao;
+        private MessagesDao mMessagesDao;
 
-        deleteChatAsyncTask(ChatsDao dao) {
-            this.mChatAsyncTaskDao = dao;
+        deleteChatAsyncTask(ChatsDao chatsDao, MessagesDao messagesDao) {
+            this.mChatAsyncTaskDao = chatsDao;
+            this.mMessagesDao = messagesDao;
         }
 
         @Override
-        protected Void doInBackground( Chat... chats) {
-
-            for (Chat chat : chats){
-                mChatAsyncTaskDao.delete(chat);
+        protected Void doInBackground(Integer... chatIds) {
+            for (Integer chatId : chatIds) {
+                mMessagesDao.delete(chatId);
+                mChatAsyncTaskDao.delete(chatId);
             }
             return null;
         }
@@ -89,7 +92,7 @@ public class RoomClientDataSource {
 
 
         deleteAllAsyncTask(RoomClientDatabase roomClientDataSource) {
-           this.roomClientDataSource = roomClientDataSource;
+            this.roomClientDataSource = roomClientDataSource;
         }
 
 
@@ -101,19 +104,18 @@ public class RoomClientDataSource {
     }
 
 
-    private static class insertMessageAsyncTask extends AsyncTask<MessageEntity, Void , Void> {
+    private static class insertMessageAsyncTask extends AsyncTask<MessageEntity, Void, Void> {
 
         private MessagesDao mMessageAsyncTaskDao;
 
 
-
-         insertMessageAsyncTask(MessagesDao dao) {
+        insertMessageAsyncTask(MessagesDao dao) {
             mMessageAsyncTaskDao = dao;
         }
 
         @Override
         protected Void doInBackground(MessageEntity... messages) {
-             mMessageAsyncTaskDao.insert(messages);
+            mMessageAsyncTaskDao.insert(messages);
             return null;
         }
     }

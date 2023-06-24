@@ -25,6 +25,7 @@ public interface ChatsDao {
     @Update
     public void updateChat(Chat chat);
 
-    @Delete
-    void delete(Chat chat);
+    @Query("DELETE FROM chats WHERE chatId = :chatId")
+    public void delete(Integer chatId);
+
 }
