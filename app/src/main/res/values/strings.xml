@@ -37,5 +37,8 @@
     <string name="set_url">set URL</string>
     <string name="night_mode">night mode</string>
     <string name="logout">Logout</string>
+    <string name="notification_title">New Message</string>
+    <string name="notification_message">this is description message</string>
+    <string name="notification_logo">notification_logo</string>
 
 </resources>

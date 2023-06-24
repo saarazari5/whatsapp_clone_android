@@ -3,6 +3,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -31,8 +33,11 @@ import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.SPManager;
 import com.example.whatsapp_clone.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -75,6 +80,20 @@ public class MainActivity extends AppCompatActivity {
         if(Utils.isSettingsOpen) {
             showSettingsBottomSheet();
         }
+
+        //  Access the device registration token from firebase
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.i("TAG", "Fetching FCM registration token failed", task.getException());
+                return;
+            }
+            // Get new FCM registration token
+            String token = task.getResult();
+            // Log and toast
+            Log.i("TOKEN", token);
+            System.out.println(token);
+            Toast.makeText(MainActivity.this, "Device Token is: " + token, Toast.LENGTH_SHORT).show();
+        });
     }
 
 
