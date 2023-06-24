@@ -11,13 +11,12 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.R;
@@ -36,6 +35,7 @@ public class MessagesFragment extends Fragment {
 
     private User userSender;
     private int chatId;
+    private ImageView deleteContactIV;
 
     public static MessagesFragment newInstance() {
         return new MessagesFragment();
@@ -62,6 +62,7 @@ public class MessagesFragment extends Fragment {
         });
 
         activity.invalidateOptionsMenu();
+        this.deleteContactIV = activity.getDeleteContactIV();
         return binding.getRoot();
     }
 
@@ -72,6 +73,7 @@ public class MessagesFragment extends Fragment {
         handleMessageRecyclerView();
         handleSendMessageButton();
         setupObservers();
+        handleDeleteChatIV();
         mViewModel.loadMessages(this.chatId, this.userSender);
         super.onViewCreated(view, savedInstanceState);
     }
@@ -88,7 +90,22 @@ public class MessagesFragment extends Fragment {
 
     private void handleMessageRecyclerView() {
 
+    }
 
+    private void handleDeleteChatIV() {
+        this.deleteContactIV.setOnClickListener(v -> {
+            mViewModel.deleteChat(this.chatId, result -> {
+                if (result.isSuccess()){
+                    Toast.makeText(requireContext(),
+                            "deletion succeeded.", Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(requireView()).navigate(R.id.action_messagesFragment_to_chatsFragment);
+
+                }else{
+                    Toast.makeText(requireContext(),
+                            "deletion failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     private void handleSendMessageButton() {

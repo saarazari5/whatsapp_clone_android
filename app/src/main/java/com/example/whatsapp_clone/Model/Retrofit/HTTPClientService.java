@@ -10,6 +10,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -42,6 +43,7 @@ public interface HTTPClientService {
     @GET("Chats/{id}/Messages")
     Call<List<Message>> getMessages(@Header("Authorization") String token,
                                        @Path("id") int id);
-
+    @DELETE("Chats/{id}")
+    Call<Void> deleteChat(@Header("Authorization") String token, @Path("id") int chatId);
 
 }

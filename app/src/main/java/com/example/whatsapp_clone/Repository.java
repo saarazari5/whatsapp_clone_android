@@ -24,8 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
-/** important note about callback in this class... each callback will be called twice.
- *  once when fetching from local db and other after performing snapshot update from the remote.
+/**
+ * important note about callback in this class... each callback will be called twice.
+ * once when fetching from local db and other after performing snapshot update from the remote.
  */
 public class Repository {
     private static Repository instance;
@@ -49,12 +50,19 @@ public class Repository {
      */
     public User getCurrentUser() {
         User.UserRegistration currentUser = new SPManager(contextWeakReference.get()).getUser("current_user");
-        if (currentUser == null) {return null;}
-        return new User(currentUser.username,currentUser.displayName,currentUser.profilePic);
+        if (currentUser == null) {
+            return null;
+        }
+        return new User(currentUser.username, currentUser.displayName, currentUser.profilePic);
     }
 
     public String getToken() {
         return new SPManager(contextWeakReference.get()).getString("token");
+    }
+
+    // temporary implementation
+    public void deleteChat(String token, int chatId, CompletionBlock<Void> completionBlock) {
+        this.httpClientDataSource.deleteChat(token, chatId, completionBlock);
     }
 
     public void createChat(String token, HashMap<String, String> username, CompletionBlock<Chat> completionBlock) {
@@ -73,27 +81,27 @@ public class Repository {
         });
     }
 
-    public void getMessages(String token, int chatId,  CompletionBlock<List<MessageEntity>> completionBlock) {
-           LiveData<List<MessageEntity>> mvd = roomClientDataSource.findMessages(chatId);
-                    mvd.observe(LOWeakReference.get(), messages -> {
-                        if (!messages.isEmpty()) {
-                            completionBlock
-                                .onResult(new Result<>(true, messages, ""));
-                    }
-                        mvd.removeObservers(LOWeakReference.get());
-                        httpClientDataSource.getMessages(token, chatId, result -> {
-                            Result<List<MessageEntity>> res;
-                            if(result.isSuccess()) {
-                                List<MessageEntity> messageEntities = new MessageToMessageEntityAdapter()
-                                                                     .adapt(result.getData(), chatId);
-                                roomClientDataSource.insert(messageEntities.toArray(new MessageEntity[0]));
-                                res = new Result<>(true, messageEntities, "");
-                            } else {
-                                res = new Result<>(result.isSuccess(), null, result.getErrorMessage());
-                            }
-                            completionBlock.onResult(res);
-                        });
-                    });
+    public void getMessages(String token, int chatId, CompletionBlock<List<MessageEntity>> completionBlock) {
+        LiveData<List<MessageEntity>> mvd = roomClientDataSource.findMessages(chatId);
+        mvd.observe(LOWeakReference.get(), messages -> {
+            if (!messages.isEmpty()) {
+                completionBlock
+                        .onResult(new Result<>(true, messages, ""));
+            }
+            mvd.removeObservers(LOWeakReference.get());
+            httpClientDataSource.getMessages(token, chatId, result -> {
+                Result<List<MessageEntity>> res;
+                if (result.isSuccess()) {
+                    List<MessageEntity> messageEntities = new MessageToMessageEntityAdapter()
+                            .adapt(result.getData(), chatId);
+                    roomClientDataSource.insert(messageEntities.toArray(new MessageEntity[0]));
+                    res = new Result<>(true, messageEntities, "");
+                } else {
+                    res = new Result<>(result.isSuccess(), null, result.getErrorMessage());
+                }
+                completionBlock.onResult(res);
+            });
+        });
     }
 
 
@@ -110,25 +118,26 @@ public class Repository {
         });
     }
 
-    private void syncChats( String token, CompletionBlock<List<Chat>> completionBlock) {
+    private void syncChats(String token, CompletionBlock<List<Chat>> completionBlock) {
         httpClientDataSource.getChats(token, result -> {
-                if(result.isSuccess()) {
-                    roomClientDataSource.insert(result.getData().toArray(new Chat[0]));
-                }
-               completionBlock.onResult(result);
+            if (result.isSuccess()) {
+                roomClientDataSource.insert(result.getData().toArray(new Chat[0]));
+            }
+            completionBlock.onResult(result);
         });
 
     }
+
     public void addMessage(String token,
-                           HashMap<String,String> msg,
+                           HashMap<String, String> msg,
                            int chatId,
-                           CompletionBlock<MessageEntity> completionBlock){
+                           CompletionBlock<MessageEntity> completionBlock) {
         httpClientDataSource.postMessage(token, msg, chatId, result -> {
             Result<MessageEntity> res;
             if (result.isSuccess()) {
                 MessageEntity messageEntity = new MessageToMessageEntityAdapter().adapt(result.getData(), chatId);
                 roomClientDataSource.insert(messageEntity);
-                res = new Result<>(true, messageEntity,"");
+                res = new Result<>(true, messageEntity, "");
             } else {
                 res = new Result<>(false, null, result.getErrorMessage());
             }
@@ -137,7 +146,7 @@ public class Repository {
     }
 
     public void logOut() {
-       roomClientDataSource.deleteAll();
+        roomClientDataSource.deleteAll();
         new SPManager(contextWeakReference.get()).clear();
     }
 
@@ -147,7 +156,9 @@ public class Repository {
     }
 
     public void setBaseURL(String baseURL) {
-        if ((baseURL.isEmpty())) {return;}
+        if ((baseURL.isEmpty())) {
+            return;
+        }
         new SPManager(contextWeakReference.get()).putString("base_url", baseURL);
         httpClientDataSource.setBaseUrl(baseURL);
     }
@@ -183,11 +194,11 @@ public class Repository {
         Repository.getInstance()
                 .contextWeakReference = new WeakReference<>(context);
 
-       SPManager manager = new SPManager(context);
-       String baseURL = manager.getString("base_url");
-        if(baseURL == null) {
-           Repository.getInstance().setBaseURL("http://10.0.2.2:5000/api/");
-       }else {
+        SPManager manager = new SPManager(context);
+        String baseURL = manager.getString("base_url");
+        if (baseURL == null) {
+            Repository.getInstance().setBaseURL("http://10.0.2.2:5000/api/");
+        } else {
             Repository.getInstance().setBaseURL(baseURL);
         }
     }

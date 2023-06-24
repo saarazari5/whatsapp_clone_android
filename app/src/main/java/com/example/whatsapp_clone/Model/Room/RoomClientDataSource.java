@@ -34,6 +34,10 @@ public class RoomClientDataSource {
                 .execute(messages);
     }
 
+    public void deleteChat(Chat... chats){
+        new deleteChatAsyncTask(roomClientDataSource.chatsDao()).execute(chats);
+    }
+
     public void deleteAll() {
         new deleteAllAsyncTask(roomClientDataSource).execute();
     }
@@ -61,6 +65,25 @@ public class RoomClientDataSource {
         }
     }
 
+    // delete chat stuff:
+    private static class deleteChatAsyncTask extends AsyncTask<Chat, Void, Void> {
+
+        private ChatsDao mChatAsyncTaskDao;
+
+        deleteChatAsyncTask(ChatsDao dao) {
+            this.mChatAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground( Chat... chats) {
+
+            for (Chat chat : chats){
+                mChatAsyncTaskDao.delete(chat);
+            }
+            return null;
+        }
+    }
+
     private static class deleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private RoomClientDatabase roomClientDataSource;
 
@@ -76,6 +99,7 @@ public class RoomClientDataSource {
             return null;
         }
     }
+
 
     private static class insertMessageAsyncTask extends AsyncTask<MessageEntity, Void , Void> {
 

@@ -37,5 +37,6 @@
     <string name="set_url">set URL</string>
     <string name="night_mode">night mode</string>
     <string name="logout">Logout</string>
+    <string name="delete_contact">delete contact</string>
 
 </resources>
