@@ -94,6 +94,8 @@ public class ChatsFragment extends Fragment {
             addBtn.setOnClickListener(view2 -> {
                 EditText addContactEt = customLayout.findViewById(R.id.add_contact_et);
                 //todo: consider add error handling
+                // error handling for adding yourself as contact - show msg
+                // error handling for adding some1 that is not a user - show msg
                 mViewModel.createChat(addContactEt.getText().toString());
                 dialog.dismiss();
             });
