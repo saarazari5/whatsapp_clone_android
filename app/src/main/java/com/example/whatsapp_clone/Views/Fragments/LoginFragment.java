@@ -109,11 +109,13 @@ public class LoginFragment extends Fragment {
         binding.registerLink.setOnClickListener(v -> Navigation.findNavController(binding.getRoot())
                 .navigate(R.id.action_loginFragment_to_registerFragment));
 
+//            ori opinion: why is this not in the onResume method of this fragment?
         // Set listener for the logged user to navigate the chat page
         loginViewModel.getLoggedInUserLivedata().observe(this.getViewLifecycleOwner(), user ->
                 Navigation.findNavController(binding.getRoot())
                 .navigate(R.id.action_loginFragment_to_chatsFragment));
 
+        //            ori opinion: why is this not in the onResume method of this fragment?
         // Set listener for the error from the server if exists
         loginViewModel.getLoginError().observe(this.getViewLifecycleOwner(), result -> {
             String errorMsg = extractMessage(result.getErrorMessage());

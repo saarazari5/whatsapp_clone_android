@@ -1,5 +1,7 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -58,7 +60,6 @@ public class LoginViewModel extends ViewModel {
      * Get the user profile for the specified user ID.
      * @param username The user ID.
      */
-=
     private void handleUser(String username,String password ,String token) {
 
         // Request user profile from the repository

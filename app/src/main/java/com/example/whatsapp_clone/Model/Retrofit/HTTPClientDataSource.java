@@ -47,7 +47,6 @@ public class HTTPClientDataSource {
 
                     @Override
                     public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                        Log.d("test", "the registration failed!");
                         completionBlock.onResult(new Result<>(false, null, t.getMessage()));
                     }
                 });
@@ -197,6 +196,28 @@ public class HTTPClientDataSource {
                     }
                 });
     }
+
+
+    public void deleteChat(String token, int chatId, CompletionBlock<Void> completionBlock) {
+        service.deleteChat(token, chatId)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            completionBlock.onResult(new Result<>(true, null, ""));
+                        } else {
+                            completionBlock.onResult(new Result<>(false, null, String.valueOf(response.code())));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                        completionBlock.onResult(new Result<>(false, null, t.getMessage()));
+                    }
+                });
+    }
+
+
 
     private void initService() {
 

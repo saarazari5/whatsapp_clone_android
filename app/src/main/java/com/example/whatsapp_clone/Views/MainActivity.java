@@ -1,7 +1,6 @@
 package com.example.whatsapp_clone.Views;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,10 +21,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.whatsapp_clone.Model.Delegates.SearchQueryObserver;
-import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
-import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
-import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Repository;
@@ -50,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         REGISTER
     }
 
+    private ImageView deleteContactIV;
     private ActivityMainBinding binding;
 
     private TextView toolbarTitle;
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         Repository.init(getApplicationContext(), this);
         toolbarTitle = binding.myToolbar.findViewById(R.id.toolbar_title);
-
+        this.deleteContactIV = binding.deleteContactBtn;
         if(Utils.isSettingsOpen) {
             showSettingsBottomSheet();
         }
@@ -110,21 +107,24 @@ public class MainActivity extends AppCompatActivity {
     private void handleToolbarForChat() {
         binding.userProfile.setVisibility(View.INVISIBLE);
         binding.backBtn.setVisibility(View.INVISIBLE);
+        binding.deleteContactBtn.setVisibility(View.INVISIBLE);
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(R.string.chat_title);
     }
 
     private void handleToolbarForRegister() {
-        binding.userProfile.setVisibility(View.INVISIBLE);
-        binding.backBtn.setVisibility(View.INVISIBLE);
+        binding.userProfile.setVisibility(View.GONE);
+        binding.backBtn.setVisibility(View.GONE);
+        binding.deleteContactBtn.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(R.string.register_title);
 
     }
 
     private void handleToolbarForLogin() {
-        binding.userProfile.setVisibility(View.INVISIBLE);
-        binding.backBtn.setVisibility(View.INVISIBLE);
+        binding.userProfile.setVisibility(View.GONE);
+        binding.backBtn.setVisibility(View.GONE);
+        binding.deleteContactBtn.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(R.string.login_title);
     }
@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
     private void handleToolbarForMessages() {
         binding.backBtn.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.VISIBLE);
+        binding.deleteContactBtn.setVisibility(View.VISIBLE);
         binding.userProfile.setVisibility(View.VISIBLE);
     }
 
@@ -286,8 +287,10 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.loginFragment);
         });
 
+    }
 
-
+    public ImageView getDeleteContactIV(){
+        return this.deleteContactIV;
     }
 
 }

@@ -1,11 +1,14 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
+import android.widget.Toast;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.whatsapp_clone.Model.Adapters.MessageToMessageEntityAdapter;
 import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Utils;
 import com.example.whatsapp_clone.Repository;
 
@@ -52,6 +55,14 @@ public class MessagesViewModel extends ViewModel {
                     }
                 });
     }
+
+    public void deleteChat(Integer chatId, CompletionBlock<Void> completionBlock) {
+        Repository repository = Repository.getInstance();
+        String token = repository.getToken();
+
+        repository.deleteChat(token, chatId,completionBlock);
+    }
+
 
     public void mockMessages() {
         messages = new MessageToMessageEntityAdapter().adapt(Utils.mockMessages(),1);
