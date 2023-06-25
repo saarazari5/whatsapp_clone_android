@@ -50,7 +50,7 @@ public class ChatsAdapter extends
         if (mChats == null) {return;}
         Chat chat = mChats.get(position);
         if(chat == null){ return; }
-        User currentUser = Repository.getInstance().getCurrentUser();
+        User currentUser = Repository.getInstance().getCurrentUser(); // messages empty but users have info
         User otherUser;
 
         if(Objects.equals(currentUser.username, chat.users.get(0).username)) {

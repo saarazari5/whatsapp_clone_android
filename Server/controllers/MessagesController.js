@@ -9,11 +9,11 @@ const postMessage = async (req, res) => {
         displayName: currentUser.displayName,
         profilePic: currentUser.profilePic
     };
-
     const chatId = req.params.id;
     const msgContent = req.body.msg;
 
     const result = await messagesService.postMessage(sender, chatId, msgContent);
+
     if (!result) {
         res.status(503).send('Database Error');
     } else {

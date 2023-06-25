@@ -10,10 +10,12 @@ import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
+import com.example.whatsapp_clone.Repository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,8 +53,12 @@ public class HTTPClientDataSource {
                     }
                 });
     }
-    public void loginUser(String username, String password, String fcm ,CompletionBlock<String> completionBlock) {
-        service.loginUser( fcm, username,password).enqueue(new Callback<String>() {
+    public void loginUser(String username, String password, String fcm , CompletionBlock<String> completionBlock) {
+        HashMap<String,String> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", password);
+
+        service.loginUser(params,fcm).enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if(response.isSuccessful()) {
@@ -120,6 +126,15 @@ public class HTTPClientDataSource {
                     public void onResponse(@NonNull Call<List<Chat>> call, @NonNull Response<List<Chat>> response) {
                         if (response.isSuccessful()) {
                             List<Chat> chats = response.body();
+                            //if users is null or empty, initialize it using current User and the user that the response fetched
+                            assert chats != null;
+                            for (Chat chat : chats){
+                                if (chat.users == null || chat.users.isEmpty()){
+                                    chat. users = new ArrayList<>();
+                                    chat.users.add(Repository.getInstance().getCurrentUser());
+                                    chat.users.add(chat.addedUser);
+                                }
+                            }
                             completionBlock.onResult(new Result<>(true, chats, ""));
                         } else {
                             completionBlock.onResult(new Result<>(false, null, ""));

@@ -23,7 +23,7 @@ appEnv.env(process.env.NODE_ENV, './config');
 
 // API routes
 app.use('/api/Users', userRoutes);
-app.use('/api/Token', loginRoutes);
+app.use('/api/Tokens', loginRoutes);
 app.use('/api/Chats', chatScreenRoutes);
 
 

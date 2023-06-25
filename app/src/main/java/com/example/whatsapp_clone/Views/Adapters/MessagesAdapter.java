@@ -51,7 +51,7 @@ public class MessagesAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-        MessageEntity message =  messages.get(position);
+        MessageEntity message = messages.get(position);
 
         if (message.sender.username
                 .equals(Repository.getInstance().getCurrentUser().username)) {
@@ -100,7 +100,8 @@ public class MessagesAdapter extends
             nameText.setText(message.sender.displayName);
 
             // Insert the profile image from the URL into the ImageView.
-            profileImage.setImageBitmap(Utils.getDecodedPic(message.sender.profilePic));
+            if (message.sender.profilePic != null)
+                profileImage.setImageBitmap(Utils.getDecodedPic(message.sender.profilePic));
         }
     }
 

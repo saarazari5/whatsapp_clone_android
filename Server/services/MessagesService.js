@@ -33,7 +33,6 @@ const postMessage = async (sender, chatId, content) => {
             content: content
         });
         await newMessage.save();
-
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
@@ -71,6 +70,7 @@ const postMessage = async (sender, chatId, content) => {
                  content: newMessage.content};
 
     } catch (error) {
+        console.log(error);
         return null;
     }
 };

@@ -1,18 +1,25 @@
 package com.example.whatsapp_clone.Model.Utils;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+
+import androidx.core.graphics.BitmapCompat;
 
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.User;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Utils {
@@ -35,6 +42,29 @@ public class Utils {
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
+//    public static boolean isBitmapSizeExceedsLimit(Bitmap bitmap) {
+//        int width = bitmap.getWidth();
+//        int height = bitmap.getHeight();
+//        int bytesPerPixel = BitmapCompat.getAllocationByteCount(bitmap) / (width * height);
+//
+//        int maxSizeInBytes = 50 * 1024; // 50KB
+//
+//        int bitmapSize = width * height * bytesPerPixel;
+//        return bitmapSize > maxSizeInBytes;
+//    }
+
+    public static boolean isBitmapSizeExceedsLimit(Bitmap bitmap, int maxSizeInKB) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        byte[] byteArray = outputStream.toByteArray();
+        int bitmapSizeInBytes = byteArray.length;
+        int maxSizeInBytes = maxSizeInKB * 1024;
+
+        return bitmapSizeInBytes > maxSizeInBytes;
+    }
+
+
     public static List<Chat> mockChats() {
         ArrayList<Chat> mock = new ArrayList<>();
         for(int i =0 ; i<10 ; i++) {
@@ -51,7 +81,10 @@ public class Utils {
         return mock;
     }
 
-    public static String formatDateTime(String created, boolean isPrecise) {
+    /**
+     * Works as our server expects
+     */
+    public static String formatDateTime2(String created, boolean isPrecise) {
         if(created == null || created.isEmpty()) {return  "";}
         OffsetDateTime dateTime = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -67,6 +100,28 @@ public class Utils {
 
         return  "";
     }
+
+    /**
+     * Works as Hemi's API expects
+     */
+    public static String formatDateTime(String created, boolean isPrecise) {
+    if (created == null || created.isEmpty()) {
+        return "";
+    }
+
+    // Truncate fractional seconds
+    String truncatedTimestamp = created.substring(0, created.lastIndexOf('.'));
+
+    @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormat = new SimpleDateFormat(isPrecise ? "dd/MM/yyyy HH:mm:ss" : "dd/MM/yyyy");
+
+    try {
+        Date date = inputFormat.parse(truncatedTimestamp);
+        return outputFormat.format(date);
+    } catch (ParseException e) {
+        return formatDateTime2(created, isPrecise);
+    }
+}
 
 
     public static List<Message> mockMessages() {

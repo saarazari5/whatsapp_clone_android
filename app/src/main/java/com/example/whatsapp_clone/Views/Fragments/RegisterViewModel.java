@@ -83,9 +83,22 @@ public class RegisterViewModel extends ViewModel {
 
 
 
-    public void handleImageSelection(ContentResolver contentResolver, Uri imageUri) {
+    public void handleImageSelection(ContentResolver contentResolver, Uri imageUri, RegisterFragment.ImageUploadingUIEffectCallBack cb) {
+        if (imageUri == null) {
+            // No image selected
+            cb.onNoImageSelected();
+            return;
+        }
         try {
+            // Get the original bitmap from the image URI
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri);
+
+            // check if the image is too big (i.e bigger then 50KB)
+            if(Utils.isBitmapSizeExceedsLimit(bitmap, 50)){
+                cb.onImageSizeExceedsLimit();
+                return;
+            }
+
             profilePictureLiveData.setValue(bitmap);
             this.base64ProfilePic = Utils.convertBitmapToBase64(bitmap);
         } catch (IOException e) {
@@ -131,6 +144,11 @@ public class RegisterViewModel extends ViewModel {
             inputErrorFlag = true;
         }
 
+        // Check if profile picture is available
+        if (profilePictureLiveData.getValue() == null) {
+            addError(InputError.NO_PROFILE_PIC);
+            inputErrorFlag = true;
+        }
         // to do:
         /**
          * add validations tests for profile pic

@@ -60,7 +60,7 @@ public class Repository {
         return new SPManager(contextWeakReference.get()).getString("token");
     }
 
-    // temporary implementation
+
     public void deleteChat(String token, Integer chatId, CompletionBlock<Void> completionBlock) {
         this.httpClientDataSource.deleteChat(token, chatId, result -> {
             if (result.isSuccess()){
