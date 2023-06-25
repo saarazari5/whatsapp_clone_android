@@ -52,7 +52,11 @@ public class HTTPClientDataSource {
                 });
     }
     public void loginUser(String username, String password, CompletionBlock<String> completionBlock) {
-        service.loginUser(username,password).enqueue(new Callback<String>() {
+        HashMap<String,String> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", password);
+
+        service.loginUser(params).enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if(response.isSuccessful()) {
