@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import androidx.core.graphics.BitmapCompat;
+
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.User;
@@ -40,6 +42,29 @@ public class Utils {
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
+//    public static boolean isBitmapSizeExceedsLimit(Bitmap bitmap) {
+//        int width = bitmap.getWidth();
+//        int height = bitmap.getHeight();
+//        int bytesPerPixel = BitmapCompat.getAllocationByteCount(bitmap) / (width * height);
+//
+//        int maxSizeInBytes = 50 * 1024; // 50KB
+//
+//        int bitmapSize = width * height * bytesPerPixel;
+//        return bitmapSize > maxSizeInBytes;
+//    }
+
+    public static boolean isBitmapSizeExceedsLimit(Bitmap bitmap, int maxSizeInKB) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        byte[] byteArray = outputStream.toByteArray();
+        int bitmapSizeInBytes = byteArray.length;
+        int maxSizeInBytes = maxSizeInKB * 1024;
+
+        return bitmapSizeInBytes > maxSizeInBytes;
+    }
+
+
     public static List<Chat> mockChats() {
         ArrayList<Chat> mock = new ArrayList<>();
         for(int i =0 ; i<10 ; i++) {

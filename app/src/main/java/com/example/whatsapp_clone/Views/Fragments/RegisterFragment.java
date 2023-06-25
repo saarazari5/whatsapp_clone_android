@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,22 +17,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.whatsapp_clone.R;
-import com.example.whatsapp_clone.ValidationTester;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentRegisterBinding;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 public class RegisterFragment extends Fragment {
 
@@ -122,11 +115,16 @@ public class RegisterFragment extends Fragment {
                     case PASSWORDS_DONT_MATCH:
                         binding.passwordConfirmationInputLayout.setError(inputError.getErr());
                         break;
+                    case NO_PROFILE_PIC:
+                        Toast.makeText(requireContext(),
+                                "You have to pick a profile Image.", Toast.LENGTH_SHORT).show();
+                        break;
                 }
                 mViewModel.removeError(inputError);
             }
         });
         mViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), bitmap -> {
+            uploadPictureBtn.setText(R.string.change_profile_picture);
             ImageView profileImageView = binding.profileImageView;
             profileImageView.setImageBitmap(bitmap);
             profileImageView.setVisibility(View.VISIBLE);
@@ -141,13 +139,26 @@ public class RegisterFragment extends Fragment {
                 Intent data = result.getData();
                 if (data != null) {
                     Uri imageUri = data.getData();
-                    mViewModel.handleImageSelection(requireContext().getContentResolver(), imageUri); // Call the handleImageSelection method
+                    mViewModel.handleImageSelection(requireContext().getContentResolver(), imageUri, new ImageUploadingUIEffectCallBack() {
+
+                        @Override
+                        public void onImageSizeExceedsLimit() {
+                            Toast.makeText(requireContext(),
+                                    "Image size exceeds the limit of 50 KB.", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onNoImageSelected() {
+                            Toast.makeText(requireContext(),
+                                    "You have to pick a profile Image.", Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
                 }
             }
         });
 
         uploadPictureBtn.setOnClickListener(v -> {
-            uploadPictureBtn.setText(R.string.change_profile_picture);
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             imagePickerLauncher.launch(intent);
 
@@ -211,6 +222,12 @@ public class RegisterFragment extends Fragment {
         void onRegistrationFailure();
 
         void onServerConnectionFailure();
+    }
+
+    public interface ImageUploadingUIEffectCallBack {
+        void onImageSizeExceedsLimit();
+
+        void onNoImageSelected();
     }
 
 }
