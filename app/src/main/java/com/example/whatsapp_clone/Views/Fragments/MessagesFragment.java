@@ -25,6 +25,8 @@ import com.example.whatsapp_clone.Views.Adapters.MessagesAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentMessagesBinding;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class MessagesFragment extends Fragment {
@@ -81,6 +83,11 @@ public class MessagesFragment extends Fragment {
 
     private void setupObservers() {
         final Observer<List<MessageEntity>> messagesObserver = messages -> {
+            if (messages.size() >= 1){
+                if(messages.get(0).messageId > messages.get(1).messageId){
+                    Collections.reverse(messages);
+                }
+            }
             messagesRv.setAdapter(new MessagesAdapter(messages));
             messagesRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         };
