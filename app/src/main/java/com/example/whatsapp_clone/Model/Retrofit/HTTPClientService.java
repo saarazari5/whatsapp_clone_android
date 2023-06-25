@@ -22,9 +22,10 @@ public interface HTTPClientService {
     @POST("Users")
     Call<Void> createUser(@Body User.UserRegistration user);
 
-    @FormUrlEncoded
-    @POST("Token")
-    Call<String> loginUser(@Field("username") String username, @Field("password") String password);
+    @POST("Tokens")
+    Call<String> loginUser(@Body HashMap<String,String> params);
+
+
 
     @GET("Users/{username}")
     Call<User> getUserDetails(@Header("Authorization") String token, @Path("username") String username);

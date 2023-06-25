@@ -66,7 +66,6 @@ public class RoomClientDataSource {
         }
     }
 
-    // delete chat stuff:
     private static class deleteChatAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         private ChatsDao mChatAsyncTaskDao;
