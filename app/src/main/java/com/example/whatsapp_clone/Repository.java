@@ -1,6 +1,7 @@
 package com.example.whatsapp_clone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -164,8 +165,8 @@ public class Repository {
         return instance;
     }
 
-    public void handleLogin(String username, String password, CompletionBlock<String> completionBlock) {
-        httpClientDataSource.loginUser(username, password, completionBlock);
+    public void handleLogin(String fcmToken, String username, String password, CompletionBlock<String> completionBlock) {
+        httpClientDataSource.loginUser(username, password, fcmToken, completionBlock);
     }
 
     public void getUser(String username, String token, CompletionBlock<User> completionBlock) {

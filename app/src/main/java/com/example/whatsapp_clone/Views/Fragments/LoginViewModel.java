@@ -1,14 +1,14 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
-import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.SPManager;
@@ -44,17 +44,19 @@ public class LoginViewModel extends ViewModel {
      * @param username The user's username.
      * @param password The user's password.
      */
-    public void loginUser(String username, String password) {
-        // Login request with username and password
-        repository.handleLogin(username, password, result -> {
+    public void loginUser(Context context, String username, String password) {
+        SharedPreferences sp = context.getSharedPreferences("fcmTokens", Context.MODE_PRIVATE);
+        String fcmToken = sp.getString("fcmToken", "");
+        // Login request with username, password and the fcmToken
+        repository.handleLogin(fcmToken, username, password, result -> {
             // Check if result is an error
             if (result.isSuccess()) {
                 // Get the user and send it to the chat screen
-                handleUser(username, password, result.getData());
+                handleUser(username, password, result.getData(), fcmToken);
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
-                loginError.postValue(new Result<String>(false, "ERROR", errorMsg));
+                loginError.postValue(new Result<>(false, "ERROR", errorMsg));
             }
         });
     }
@@ -63,18 +65,18 @@ public class LoginViewModel extends ViewModel {
      * Get the user profile for the specified user ID.
      * @param username The user ID.
      */
-    private void handleUser(String username,String password ,String token) {
+    private void handleUser(String username,String password, String token, String fcmToken) {
         // Request user profile from the repository
         repository.getUser(username, token, result -> {
             // Get the user and send it to the chat screen
             if (result.isSuccess()) {
                 User user = result.getData();
-                saveUserPreferences(user.username, user.displayName, user.profilePic, password ,token);
+                saveUserPreferences(user.username, user.displayName, user.profilePic, password, token, fcmToken);
                 loggedInUserLivedata.postValue(user);
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
-                loginError.postValue(new Result<String>(false, "ERROR", errorMsg));
+                loginError.postValue(new Result<>(false, "ERROR", errorMsg));
             }
         });
     }
@@ -83,7 +85,8 @@ public class LoginViewModel extends ViewModel {
      * Save the authentication token to local storage or preferences.
      * @param token The authentication token.
      */
-    private void saveUserPreferences(String username, String displayName, String profilePic, String password ,String token) {
+    private void saveUserPreferences(String username, String displayName, String profilePic,
+                                     String password, String token, String fcmToken) {
 
         User.UserRegistration userRegistration = new User.UserRegistration(username,password,displayName,profilePic);
         preferences.putUser(userRegistration, "current_user");
@@ -93,6 +96,7 @@ public class LoginViewModel extends ViewModel {
         preferences.putString("displayName", displayName);
         preferences.putString("profilePic", profilePic);
         preferences.putString("token", token);
+        preferences.putString("fcmToken", fcmToken);
         Log.i("token", token);
     }
 }

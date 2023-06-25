@@ -1,5 +1,6 @@
 const User = require('../models/User.js');
 const nodemailer = require('nodemailer');
+const userFcmTokenMap = require('../server.js');
 
 const getLogin = async (_, res) => {
     try {
@@ -29,8 +30,11 @@ const handleLogin = async (req, res) => {
         }
         // create a jwt for the login user
         const token = await user.generateAuthToken();
+        // Add the user fcm token to a map, if given
+        if (req.headers["fcmToken"]) {
+            userFcmTokenMap.set(user.username, req.headers["fcmToken"]);
+        }
         // send Ok status meaning successfull connect
-        // res.status(200).json({ authorization: token, message: 'Login successful' });
         res.status(200).send(token);
         console.log(`${user.username} has connected`);
     } catch (e) {

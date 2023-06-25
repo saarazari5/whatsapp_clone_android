@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.whatsapp_clone.FirebaseMessagesService;
 import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
@@ -24,6 +25,9 @@ import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Views.Adapters.MessagesAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentMessagesBinding;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -92,13 +96,10 @@ public class MessagesFragment extends Fragment {
     }
 
     private void handleSendMessageButton() {
-        binding.buttonGchatSend
-                .setOnClickListener(view -> {
-                    String msg = binding.editGchatMessage.getText().toString();
-                    binding.editGchatMessage.setText("");
-                    mViewModel.addMessages(msg,chatId);
-                });
+        binding.buttonGchatSend.setOnClickListener(view -> {
+            String msg = binding.editGchatMessage.getText().toString();
+            binding.editGchatMessage.setText("");
+            mViewModel.addMessages(msg,chatId);
+        });
     }
-
-
 }

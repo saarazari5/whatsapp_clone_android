@@ -20,13 +20,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/register', express.static('public'));
-// app.use('/login', express.static('public'));
 app.use('/chat', express.static('public'));
-// app.use('/*', express.static('public'));
-
-// app.use(express.static('public/build'));
 app.use(cors());
 appEnv.env(process.env.NODE_ENV, './config');
+
+// Create a map to store the user-to-FCM token mapping
+const userFcmTokenMap = new Map();
 
 // API routes
 app.use('/api/Users', userRoutes);
@@ -71,18 +70,16 @@ io.on("connection", (socket) => {
     });
 });
 
-// server.listen(5000, () => {
-//     console.log("SERVER RUNNING");
-// });
-
-
 // Connect to MongoDB
 mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
-    .then(() => console.log('Connected to MongoDB...'))
+}).then(() => console.log('Connected to MongoDB...'))
     .catch((error) => console.error('Error connecting to MongoDB...', error));
+
+module.exports = {
+    userFcmTokenMap
+};
 
 // Connect the application to some PORT
 const PORT = process.env.PORT || 5000;

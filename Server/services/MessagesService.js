@@ -1,4 +1,4 @@
-
+const userFcmTokenMap = require('../server.js');
 const Message = require('../models/Message');
 const contactModel = require('../models/Contact');
 
@@ -18,6 +18,13 @@ const postMessage = async (sender, chatId, content) => {
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
+
+        // Push notification to the user
+        const fcmToken = userFcmTokenMap.get(sender);
+        if (fcmToken != null) {
+
+        }
+
         return {messageId: messageId, id: messageId, sender: newMessage.sender, content: newMessage.content};
 
     } catch (error) {

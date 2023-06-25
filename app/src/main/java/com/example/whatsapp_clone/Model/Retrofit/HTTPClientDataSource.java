@@ -53,8 +53,8 @@ public class HTTPClientDataSource {
                     }
                 });
     }
-    public void loginUser(String username, String password, CompletionBlock<String> completionBlock) {
-        service.loginUser(username,password).enqueue(new Callback<String>() {
+    public void loginUser(String username, String password, String fcmToken, CompletionBlock<String> completionBlock) {
+        service.loginUser(fcmToken, username,password).enqueue(new Callback<String>() {
             @Override
             public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                 if(response.isSuccessful()) {

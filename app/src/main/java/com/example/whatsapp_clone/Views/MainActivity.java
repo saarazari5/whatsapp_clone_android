@@ -90,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
             // Get new FCM registration token
             String token = task.getResult();
             // Log and toast
-            Log.i("TOKEN", token);
-            System.out.println(token);
-            Toast.makeText(MainActivity.this, "Device Token is: " + token, Toast.LENGTH_SHORT).show();
+            Log.d("TOKEN", token);
         });
     }
 
