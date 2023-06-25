@@ -33,12 +33,11 @@ That`s it!
 # Usage
 
 * In terminal:
-```console
 $ cd {path}/Server
 $ npm install
 $ npm start
 ```
-```
-Replacing {path} with the folder path to the project's repository on your personal computer.
+
+Replace {path} with the folder path to the project's repository on your personal computer.
 Register and log in to the app.
 Start chatting with your contacts!
