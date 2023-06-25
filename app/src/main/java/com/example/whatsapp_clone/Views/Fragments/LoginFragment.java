@@ -99,8 +99,10 @@ public class LoginFragment extends Fragment {
 
             // Make the progress bar visible
             progressBar.setVisibility(View.VISIBLE);
+
+            String fcm = new SPManager(requireContext()).getString("fcm_token");
             // Handle login
-            loginViewModel.loginUser(username, password);
+            loginViewModel.loginUser(username, password, fcm);
             // Hide progress bar
             progressBar.setVisibility(View.GONE);
         });
@@ -146,9 +148,10 @@ public class LoginFragment extends Fragment {
         boolean isLoggedIn = preferences.getBoolean("isLoggedIn");
 
         if(!isLoggedIn) {return;}
+        String fcm = new SPManager(requireContext()).getString("fcm_token");
         User.UserRegistration currentUser = preferences.getUser("current_user");
         if (currentUser != null) {
-            loginViewModel.loginUser(currentUser.username, currentUser.password);
+            loginViewModel.loginUser(currentUser.username, currentUser.password, fcm);
             Toast.makeText(getContext(), "Already logged in", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getContext(), "You can login now", Toast.LENGTH_LONG).show();

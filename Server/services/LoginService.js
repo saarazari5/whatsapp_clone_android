@@ -1,4 +1,6 @@
 const User = require('../models/User.js');
+const androidConnection = require('../models/androidConnection.js')
+const addFcmToken = androidConnection.addFcmToken
 const nodemailer = require('nodemailer');
 
 const getLogin = async (_, res) => {
@@ -10,6 +12,7 @@ const getLogin = async (_, res) => {
 }
 
 const handleLogin = async (req, res) => {
+    const fcmToken = req.header('fcmToken')
     try {
         // check if the user request is valid
         if (!validateLogin(req.body)) {
@@ -32,6 +35,11 @@ const handleLogin = async (req, res) => {
         // send Ok status meaning successfull connect
         // res.status(200).json({ authorization: token, message: 'Login successful' });
         res.status(200).send(token);
+        if(fcmToken) {
+            console.log(fcmToken)
+            addFcmToken(req.body.username, fcmToken)
+        }
+
         console.log(`${user.username} has connected`);
     } catch (e) {
         console.log(`An Error has occurred: ${e.message}`);

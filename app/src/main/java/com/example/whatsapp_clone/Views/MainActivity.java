@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
@@ -27,8 +28,11 @@ import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.SPManager;
 import com.example.whatsapp_clone.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -72,6 +76,19 @@ public class MainActivity extends AppCompatActivity {
         if(Utils.isSettingsOpen) {
             showSettingsBottomSheet();
         }
+
+        handleFirebaseFCM();
+    }
+
+    private void handleFirebaseFCM() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) { return; }
+                    // Get new FCM registration token
+                    String token = task.getResult();
+                    new SPManager(this).putString("fcm_token", token);
+
+                });
     }
 
 

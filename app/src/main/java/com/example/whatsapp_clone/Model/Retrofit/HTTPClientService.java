@@ -24,7 +24,7 @@ public interface HTTPClientService {
 
     @FormUrlEncoded
     @POST("Token")
-    Call<String> loginUser(@Field("username") String username, @Field("password") String password);
+    Call<String> loginUser(@Header("fcmToken") String fcmToken, @Field("username") String username, @Field("password") String password);
 
     @GET("Users/{username}")
     Call<User> getUserDetails(@Header("Authorization") String token, @Path("username") String username);

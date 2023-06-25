@@ -1,7 +1,6 @@
 package com.example.whatsapp_clone.Views.Fragments;
 
 import android.util.Log;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -42,9 +41,9 @@ public class LoginViewModel extends ViewModel {
      * @param username The user's username.
      * @param password The user's password.
      */
-    public void loginUser(String username, String password) {
+    public void loginUser(String username, String password, String fcm) {
         // Login request with username and password
-        repository.handleLogin(username, password, result -> {
+        repository.handleLogin(username, password, fcm ,result -> {
             // Check if result is an error
             if (result.isSuccess()) {
                 handleUser(username, password, result.getData());
@@ -61,14 +60,13 @@ public class LoginViewModel extends ViewModel {
      * @param username The user ID.
      */
     private void handleUser(String username,String password ,String token) {
-
         // Request user profile from the repository
         repository.getUser(username, token, result -> {
             // Get the user and send it to the chat screen
             if (result.isSuccess()) {
                 User user = result.getData();
-
-                saveUserPreferences(user.username, user.displayName, user.profilePic, password ,token);loggedInUserLivedata.postValue(user);
+                saveUserPreferences(user.username, user.displayName, user.profilePic, password ,token);
+                loggedInUserLivedata.postValue(user);
             } else {
                 // Handle the error message
                 String errorMsg = result.getErrorMessage();
