@@ -3,6 +3,7 @@ package com.example.whatsapp_clone.Model;
 
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -26,6 +27,10 @@ public class Chat implements Serializable {
     @Embedded
     public Message lastMessage;
     public List<User> users;
+
+    @Ignore
+    @SerializedName("user")
+    public User addedUser;
 
     public transient List<Message> messages;
 
