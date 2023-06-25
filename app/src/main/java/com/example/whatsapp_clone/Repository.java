@@ -181,8 +181,8 @@ public class Repository {
         return instance;
     }
 
-    public void handleLogin(String username, String password, CompletionBlock<String> completionBlock) {
-        httpClientDataSource.loginUser(username, password, completionBlock);
+    public void handleLogin(String username, String password, String fcm ,CompletionBlock<String> completionBlock) {
+        httpClientDataSource.loginUser(username, password, fcm ,completionBlock);
     }
 
     public void getUser(String username, String token, CompletionBlock<User> completionBlock) {

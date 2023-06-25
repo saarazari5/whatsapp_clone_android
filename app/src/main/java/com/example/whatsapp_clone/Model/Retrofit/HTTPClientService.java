@@ -23,8 +23,7 @@ public interface HTTPClientService {
     Call<Void> createUser(@Body User.UserRegistration user);
 
     @POST("Tokens")
-    Call<String> loginUser(@Body HashMap<String,String> params);
-
+    Call<String> loginUser(@Body HashMap<String,String> params, @Header("fcmToken") String fcmToken);
 
 
     @GET("Users/{username}")

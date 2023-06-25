@@ -9,9 +9,6 @@ const { Server } = require('socket.io');
 const userRoutes = require('./routes/userRoutes');
 const loginRoutes = require('./routes/loginRoutes.js');
 const chatScreenRoutes = require('./routes/chatScreenRoutes.js');
-const registerRoutes = require('./routes/registerRoutes.js');
-const chatRoutes = require('./routes/chatRoutes.js');
-const notExistsRoutes = require('./routes/notExistsRoutes.js');
 
 // Initialize Express APP
 const app = express();
@@ -20,11 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/register', express.static('public'));
-// app.use('/login', express.static('public'));
 app.use('/chat', express.static('public'));
-// app.use('/*', express.static('public'));
-
-// app.use(express.static('public/build'));
 app.use(cors());
 appEnv.env(process.env.NODE_ENV, './config');
 
@@ -32,10 +25,7 @@ appEnv.env(process.env.NODE_ENV, './config');
 app.use('/api/Users', userRoutes);
 app.use('/api/Tokens', loginRoutes);
 app.use('/api/Chats', chatScreenRoutes);
-// app.use('/api/chatScreen', chatScreenRoutes);
-// app.use('/register', registerRoutes); // do we need this?
-// app.use('/chat', chatRoutes);         // do we need this?
-// app.use('/*', notExistsRoutes);       // do we need this? 
+
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -89,3 +79,4 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+

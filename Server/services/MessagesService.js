@@ -1,8 +1,12 @@
 const Message = require('../models/Message');
 const contactModel = require('../models/Contact');
-
-
 const messageModel = Message.messageModel;
+
+
+const androidConnection = require('../models/androidConnection.js')
+const connections = androidConnection.androidConnection
+const admin = require('firebase-admin');
+
 
 const getHighestMessageId = async () => {
     try {
@@ -20,10 +24,9 @@ const getHighestMessageId = async () => {
 
 const postMessage = async (sender, chatId, content) => {
     try {
-        console.log("inside MessagesService: postMessage")
         const chat = await contactModel.findOne({"chatId": chatId});
         const messageId = await getHighestMessageId() + 1;
-        console.log("message id ", messageId)
+        const reciever = chat.users.find(user => user.username != sender.username)
         const newMessage = new messageModel({
             messageId: messageId,
             sender: sender,
@@ -33,7 +36,38 @@ const postMessage = async (sender, chatId, content) => {
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
-        return {messageId: messageId, id: messageId, sender: newMessage.sender, created: newMessage.created,  content: newMessage.content};
+        if(connections.has(reciever.username)) {
+            const messageToSend = await messageModel.findOne({"messageId": messageId})
+            const fcmToken = connections.get(reciever.username)
+            const message = {
+                token: fcmToken,
+                data: {
+                    chatId: chat.chatId.toString(),
+                    sender: sender.username,
+                    displayName: sender.displayName,
+                    content: content,
+                    created: messageToSend.created.toString()
+                },
+            };
+
+            console.log(" message To Send is : ", message)
+
+            admin.messaging()
+            .send(message)
+            .then((response) => {
+                console.log('Notification sent successfully:', response);
+            })
+            .catch(error => {
+                console.error("Error: ", error)
+            })
+            
+        }
+
+        return {messageId: messageId,
+             id: messageId,
+              sender: newMessage.sender,
+               created: newMessage.created,
+                 content: newMessage.content};
 
     } catch (error) {
         console.log(error);
