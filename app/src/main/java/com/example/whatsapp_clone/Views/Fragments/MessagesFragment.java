@@ -83,7 +83,7 @@ public class MessagesFragment extends Fragment {
 
     private void setupObservers() {
         final Observer<List<MessageEntity>> messagesObserver = messages -> {
-            if (messages.size() >= 1){
+            if (messages.size() > 1){
                 if(messages.get(0).messageId > messages.get(1).messageId){
                     Collections.reverse(messages);
                 }

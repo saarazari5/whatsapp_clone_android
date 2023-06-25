@@ -20,7 +20,7 @@ const getHighestMessageId = async () => {
 
 const postMessage = async (sender, chatId, content) => {
     try {
-        console.log("in post message")
+        console.log("inside MessagesService: postMessage")
         const chat = await contactModel.findOne({"chatId": chatId});
         const messageId = await getHighestMessageId() + 1;
         console.log("message id ", messageId)
@@ -30,13 +30,13 @@ const postMessage = async (sender, chatId, content) => {
             content: content
         });
         await newMessage.save();
-
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
         return {messageId: messageId, id: messageId, sender: newMessage.sender, created: newMessage.created,  content: newMessage.content};
 
     } catch (error) {
+        console.log(error);
         return null;
     }
 };
