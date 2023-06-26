@@ -15,7 +15,6 @@ module.exports = async function (req, res, next) {
         next();
     } catch (e) {
         // Invalid Token provided
-        console.log(e.message);
         return res.status(403).json({ messgae: 'Access denied: Invalid Token' });
     }
 }

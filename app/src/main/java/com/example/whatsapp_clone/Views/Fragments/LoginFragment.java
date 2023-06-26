@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -144,10 +143,6 @@ public class LoginFragment extends Fragment {
     public void onStart() {
         super.onStart();
         SPManager preferences = new SPManager(requireContext());
-        // Check if the user is already logged in
-        boolean isLoggedIn = preferences.getBoolean("isLoggedIn");
-
-        if(!isLoggedIn) {return;}
         String fcm = new SPManager(requireContext()).getString("fcm_token");
         User.UserRegistration currentUser = preferences.getUser("current_user");
         if (currentUser != null) {
