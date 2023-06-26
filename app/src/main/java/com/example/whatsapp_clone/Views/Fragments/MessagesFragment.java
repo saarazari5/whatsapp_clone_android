@@ -81,22 +81,41 @@ public class MessagesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+//    private void setupObservers() {
+//        final Observer<List<MessageEntity>> messagesObserver = messages -> {
+//            if (messages.size() > 1){
+//                if(messages.get(0).messageId > messages.get(1).messageId){
+//                    Collections.reverse(messages);
+//                }
+//            }
+//            messagesRv.setAdapter(new MessagesAdapter(messages));
+//            messagesRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+//        };
+//
+//        mViewModel.getMessagesMutableData().observe(this.getViewLifecycleOwner(), messagesObserver);
+//
+//    }
+
     private void setupObservers() {
         final Observer<List<MessageEntity>> messagesObserver = messages -> {
-            if (messages.size() > 1){
-                if(messages.get(0).messageId > messages.get(1).messageId){
+            if (messages.size() > 1) {
+                if (messages.get(0).messageId > messages.get(1).messageId) {
                     Collections.reverse(messages);
                 }
             }
-            messagesRv.setAdapter(new MessagesAdapter(messages));
+
+            MessagesAdapter adapter = new MessagesAdapter(messages);
+            messagesRv.setAdapter(adapter);
             messagesRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+            // Scroll to the last item in the RecyclerView
+            if (messages.size() > 0) {
+                messagesRv.smoothScrollToPosition(adapter.getItemCount() - 1);
+            }
         };
 
         mViewModel.getMessagesMutableData().observe(this.getViewLifecycleOwner(), messagesObserver);
-
     }
-
-
 
     private void handleDeleteChatIV() {
         this.deleteContactIV.setOnClickListener(v -> {
