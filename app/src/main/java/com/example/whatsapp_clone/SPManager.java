@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 
 public class SPManager {
     private final SharedPreferences sharedPreferences;
-    public static final String KEY_PREFERENCE_NAME = "preference_foofoo";
+    public static final String KEY_PREFERENCE_NAME = "SPManager";
 
     public SPManager(Context context) {
         sharedPreferences = context.getSharedPreferences(KEY_PREFERENCE_NAME, Context.MODE_PRIVATE);
