@@ -31,7 +31,6 @@ const createChat = async (req, res) => {
     } else {
         const id = result;
         const user = newContact;
-        console.log("new user is: ", user)
         res.status(200).json({ id, user });
     }
 };
@@ -68,9 +67,9 @@ const getChat = async (req, res) => {
 
 
 const deleteChat = async (req, res) => {
-    console.log("req: ", req.params.id)
-    const result = await chatsService.deleteChat(req.params.id);
-    console.log(result);
+    const currentUser = await chatsService.UserById(req.user._id);
+    const result = await chatsService.deleteChat(req.params.id, currentUser);
+    console.log('result from delete chat is: ', result)
     if (result) {
         res.status(200).send('Deleted succesfully')
     } else {

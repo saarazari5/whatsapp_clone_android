@@ -28,7 +28,7 @@ public class MessagesViewModel extends ViewModel {
         Repository.getInstance();
     }
 
-    public void loadMessages(int chatId, User user) {
+    public void loadMessages(int chatId) {
         Repository repository = Repository.getInstance();
         String token = repository.getToken();
 

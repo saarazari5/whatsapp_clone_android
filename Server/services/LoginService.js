@@ -50,7 +50,6 @@ const handleLogin = async (req, res) => {
         // res.status(200).json({ authorization: token, message: 'Login successful' });
         res.status(200).send(token);
         if(fcmToken) {
-            console.log(fcmToken)
             addFcmToken(req.body.username, fcmToken)
         }
 
