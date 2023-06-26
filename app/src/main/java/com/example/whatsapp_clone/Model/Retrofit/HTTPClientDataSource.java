@@ -1,12 +1,9 @@
 package com.example.whatsapp_clone.Model.Retrofit;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.whatsapp_clone.Model.Chat;
 import com.example.whatsapp_clone.Model.Message;
-import com.example.whatsapp_clone.Model.Token;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
 import com.example.whatsapp_clone.Model.Utils.Result;
