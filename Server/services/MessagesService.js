@@ -1,7 +1,7 @@
 const Message = require('../models/Message');
 const contactModel = require('../models/Contact');
 const messageModel = Message.messageModel;
-
+const io = require('../server');
 
 const androidConnection = require('../models/androidConnection.js')
 const connections = androidConnection.androidConnection
@@ -52,15 +52,13 @@ const postMessage = async (sender, chatId, content) => {
 
             console.log(" message To Send is : ", message)
 
-            admin.messaging()
-            .send(message)
-            .then((response) => {
+            admin.messaging().send(message).then((response) => {
                 console.log('Notification sent successfully:', response);
             })
             .catch(error => {
                 console.error("Error: ", error)
             })
-            
+            io.to(data.room).emit("receive_message", data);
         }
 
         return {messageId: messageId,

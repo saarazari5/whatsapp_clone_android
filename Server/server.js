@@ -61,10 +61,7 @@ io.on("connection", (socket) => {
     });
 });
 
-// server.listen(5000, () => {
-//     console.log("SERVER RUNNING");
-// });
-
+module.exports = io;
 
 // Connect to MongoDB
 mongoose.connect(process.env.CONNECTION_STRING, {
