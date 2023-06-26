@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const appEnv = require('custom-env');
 const http = require('http');
+const socketMap = require('./socketMap');
 const { Server } = require('socket.io');
 
 const userRoutes = require('./routes/userRoutes');
@@ -38,6 +39,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     console.log(`User Connected: ${socket.id}`);
 
+    socket.on("login", (username) => {
+        socketMap[socket.id] = { socket: socket, username: username };
+    });
+
     socket.on("join_room", (data) => {
         socket.join(data);
         console.log(`User with ID: ${socket.id} joined room: ${data}`);
@@ -52,6 +57,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
+        socketMap[socket.id] = null;
         console.log("User Disconnected", socket.id);
     });
 
@@ -61,10 +67,7 @@ io.on("connection", (socket) => {
     });
 });
 
-// server.listen(5000, () => {
-//     console.log("SERVER RUNNING");
-// });
-
+module.exports = io;
 
 // Connect to MongoDB
 mongoose.connect(process.env.CONNECTION_STRING, {

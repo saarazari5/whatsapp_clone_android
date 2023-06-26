@@ -2,6 +2,7 @@ const Contact = require("../models/Contact.js");
 const User = require('../models/User.js');
 const Message = require('../models/Message.js');
 const { messageModel } = require('../models/Message.js');
+const socketMap = require('../socketMap');
 
 
 const androidConnection = require('../models/androidConnection.js')
@@ -67,6 +68,19 @@ const createChat = async (currentUser, newContact) => {
         });
 
         await newChat.save();
+
+        const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
+
+        // Loop through the socketsMap
+        Object.entries(socketMap).forEach(([socketId, socketData]) => {
+
+            console.log(socketId, socketData);
+            // Check if the username matches the desired value
+            if (socketData.username === newContact.username) {
+                // Emit the "receive_message" event to the socket
+                socketData.socket.emit("add_new_contact", data);
+            }
+        });
 
         if(connections.has(newContact.username)) {
             const fcmToken = connections.get(newContact.username);
@@ -154,27 +168,33 @@ const deleteChat = async (chatId, currentUser) => {
         }
 
         await targetChat.deleteOne();
-        console.log("Deleted from db sucessfully!!!!")
 
+     
         const user1 = targetChat.users[0];
         const user2 = targetChat.users[1];
-
-        console.log('users to compare: ', user1.username, user2.username)
-        console.log('current user is: ', currentUser.username)
-
-        let username  = "";
+        let deletedContact  = "";
 
         if(user1.username === currentUser.username) {
-            username = user2.username;
+            deletedContact = user2.username;
         }else if(user2.username === currentUser.username) {
-            username = user1.username
+            deletedContact = user1.username
         }
 
-        console.log('user to push delete is: ', username)
+        const data = {currentUser: currentUser.username, deletedContact: deletedContact, room: chatId };
 
-        if(connections.has(username)) {
-            console.log("first user to push delete is .... ", username)
-            const fcmToken = connections.get(username);
+        console.log("map is: ", socketMap)
+          // Loop through the socketsMap
+       Object.entries(socketMap).forEach(([socketId, socketData]) => {
+        console.log(socketId, socketData);
+        // Check if the username matches the desired value
+        if (socketData.username === deletedContact) {
+            // Emit the "receive_message" event to the socket
+            socketData.socket.emit("recived_delete", data);
+        }
+    });
+
+        if(connections.has(deletedContact)) {
+            const fcmToken = connections.get(deletedContact);
             const message = {
                 token: fcmToken,
                 notification: {
