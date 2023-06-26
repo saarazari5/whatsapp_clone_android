@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/chat_item_background"
-    android:padding="8dp"
-    android:layout_height="wrap_content">
+    android:padding="8dp">
 
     <View
         android:id="@+id/view2"
@@ -22,8 +22,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/add_new_contact"
         android:textSize="32sp"
         android:textStyle="bold"
@@ -51,28 +51,66 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 
-    <EditText
-        android:id="@+id/add_contact_et"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/add_contact_background"
-        android:ellipsize="end"
-        android:hint="@string/write_contact_name"
-        android:maxLines="1"
-        android:padding="8dp"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+    <!--    <EditText-->
+    <!--        android:id="@+id/add_contact_et"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        android:layout_margin="16dp"-->
+    <!--        android:background="@drawable/add_contact_background"-->
+    <!--        android:ellipsize="end"-->
+    <!--        android:hint="@string/write_contact_name"-->
+    <!--        android:maxLines="1"-->
+    <!--        android:padding="8dp"-->
+    <!--        android:textSize="18sp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/view" />-->
 
-    <Button
-        android:id="@+id/add_contact_btn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/add"
+        android:orientation="vertical"
+        android:padding="13dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/view">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/add_contact_etLa"
+            style="@style/InputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_margin="16dp"
+            android:ellipsize="end"
+            android:hint="@string/write_contact_name"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/add_contact_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:padding="8dp"
+                android:textSize="18sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/add_contact_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.532"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_contact_etLa" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

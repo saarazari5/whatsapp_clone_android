@@ -40,19 +40,11 @@ public class Utils {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        String str = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        str = "data:image/png;base64," + str;
+        return str;
     }
 
-//    public static boolean isBitmapSizeExceedsLimit(Bitmap bitmap) {
-//        int width = bitmap.getWidth();
-//        int height = bitmap.getHeight();
-//        int bytesPerPixel = BitmapCompat.getAllocationByteCount(bitmap) / (width * height);
-//
-//        int maxSizeInBytes = 50 * 1024; // 50KB
-//
-//        int bitmapSize = width * height * bytesPerPixel;
-//        return bitmapSize > maxSizeInBytes;
-//    }
 
     public static boolean isBitmapSizeExceedsLimit(Bitmap bitmap, int maxSizeInKB) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

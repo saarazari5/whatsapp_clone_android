@@ -212,7 +212,6 @@ public class Repository {
         String baseURL = manager.getString("base_url");
         if (baseURL == null) {
             Repository.getInstance().setBaseURL("http://10.0.2.2:5000/api/");
-           // Repository.getInstance().setBaseURL("http://172.20.10.2:5000/api/");
         } else {
             Repository.getInstance().setBaseURL(baseURL);
         }

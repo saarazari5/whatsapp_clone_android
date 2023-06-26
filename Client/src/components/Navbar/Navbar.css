@@ -1,0 +1,15 @@
+.navbar-icon {
+    border-radius: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.nav-item a {
+    border: none;
+    color: #fff;
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+    margin-left: 10px;
+}
