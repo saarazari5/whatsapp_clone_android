@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HTTPClientDataSource {
     private HTTPClientService service;
-    private String baseUrl = "http://10.0.0.34:5000/api/";
+    private String baseUrl = "http://10.0.2.2:5000/api/";
 
     public HTTPClientDataSource() {
         initService();

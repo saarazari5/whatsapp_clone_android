@@ -1,6 +1,7 @@
 package com.example.whatsapp_clone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
@@ -153,7 +154,14 @@ public class Repository {
 
     public void logOut() {
         roomClientDataSource.deleteAll();
-        new SPManager(contextWeakReference.get()).clear();
+        SPManager sp = new SPManager(contextWeakReference.get());
+        String fcmToken = sp.getString("fcmToken");
+        boolean nightMode = sp.getBoolean("is_night_mode");
+        String url = sp.getString("base_url");
+        sp.clear();
+        sp.putString("fcmToken", fcmToken);
+        sp.putBoolean("is_night_mode", nightMode);
+        sp.putString("base_url", url);
     }
 
 

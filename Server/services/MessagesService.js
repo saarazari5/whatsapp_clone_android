@@ -1,8 +1,7 @@
 const Message = require('../models/Message');
 const contactModel = require('../models/Contact');
 const messageModel = Message.messageModel;
-const io = require('../server');
-
+const socketMap = require('../socketMap');
 const androidConnection = require('../models/androidConnection.js')
 const connections = androidConnection.androidConnection
 const admin = require('firebase-admin');
@@ -24,7 +23,7 @@ const getHighestMessageId = async () => {
 
 const postMessage = async (sender, chatId, content) => {
     try {
-        const chat = await contactModel.findOne({"chatId": chatId});
+        const chat = await contactModel.findOne({ "chatId": chatId });
         const messageId = await getHighestMessageId() + 1;
         const reciever = chat.users.find(user => user.username != sender.username)
         const newMessage = new messageModel({
@@ -36,8 +35,8 @@ const postMessage = async (sender, chatId, content) => {
         chat.messages.push(newMessage);
         chat.lastMessage = newMessage;
         await chat.save();
-        if(connections.has(reciever.username)) {
-            const messageToSend = await messageModel.findOne({"messageId": messageId})
+        if (connections.has(reciever.username)) {
+            const messageToSend = await messageModel.findOne({ "messageId": messageId })
             const fcmToken = connections.get(reciever.username)
             const message = {
                 token: fcmToken,
@@ -54,18 +53,28 @@ const postMessage = async (sender, chatId, content) => {
 
             admin.messaging().send(message).then((response) => {
                 console.log('Notification sent successfully:', response);
-            })
-            .catch(error => {
+            }).catch(error => {
                 console.error("Error: ", error)
             })
-            io.to(data.room).emit("receive_message", data);
         }
+        // Construct a data object of the message
+        const data = { room: chat.chatId, msg: "messageToSend" };
+        // Loop through the socketsMap
+        Object.entries(socketMap).forEach(([socketId, socketData]) => {
+            // Check if the username matches the desired value
+            if (socketData.username === reciever.username) {
+                // Emit the "receive_message" event to the socket
+                socketData.socket.emit("receive_message", data);
+            }
+        });
 
-        return {messageId: messageId,
-             id: messageId,
-              sender: newMessage.sender,
-               created: newMessage.created,
-                 content: newMessage.content};
+        return {
+            messageId: messageId,
+            id: messageId,
+            sender: newMessage.sender,
+            created: newMessage.created,
+            content: newMessage.content
+        };
 
     } catch (error) {
         console.log(error);
@@ -75,7 +84,7 @@ const postMessage = async (sender, chatId, content) => {
 
 const getMessages = async (chatId) => {
     try {
-        const chat = await contactModel.findOne({"chatId": chatId});
+        const chat = await contactModel.findOne({ "chatId": chatId });
         let conversation = [];
 
         chat.messages.forEach(msg => {
@@ -86,15 +95,15 @@ const getMessages = async (chatId) => {
                 content: msg.content
             }
 
-            conversation = [ ...conversation, message];
+            conversation = [...conversation, message];
         });
 
         return conversation;
-        
+
     } catch (error) {
         console.log(error)
         return null;
     }
 }
 
-module.exports = {getMessages, postMessage};
+module.exports = { getMessages, postMessage };

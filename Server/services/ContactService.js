@@ -2,6 +2,7 @@ const Contact = require("../models/Contact.js");
 const User = require('../models/User.js');
 const Message = require('../models/Message.js');
 const { messageModel } = require('../models/Message.js');
+const socketMap = require('../socketMap');
 
 const UserById = async (id) => {
     const user = await User.findOne({ _id: id });
@@ -38,7 +39,6 @@ const getHighestChatId = async () => {
 const createChat = async (currentUser, newContact) => {
     try {
         const result = await shouldCreateChat(currentUser, newContact);
-        console.log(result)
         if (!result) { return false }
         const chatId = await getHighestChatId() + 1;
         const users = [
@@ -62,6 +62,17 @@ const createChat = async (currentUser, newContact) => {
         });
 
         await newChat.save();
+
+        const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
+        // Loop through the socketsMap
+        Object.entries(socketMap).forEach(([socketId, socketData]) => {
+            // Check if the username matches the desired value
+            if (socketData.username === newContact.username) {
+                // Emit the "receive_message" event to the socket
+                socketData.socket.emit("add_new_contact", data);
+            }
+        });
+
         return chatId;
 
     } catch (error) {
@@ -125,6 +136,8 @@ const deleteChat = async (chatId) => {
         }
 
         await targetChat.deleteOne();
+
+        const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
         return true;
     } catch {
         return false
