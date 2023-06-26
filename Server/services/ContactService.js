@@ -70,8 +70,11 @@ const createChat = async (currentUser, newContact) => {
         await newChat.save();
 
         const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
+
         // Loop through the socketsMap
         Object.entries(socketMap).forEach(([socketId, socketData]) => {
+
+            console.log(socketId, socketData);
             // Check if the username matches the desired value
             if (socketData.username === newContact.username) {
                 // Emit the "receive_message" event to the socket
@@ -166,20 +169,32 @@ const deleteChat = async (chatId, currentUser) => {
 
         await targetChat.deleteOne();
 
-        const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
-
+     
         const user1 = targetChat.users[0];
         const user2 = targetChat.users[1];
-        let username  = "";
+        let deletedContact  = "";
 
         if(user1.username === currentUser.username) {
-            username = user2.username;
+            deletedContact = user2.username;
         }else if(user2.username === currentUser.username) {
-            username = user1.username
+            deletedContact = user1.username
         }
 
-        if(connections.has(username)) {
-            const fcmToken = connections.get(username);
+        const data = {currentUser: currentUser.username, deletedContact: deletedContact, room: chatId };
+
+        console.log("map is: ", socketMap)
+          // Loop through the socketsMap
+       Object.entries(socketMap).forEach(([socketId, socketData]) => {
+        console.log(socketId, socketData);
+        // Check if the username matches the desired value
+        if (socketData.username === deletedContact) {
+            // Emit the "receive_message" event to the socket
+            socketData.socket.emit("recived_delete", data);
+        }
+    });
+
+        if(connections.has(deletedContact)) {
+            const fcmToken = connections.get(deletedContact);
             const message = {
                 token: fcmToken,
                 notification: {
