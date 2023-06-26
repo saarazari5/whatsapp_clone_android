@@ -9,7 +9,10 @@ import { useUser } from '../../UserContext.js';
 import whatsappImage from '../../whatsapp_img.png';
 import { Link } from 'react-router-dom';
 import { addNewContact, fetchContacts, sendNewMessageToServer, getMessages, deleteContact } from './API/ChatPageAPI.js';
-import socket from '../../socket.js';
+import io from "socket.io-client";
+
+
+const socket = io.connect("http://localhost:5000");
 
 function ChatContainer({ handleLogout }) {
     const [contacts, setContacts] = useState([]);
@@ -120,6 +123,10 @@ function ChatContainer({ handleLogout }) {
     };
 
     const handelPickCurrentContact = async (chatId, clickedContact) => {
+        
+        console.log("test")// test
+        console.log(clickedContact) // test
+
         const messages = await getMessages(user, chatId);
         clickedContact.messages = messages;
         setCurrentContact(clickedContact);
