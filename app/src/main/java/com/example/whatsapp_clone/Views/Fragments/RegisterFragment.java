@@ -66,12 +66,16 @@ public class RegisterFragment extends Fragment {
                 activity.getSupportActionBar().setTitle("Register");
             }
         }
-
+        binding.backToLoginBtn.setOnClickListener(v -> {
+            Navigation.findNavController(binding.getRoot())
+                    .navigate(R.id.action_registerFragment_to_loginFragment);
+        });
         binding.registerBtn.setOnClickListener(v -> {
             String userEmail = binding.emailInput.getText().toString();
             String userDisplayName = binding.displayNameInput.getText().toString();
             String userPassword = binding.passwordInput.getText().toString();
             String userPasswordConfirmation = binding.passwordConfirmationInput.getText().toString();
+
 
             this.mViewModel.registerUser(userEmail, userDisplayName, userPassword, userPasswordConfirmation, new RegistrationCallback() {
                 @Override
