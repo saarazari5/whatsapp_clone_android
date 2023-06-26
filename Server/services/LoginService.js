@@ -12,10 +12,16 @@ const getLogin = async (_, res) => {
 }
 
 const handleLogin = async (req, res) => {
+
+    console.log("inside LoginService: handleLogin") // test
+
     const fcmToken = req.header('fcmToken')
     try {
         // check if the user request is valid
         if (!validateLogin(req.body)) {
+
+            console.log("inside LoginService-> handleLogin: the user request was not valid ") // test
+
             res.status(400).json({ message: 'Invalid inputs' });
             return;
         }
@@ -30,8 +36,16 @@ const handleLogin = async (req, res) => {
             res.status(400).json({ message: 'Incorrect Username Or Password' });
             return;
         }
+
+
+        console.log("inside LoginService-> handleLogin: triying to get a token") // test
+
         // create a jwt for the login user
         const token = await user.generateAuthToken();
+
+
+        console.log("inside LoginService-> handleLogin: got the token ") // test
+        
         // send Ok status meaning successfull connect
         // res.status(200).json({ authorization: token, message: 'Login successful' });
         res.status(200).send(token);

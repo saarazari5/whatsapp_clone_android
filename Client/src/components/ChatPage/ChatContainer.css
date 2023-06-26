@@ -1,0 +1,31 @@
+.chat-app {
+  position: relative;
+  overflow: hidden;
+  top: 19px;
+  height: 80%;
+  width: 80%;
+  margin: auto;
+  padding: 0;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .06), 0 2px 5px 0 rgba(0, 0, 0, .2);
+  border-radius: 5px;
+}
+
+.chat-app-inner {
+  background-color: #f7f7f7;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .06), 0 2px 5px 0 rgba(0, 0, 0, .2);
+}
+
+.btn-danger {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.bi-trash-fill {
+  color: white;
+}

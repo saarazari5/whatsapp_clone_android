@@ -1,0 +1,21 @@
+.heading {
+  padding: 10px;
+  margin: 0;
+  height: 60px;
+  width: 100%;
+  background-color: #eee;
+}
+.heading-avatar {
+  padding: 0;
+  cursor: pointer;
+}
+
+  .sideBar-main .row {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sideBar-main .row {
+    padding: 0 !important;
+    margin: 0 !important;
+}
