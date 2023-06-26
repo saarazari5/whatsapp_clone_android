@@ -232,8 +232,6 @@ public class HTTPClientDataSource {
                 });
     }
 
-
-
     private void initService() {
 
         Gson gson = new GsonBuilder()

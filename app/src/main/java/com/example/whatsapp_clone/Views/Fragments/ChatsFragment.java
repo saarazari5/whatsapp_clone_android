@@ -18,12 +18,20 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.whatsapp_clone.Model.Chat;
+import com.example.whatsapp_clone.Model.Events.AddEvent;
+import com.example.whatsapp_clone.Model.Events.AddMessageEvent;
+import com.example.whatsapp_clone.Model.Events.DeleteEvent;
+import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
 import com.example.whatsapp_clone.R;
 import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.Views.Adapters.ChatsAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentChatsBinding;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
@@ -37,6 +45,28 @@ public class ChatsFragment extends Fragment {
 
     public static ChatsFragment newInstance() {
         return new ChatsFragment();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(AddEvent event) {
+        mViewModel.fetchChats();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(AddMessageEvent event) {
+        mViewModel.fetchChats();
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(DeleteEvent event) {
+        mViewModel.fetchChats();
     }
 
     @Override
@@ -140,7 +170,6 @@ public class ChatsFragment extends Fragment {
         });
 
     }
-
 
     private void navigateToMessages(Chat chat) {
         Bundle args = new Bundle();

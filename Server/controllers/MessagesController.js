@@ -1,7 +1,6 @@
 const messagesService = require('../services/MessagesService');
 const chatsService = require('../services/ContactService');
 
-
 const postMessage = async (req, res) => {
     const currentUser = await chatsService.UserById(req.user._id);
     const sender = {

@@ -18,12 +18,23 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.whatsapp_clone.Model.Chat;
+import com.example.whatsapp_clone.Model.Events.AddEvent;
+import com.example.whatsapp_clone.Model.Events.AddMessageEvent;
+import com.example.whatsapp_clone.Model.Events.DeleteEvent;
+import com.example.whatsapp_clone.Model.Message;
 import com.example.whatsapp_clone.Model.MessageEntity;
 import com.example.whatsapp_clone.Model.User;
+import com.example.whatsapp_clone.Model.Utils.CompletionBlock;
+import com.example.whatsapp_clone.Model.Utils.Result;
 import com.example.whatsapp_clone.R;
+import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.Views.Adapters.MessagesAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentMessagesBinding;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,10 +50,21 @@ public class MessagesFragment extends Fragment {
     private User userSender;
     private Integer chatId;
 
+    boolean inDeletingChat = false;
+
     private ImageView deleteContactIV;
 
     public static MessagesFragment newInstance() {
         return new MessagesFragment();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -61,9 +83,8 @@ public class MessagesFragment extends Fragment {
                 getArguments().getString("current_chat_profilePic"));
 
         this.chatId =  Integer.valueOf(getArguments().getInt("current_chat_id"));
-        activity.didEnterMessageScreen(userSender, view -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_messagesFragment_to_chatsFragment);
-        });
+        activity.didEnterMessageScreen(userSender, view ->
+                Navigation.findNavController(requireView()).navigate(R.id.action_messagesFragment_to_chatsFragment));
 
         activity.invalidateOptionsMenu();
         this.deleteContactIV = activity.getDeleteContactIV();
@@ -77,24 +98,9 @@ public class MessagesFragment extends Fragment {
         handleSendMessageButton();
         setupObservers();
         handleDeleteChatIV();
-        mViewModel.loadMessages(this.chatId, this.userSender);
+        mViewModel.loadMessages(this.chatId);
         super.onViewCreated(view, savedInstanceState);
     }
-
-//    private void setupObservers() {
-//        final Observer<List<MessageEntity>> messagesObserver = messages -> {
-//            if (messages.size() > 1){
-//                if(messages.get(0).messageId > messages.get(1).messageId){
-//                    Collections.reverse(messages);
-//                }
-//            }
-//            messagesRv.setAdapter(new MessagesAdapter(messages));
-//            messagesRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
-//        };
-//
-//        mViewModel.getMessagesMutableData().observe(this.getViewLifecycleOwner(), messagesObserver);
-//
-//    }
 
     private void setupObservers() {
         final Observer<List<MessageEntity>> messagesObserver = messages -> {
@@ -117,20 +123,46 @@ public class MessagesFragment extends Fragment {
         mViewModel.getMessagesMutableData().observe(this.getViewLifecycleOwner(), messagesObserver);
     }
 
-    private void handleDeleteChatIV() {
-        this.deleteContactIV.setOnClickListener(v -> {
-            mViewModel.deleteChat(this.chatId, result -> {
-                if (result.isSuccess()){
-                    Toast.makeText(requireContext(),
-                            "deletion succeeded.", Toast.LENGTH_SHORT).show();
-                    Navigation.findNavController(requireView()).navigate(R.id.action_messagesFragment_to_chatsFragment);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(AddMessageEvent event) {
+        MessageEntity message = event.getMessage();
+        mViewModel.loadMessages(this.chatId);
+    }
 
-                }else{
-                    Toast.makeText(requireContext(),
-                            "deletion failed.", Toast.LENGTH_SHORT).show();
-                }
-            });
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReceived(DeleteEvent event) {
+        if(this.inDeletingChat) {return;}
+        this.inDeletingChat = true;
+        mViewModel.deleteChat(chatId, result -> {
+            this.inDeletingChat = false;
+            if (result.isSuccess()){
+                Toast.makeText(requireContext(),
+                        "deletion succeeded.", Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(requireView()).navigate(R.id.action_messagesFragment_to_chatsFragment);
+
+            }else{
+                Toast.makeText(requireContext(),
+                        "deletion failed.", Toast.LENGTH_SHORT).show();
+            }
         });
+    }
+
+
+    private void handleDeleteChatIV() {
+        if(this.inDeletingChat) {return;}
+        this.inDeletingChat = true;
+        this.deleteContactIV.setOnClickListener(v -> mViewModel.deleteChat(this.chatId, result -> {
+            this.inDeletingChat = false;
+            if (result.isSuccess()){
+                Toast.makeText(requireContext(),
+                        "deletion succeeded.", Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(requireView()).navigate(R.id.action_messagesFragment_to_chatsFragment);
+
+            }else{
+                Toast.makeText(requireContext(),
+                        "deletion failed.", Toast.LENGTH_SHORT).show();
+            }
+        }));
     }
 
     private void handleSendMessageButton() {
