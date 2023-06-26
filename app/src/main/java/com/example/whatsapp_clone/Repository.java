@@ -162,7 +162,6 @@ public class Repository {
         sp.putString("fcmToken", fcmToken);
         sp.putBoolean("is_night_mode", nightMode);
         sp.putString("base_url", url);
-//        new SPManager(contextWeakReference.get()).clear();
     }
 
 
