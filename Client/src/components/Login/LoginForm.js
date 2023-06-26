@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import socket from '../../socket.js';
 
 function LoginForm({ email, password, isLoading, setEmail, setPassword, handleLogin, handleForgotPassword, handlePasswordChange, passwordVisible, togglePasswordVisibility, setIsLoading }) {
     const [errors, setErrors] = useState({});
@@ -108,14 +107,28 @@ function LoginForm({ email, password, isLoading, setEmail, setPassword, handleLo
                 };
 
                 // Request the user from the server
-                res = await fetch(`http://localhost:5000/api/Users/${email}`, requestUser);                
+                res = await fetch(`http://localhost:5000/api/Users/${email}`, requestUser);
+
+                console.log("inside LoginForm->handleSubmit: got the user from the server") // test
+                
                 const resUserDetails = await res.json();
+
+                console.log("test:")
+                console.log(resUserDetails); // Check the response data
+                console.log(resUserDetails.user); // Check the value of the 'user' property
+
+
+                console.log("inside LoginForm->handleSubmit: got the user's details from the server") // test
+                console.log(resUserDetails.username)
                 const user = resUserDetails;
-                // Register this user a new socket
-                await socket.emit("login", user.username);
+
+                console.log(user); // test
                 user.token = token;
                 handleLogin(e, user);
             } else if (res.status === 400) {
+
+                console.log("inside LoginForm->handleSubmit: something went wrong") // test
+
                 const messageRes = await res.json();
                 setError(messageRes.message);
                 setIsLoading(false);
