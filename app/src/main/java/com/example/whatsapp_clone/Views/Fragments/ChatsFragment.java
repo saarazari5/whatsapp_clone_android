@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -24,6 +24,8 @@ import com.example.whatsapp_clone.Repository;
 import com.example.whatsapp_clone.Views.Adapters.ChatsAdapter;
 import com.example.whatsapp_clone.Views.MainActivity;
 import com.example.whatsapp_clone.databinding.FragmentChatsBinding;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -89,15 +91,27 @@ public class ChatsFragment extends Fragment {
             ImageView cancelBtn = customLayout.findViewById(R.id.cancel_btn);
             cancelBtn.setOnClickListener(view22 -> dialog.dismiss());
             Button addBtn = customLayout.findViewById(R.id.add_contact_btn);
+            TextInputLayout addContactETLayout = customLayout.findViewById(R.id.add_contact_etLa);
+            EditText addContactEt = customLayout.findViewById(R.id.add_contact_et);
+
+                addContactEt.setOnClickListener(v -> {
+                    addContactETLayout.setError(null);
+                });
 
             //handle Add ContactButton
             addBtn.setOnClickListener(view2 -> {
-                EditText addContactEt = customLayout.findViewById(R.id.add_contact_et);
-                //todo: consider add error handling
-                // error handling for adding yourself as contact - show msg
-                // error handling for adding some1 that is not a user - show msg
-                mViewModel.createChat(addContactEt.getText().toString());
-                dialog.dismiss();
+                mViewModel.createChat(addContactEt.getText().toString(), new AddContactCallBack() {
+                    @Override
+                    public void onInvalidContact() {
+                        addContactETLayout.setError("Invalid contact.");
+                    }
+
+                    @Override
+                    public void onContactAdded() {
+                        dialog.dismiss();
+
+                    }
+                });
             });
             dialog.show();
         });
@@ -153,5 +167,11 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    public interface AddContactCallBack {
+        void onInvalidContact();
+
+        void onContactAdded();
     }
 }
