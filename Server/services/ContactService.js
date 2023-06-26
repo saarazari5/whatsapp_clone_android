@@ -3,6 +3,11 @@ const User = require('../models/User.js');
 const Message = require('../models/Message.js');
 const { messageModel } = require('../models/Message.js');
 
+
+const androidConnection = require('../models/androidConnection.js')
+const connections = androidConnection.androidConnection
+const admin = require('firebase-admin');
+
 const UserById = async (id) => {
     const user = await User.findOne({ _id: id });
     return user;
@@ -38,7 +43,6 @@ const getHighestChatId = async () => {
 const createChat = async (currentUser, newContact) => {
     try {
         const result = await shouldCreateChat(currentUser, newContact);
-        console.log(result)
         if (!result) { return false }
         const chatId = await getHighestChatId() + 1;
         const users = [
@@ -55,6 +59,7 @@ const createChat = async (currentUser, newContact) => {
         ];
         const messages = [];
 
+
         const newChat = new Contact({
             chatId,
             users,
@@ -62,6 +67,32 @@ const createChat = async (currentUser, newContact) => {
         });
 
         await newChat.save();
+
+        if(connections.has(newContact.username)) {
+            const fcmToken = connections.get(newContact.username);
+            const message = {
+                token: fcmToken,
+                notification: {
+                    title: 'a new user added you to their contact!',
+                    body: currentUser.username,
+    
+                },
+                data: {
+                    type: 'add',
+                },
+            };
+    
+            admin.messaging()
+            .send(message)
+            .then((response) => {
+                console.log('Notification sent successfully:', response);
+            })
+            .catch(error => {
+                console.error("Error: ", error)
+            })
+        }
+
+    
         return chatId;
 
     } catch (error) {
@@ -114,19 +145,61 @@ const getChat = async (user1, user2) => {
     }
 }
 
-const deleteChat = async (chatId) => {
+const deleteChat = async (chatId, currentUser) => {
     try {
-        console.log("chatId: ", chatId) //test
         const targetChat = await Contact.findOne({ "chatId": chatId });
-        console.log("targetChat: ", targetChat)
         for (const message of targetChat.messages) {
             const msg = await messageModel.findOne({ "messageId": message.messageId });
             await msg.deleteOne();
         }
 
         await targetChat.deleteOne();
+        console.log("Deleted from db sucessfully!!!!")
+
+        const user1 = targetChat.users[0];
+        const user2 = targetChat.users[1];
+
+        console.log('users to compare: ', user1.username, user2.username)
+        console.log('current user is: ', currentUser.username)
+
+        let username  = "";
+
+        if(user1.username === currentUser.username) {
+            username = user2.username;
+        }else if(user2.username === currentUser.username) {
+            username = user1.username
+        }
+
+        console.log('user to push delete is: ', username)
+
+        if(connections.has(username)) {
+            console.log("first user to push delete is .... ", username)
+            const fcmToken = connections.get(username);
+            const message = {
+                token: fcmToken,
+                notification: {
+                    title: currentUser.username + ' deleted you from their chat',
+                    body: 'sorry!!!!',
+                },
+                data: {
+                    type: 'delete',
+                },
+            };
+    
+            admin.messaging()
+            .send(message)
+            .then((response) => {
+                console.log('Notification sent successfully:', response);
+            })
+            .catch(error => {
+                console.error("Error: ", error)
+            })
+        }
+
         return true;
-    } catch {
+
+    } catch (error) {
+        console.log(error)
         return false
     }
 }

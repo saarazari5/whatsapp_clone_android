@@ -20,7 +20,6 @@ const createUser = async (username, password, displayName, profilePic) => {
     try {
 
         await newUser.save();
-        console.log('User saved successfully:', newUser);
         return {
             status: 200,
             body: {

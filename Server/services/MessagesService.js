@@ -41,17 +41,21 @@ const postMessage = async (sender, chatId, content) => {
             const fcmToken = connections.get(reciever.username)
             const message = {
                 token: fcmToken,
+                notification: {
+                    title: sender.displayName,
+                    body: content,
+
+                },
                 data: {
+                    type: 'message',
                     chatId: chat.chatId.toString(),
                     sender: sender.username,
+                    id: messageToSend.messageId.toString(),
                     displayName: sender.displayName,
                     content: content,
                     created: messageToSend.created.toString()
                 },
             };
-
-            console.log(" message To Send is : ", message)
-
             admin.messaging()
             .send(message)
             .then((response) => {
