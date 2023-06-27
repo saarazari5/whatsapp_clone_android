@@ -69,7 +69,7 @@ const postMessage = async (sender, chatId, content) => {
         // Loop through the socketsMap
         Object.entries(socketMap).forEach(([socketId, socketData]) => {
             // Check if the username matches the desired value
-            if (socketData.username === reciever.username) {
+            if (socketData && socketData.username === reciever.username) {
                 // Emit the "receive_message" event to the socket
                 socketData.socket.emit("receive_message", data);
             }
@@ -92,6 +92,10 @@ const postMessage = async (sender, chatId, content) => {
 const getMessages = async (chatId) => {
     try {
         const chat = await contactModel.findOne({ "chatId": chatId });
+        if (!chat) {
+            throw new Error("Chat not found");
+        }
+
         let conversation = [];
 
         chat.messages.forEach(msg => {
