@@ -61,26 +61,42 @@ public class LoginFragment extends Fragment {
             }
         }
 
+
+
         // Get the username and password inputs
 
         etUsername = binding.usernameInput;
         etPassword = binding.passwordInput;
         progressBar = binding.progressBar;
 
-        // Toggle password visibility
-        binding.showPasswordIcon.setOnClickListener(v -> {
-            if (etPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
-                // Password is invisible - show it
-                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                // Change the icon
-                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password);
-            } else {
-                // Password is visible - hide it
-                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                // Change the icon
-                binding.showPasswordIcon.setImageResource(R.drawable.ic_show_password_icon);
-            }
+        etUsername.setOnClickListener(v -> {
+            binding.usernameInputLayout.setError(null);
         });
+        binding.usernameInputLayout.setOnClickListener(v -> {
+            binding.usernameInputLayout.setError(null);
+        });
+
+        etPassword.setOnClickListener(v -> {
+            binding.passwordInputLayout.setError(null);
+        });
+        binding.passwordInputLayout.setOnClickListener(v -> {
+            binding.passwordInputLayout.setError(null);
+        });
+
+        // Toggle password visibility
+//        binding.showPasswordIcon.setOnClickListener(v -> {
+//            if (etPassword.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())) {
+//                // Password is invisible - show it
+//                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+//                // Change the icon
+//                binding.showPasswordIcon.setImageResource(R.drawable.ic_hide_password);
+//            } else {
+//                // Password is visible - hide it
+//                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//                // Change the icon
+//                binding.showPasswordIcon.setImageResource(R.drawable.ic_show_password_icon);
+//            }
+//        });
 
         // Set click listener for the login button
         binding.loginButton.setOnClickListener(v -> {
@@ -120,10 +136,12 @@ public class LoginFragment extends Fragment {
         // Set listener for the error from the server if exists
         loginViewModel.getLoginError().observe(this.getViewLifecycleOwner(), result -> {
             String errorMsg = extractMessage(result.getErrorMessage());
-            etUsername.setError(errorMsg);
-            etPassword.setError(errorMsg);
-            etUsername.requestFocus();
-            etPassword.requestFocus();
+            binding.usernameInputLayout.setError(errorMsg);
+            binding.passwordInputLayout.setError(errorMsg);
+//            etUsername.setError(errorMsg);
+//            etPassword.setError(errorMsg);
+//            etUsername.requestFocus();
+//            etPassword.requestFocus();
         });
     }
 
@@ -165,22 +183,25 @@ public class LoginFragment extends Fragment {
 
         // Validate username
         if (username.isEmpty()) {
-            etUsername.setError("Username is required");
+            binding.usernameInputLayout.setError("Username is required");
+//            etUsername.setError("Username is required");
             etUsername.requestFocus();
             isValid = false;
         } else if (!isValidUsername(username)) {
-            etUsername.setError("Invalid username format");
-            etUsername.requestFocus();
+            binding.usernameInputLayout.setError("Invalid username format");
+//            etUsername.requestFocus();
             isValid = false;
         }
         // Validate password
         if (password.isEmpty()) {
-            etPassword.setError("Password is required");
-            etPassword.requestFocus();
+            binding.passwordInputLayout.setError("Password is required");
+//            etPassword.setError("Password is required");
+//            etPassword.requestFocus();
             isValid = false;
         } else if (password.length() < 8) {
-            etPassword.setError("Password is less than 8 characters");
-            etPassword.requestFocus();
+            binding.passwordInputLayout.setError("Password is less than 8 characters");
+//            etPassword.setError("Password is less than 8 characters");
+//            etPassword.requestFocus();
             isValid = false;
         }
 
