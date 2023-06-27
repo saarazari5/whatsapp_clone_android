@@ -72,9 +72,11 @@ const createChat = async (currentUser, newContact) => {
         const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
         // Loop through the socketsMap
         Object.entries(socketMap).forEach(([socketId, socketData]) => {
+            console.log("socketId:", socketId);
+            console.log("socketData:", socketData);
             // Check if the username matches the desired value
-            if (socketData.username === newContact.username) {
-                // Emit the "receive_message" event to the socket
+            if (socketData && socketData.username === newContact.username) {
+                // Emit the "add_new_contact" event to the socket
                 socketData.socket.emit("add_new_contact", data);
             }
         });
@@ -159,6 +161,10 @@ const getChat = async (user1, user2) => {
 const deleteChat = async (chatId, currentUser) => {
     try {
         const targetChat = await Contact.findOne({ "chatId": chatId });
+        if (!targetChat) {
+            throw new Error("Chat not found");
+        }
+
         for (const message of targetChat.messages) {
             const msg = await messageModel.findOne({ "messageId": message.messageId });
             await msg.deleteOne();
@@ -166,40 +172,49 @@ const deleteChat = async (chatId, currentUser) => {
 
         await targetChat.deleteOne();
 
-        const data = {res: {id: chatId, user: newContact}, requestedUser: currentUser};
-
         const user1 = targetChat.users[0];
         const user2 = targetChat.users[1];
-        let username  = "";
+        let deletedContact  = "";
 
         if(user1.username === currentUser.username) {
-            username = user2.username;
+            deletedContact = user2.username;
         }else if(user2.username === currentUser.username) {
-            username = user1.username
+            deletedContact = user1.username
         }
 
-        if(connections.has(username)) {
-            const fcmToken = connections.get(username);
-            const message = {
-                token: fcmToken,
-                notification: {
-                    title: currentUser.username + ' deleted you from their chat',
-                    body: 'sorry!!!!',
-                },
-                data: {
-                    type: 'delete',
-                },
-            };
-    
-            admin.messaging()
-            .send(message)
-            .then((response) => {
-                console.log('Notification sent successfully:', response);
-            })
-            .catch(error => {
-                console.error("Error: ", error)
-            })
+        const data = {currentUser: currentUser.username, deletedContact: deletedContact, room: chatId };
+
+        // Loop through the socketsMap
+        Object.entries(socketMap).forEach(([socketId, socketData]) => {
+        // Check if the username matches the desired value
+        if (socketData && socketData.username === deletedContact) {
+            // Emit the "receive_message" event to the socket
+            socketData.socket.emit("recived_delete", data);
         }
+    });
+
+    if(connections.has(deletedContact)) {
+        const fcmToken = connections.get(deletedContact);
+        const message = {
+            token: fcmToken,
+            notification: {
+                title: currentUser.username + ' deleted you from their chat',
+                body: 'sorry!!!!',
+            },
+            data: {
+                type: 'delete',
+            },
+        };
+
+        admin.messaging()
+        .send(message)
+        .then((response) => {
+            console.log('Notification sent successfully:', response);
+        })
+        .catch(error => {
+            console.error("Error: ", error)
+        })
+    }
 
         return true;
 
