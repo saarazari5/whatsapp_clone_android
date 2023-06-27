@@ -52,7 +52,8 @@
             android:layout_toStartOf="@+id/button_gchat_send"
             android:background="@android:color/transparent"
             android:hint="@string/enter_message"
-
+            android:textColor="@color/black"
+            android:textColorHint="@color/background_color"
             android:inputType="text"
             android:maxLines="6"
             tools:ignore="Autofill" />

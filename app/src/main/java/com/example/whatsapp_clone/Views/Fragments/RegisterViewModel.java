@@ -94,7 +94,7 @@ public class RegisterViewModel extends ViewModel {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri);
 
             // check if the image is too big (i.e bigger then 50KB)
-            if(Utils.isBitmapSizeExceedsLimit(bitmap, 50)){
+            if(Utils.isBitmapSizeExceedsLimit(bitmap, 51)){
                 cb.onImageSizeExceedsLimit();
                 return;
             }

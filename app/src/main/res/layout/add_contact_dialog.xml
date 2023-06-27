@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/chat_item_background"
+    android:background="@color/background_color"
     android:padding="8dp">
 
     <View
@@ -106,11 +106,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/add"
+            style="@style/BUTTON"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.532"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_contact_etLa" />
+            app:layout_constraintTop_toBottomOf="@+id/add_contact_etLa"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
