@@ -15,7 +15,7 @@ For the client application: Java, Firebase, Room
 
 ## Requirements
 A mobile phone with the application installed in it. Or open the project with Android Studio, and run the emulator and the application will pop out.
-This project relies on **mongodb**, and **mongoose** to run properly. Make sure you have those installed before continuing with the installation process.
+This project relies on **mongodb**, and **mongoose**, and many other android dependencies available through **Android Studio** to run properly. Make sure you have those installed before continuing with the installation process.
 
 ## Limitations 
 1) Provide a full path URL with PORT and protocol (for example: http://localhost:5000/api) otherwise the App will crush.
